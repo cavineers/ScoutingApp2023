@@ -1,3 +1,11 @@
-.navitem {
+a.navitem {
+    font-size: 24pt;
+}
 
+a.navitem.light-theme {
+    color:#111111;
+}
+
+a.navitem.dark-theme {
+    color:#ffffff;
 }
