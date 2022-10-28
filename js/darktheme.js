@@ -1,21 +1,34 @@
 //https://css-tricks.com/a-complete-guide-to-dark-mode-on-the-web/
 
-const currentTheme = localStorage.getItem("theme") || "light";
+let currentTheme = localStorage.getItem("theme") || "light";
 
 function setThemeDark() {
-    for (let element in document.getElementsByClassName("light-theme")) {
+    console.log("Set Dark:");
+    //iterate through all elements with dark-theme class found by querySelector
+    var elements = document.querySelectorAll(".light-theme");
+    if (elements == null || elements == undefined)
+        return;
+    NodeList.prototype.forEach.call(elements, (element) => {
         element.classList.remove("light-theme");
         element.classList.add("dark-theme");
-        localStorage.setItem("theme", "dark");
-    }
+
+    })
+    currentTheme = "dark";
+    localStorage.setItem("theme", currentTheme);
 }
 
 function setThemeLight() {
-    for (let element in document.getElementsByClassName("dark-theme")) {
+    console.log("Set Light:");
+    var elements = document.querySelectorAll(".dark-theme");
+    if (elements == null || elements == undefined)
+        return;
+    NodeList.prototype.forEach.call(elements, (element) => {
         element.classList.remove("dark-theme");
         element.classList.add("light-theme");
-        localStorage.setItem("theme", "light");
-    }
+        
+    });
+    currentTheme = "light";
+    localStorage.setItem("theme", currentTheme);
 }
 
 function toggleDarkTheme() {

@@ -16,7 +16,14 @@ window.addEventListener("load", () => {
             return;
 
         toggleDarkTheme();
-        toggleDarkThemeButton.innerHTML = `${currentTheme[0].toUpperCase()+currentTheme.substring(1)} Mode`;
+        setThemeButtonText();
     }
-
+    setThemeButtonText(); //set initial text
+    
 });
+
+//update button text to match with theme
+function setThemeButtonText() {
+    var text = {"light":"Dark Mode","dark":"Light Mode"}[currentTheme] || "Light Mode"; //map light to Dark Mode and dark to Light Mode, else Light Mode
+    toggleDarkThemeButton.innerText = text;
+}
