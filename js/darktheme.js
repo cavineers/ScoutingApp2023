@@ -1,4 +1,4 @@
-//https://css-tricks.com/a-complete-guide-to-dark-mode-on-the-web/
+//cite: https://css-tricks.com/a-complete-guide-to-dark-mode-on-the-web/
 
 let currentTheme = localStorage.getItem("theme") || "light";
 
@@ -12,7 +12,7 @@ function setThemeDark() {
         element.classList.remove("light-theme");
         element.classList.add("dark-theme");
 
-    })
+    });
     currentTheme = "dark";
     localStorage.setItem("theme", currentTheme);
 }
@@ -36,6 +36,10 @@ function toggleDarkTheme() {
         setThemeDark();
     else
         setThemeLight();
+}
+
+function getThemeName() {
+    return currentTheme == "dark" ? "dark-theme" : "light-theme";
 }
 
 window.addEventListener("load", () => {

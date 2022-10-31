@@ -1,0 +1,51 @@
+/* Container for menu, also acts as the darkened background behind the menu */
+.menu-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: #000000cc; /* black, alpha 80% */
+}
+
+/* The popup menu itself */
+.menu {
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+}
+
+/* Light and dark themes for the menu */
+.menu.light-theme {
+    background-color: #efefef;
+}
+
+.menu.dark-theme {
+    background-color: #2a2a2a;
+}
+
+/* Button to close the menu */
+.menu-close-button {
+    position: absolute;
+    border:none;
+    background-color: transparent;
+    top: 0;
+    right: 0;
+    bottom: 1;
+    left: 1;
+}
+
+
+/* Themes for the image in the button (. is css dir, .. is project dir) */
+.menu-close-button.light-theme img {
+    content: url("../img/icon/close_light_32.png");
+}
+
+.menu-close-button.dark-theme img {
+    content: url("../img/icon/close_dark_32.png");
+}

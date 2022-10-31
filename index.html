@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <link rel="stylesheet" href="css/overlay-menu.css">
         <link rel="stylesheet" href="css/index.css">
         <script src="js/darktheme.js"></script>
+        <script src="js/overlay-menu.js"></script>
         <script src="js/index.js"></script>
         <title>4541 Scouting App</title>
     </head>
@@ -13,7 +15,7 @@
                     <img src="" alt="Icon">
                     <a href="" class="navitem light-theme">Scout</a>
                     <a href="" class="navitem light-theme">Leaderboard</a>
-                    <a href="" class="navitem secret light-theme">Data</a>
+                    <a class="navitem light-theme" onclick="return checkDataAccess();">Data</a>
                     <button id="toggle_darkmode" class="light-theme">Dark Mode</button>
                 <ul>
             </nav>
