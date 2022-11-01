@@ -4,7 +4,7 @@ let currentTheme = localStorage.getItem("theme") || "light";
 
 function setThemeDark() {
     console.log("Set Dark:");
-    //iterate through all elements with dark-theme class found by querySelector
+    //iterate through all elements with light-theme class found by querySelector
     var elements = document.querySelectorAll(".light-theme");
     if (elements == null || elements == undefined)
         return;

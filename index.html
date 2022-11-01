@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <link rel="stylesheet" href="css/base.css">
         <link rel="stylesheet" href="css/overlay-menu.css">
+        <link rel="stylesheet" href="css/navbar.css">
         <link rel="stylesheet" href="css/index.css">
         <script src="js/darktheme.js"></script>
         <script src="js/overlay-menu.js"></script>
+        <script src="js/navbar.js"></script>
         <script src="js/index.js"></script>
         <title>4541 Scouting App</title>
     </head>
@@ -12,13 +15,26 @@
         <header class="light-theme">
             <nav>
                 <ul>
-                    <img src="" alt="Icon">
-                    <a href="" class="navitem light-theme">Scout</a>
+                    <a href="index.html"><img src="" alt="Icon"></a>
+                    <a href="compselect.html" class="navitem light-theme">Scout</a>
                     <a href="" class="navitem light-theme">Leaderboard</a>
                     <a class="navitem light-theme" onclick="return checkDataAccess();">Data</a>
                     <button id="toggle_darkmode" class="light-theme">Dark Mode</button>
                 <ul>
             </nav>
         </header>
+
+        <div class="under-nav">
+            <div style="align-content: center; text-align: center;">
+                <h1>Robotics 4541 Scouting App</h1>
+                <br>
+                <button style="margin-top: 5%;" class="light-theme" onclick="window.location = 'help.html';">Help</button>
+                <br>
+                <button style="margin-top: 8.5%;" class="light-theme" onclick="window.location = 'compselect.html';">Select Competition to Scout</button>
+                <br>
+                <button style="margin-top: 10%;" class="light-theme" onclick="window.location = '';">View Leaderboard</button>
+            </div>
+
+        </div>
     </body>
 </html>
