@@ -2,6 +2,8 @@
 
 const cacheLocation = "scouting-app-4541";
 const assets = [
+    "manifest.json",
+
     //base app caches
     "index.html",
     "help.html",
