@@ -1,6 +1,7 @@
 {
     "name": "4541 Scouting App",
     "short_name": "Scouting App",
+    "id":"/index.html",
     "start_url": "index.html",
     "display": "standalone",
     "background_color": "#fdfdfd",
