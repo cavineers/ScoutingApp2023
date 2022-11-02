@@ -9,7 +9,6 @@ const assets = [
     "help.html",
     "compselect.html",
     "js/darktheme.js",
-    "js/index.js",
     "js/link-sw.js",
     "js/navbar.js",
     "js/overlay-menu.js",
