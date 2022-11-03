@@ -20,7 +20,7 @@ header {
     width: 100%;
     top: 0;
     left: 0;
-    padding: 0.125%;
+    height: 10%;
 }
 
 
@@ -41,6 +41,6 @@ header.dark-theme {
 
 /* Content in page under the nav bar */
 .under-nav {
-    margin-top: 5%;
+    margin-top: 6.5%;
     width: 100%;
 }
