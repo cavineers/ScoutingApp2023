@@ -42,9 +42,13 @@ function getThemeName() {
     return currentTheme == "dark" ? "dark-theme" : "light-theme";
 }
 
-window.addEventListener("load", () => {
+function setTheme() {
     if (currentTheme == "light")
         setThemeLight();
     else
         setThemeDark();
+}
+
+window.addEventListener("load", () => {
+    setTheme();
 });
