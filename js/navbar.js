@@ -31,6 +31,7 @@ function fetchNavbar(dir) {
                 setThemeButtonText();
             }
             setThemeButtonText(); //set button initial text
+            setTheme();
         });
     })
 }
