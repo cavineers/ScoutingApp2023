@@ -1,22 +1,38 @@
 let toggleDarkThemeButton;
 
-window.addEventListener("load", () => {
-    toggleDarkThemeButton = document.getElementById("toggle_darkmode");
-    toggleDarkThemeButton.onclick = (e) => {
-        if (e.button != 0)
-            return;
-
-        toggleDarkTheme();
-        setThemeButtonText();
-    }
-    setThemeButtonText(); //set initial text
-    
-});
-
 //update button text to match with theme
 function setThemeButtonText() {
     var text = {"light":"Dark Mode","dark":"Light Mode"}[currentTheme] || "Light Mode"; //map light to Dark Mode and dark to Light Mode, else Light Mode
     toggleDarkThemeButton.innerText = text;
+}
+
+/**
+ * Fetches, sets up, and inserts navbar into the page
+ * @param {string} dir
+ * @returns {Promise<any>}
+ */
+function fetchNavbar(dir) {
+    if (!dir) dir = "";
+    return fetch(dir+"navbar.html").then((response) => { //get navbar template
+        return response.text().then((text) => { //get navbar template text
+            //insert navbar at start of body
+
+            console.log(text);
+            console.log(text.replace(/\{dir\}/g, dir));
+            document.body.insertAdjacentHTML("afterbegin", text.replace(/\{dir\}/g, dir));
+
+            //setup dark/light theme button
+            toggleDarkThemeButton = document.getElementById("toggle_darkmode");
+            toggleDarkThemeButton.onclick = (e) => {
+                if (e.button != 0)
+                    return;
+
+                toggleDarkTheme();
+                setThemeButtonText();
+            }
+            setThemeButtonText(); //set button initial text
+        });
+    })
 }
 
 function checkDataAccess() {

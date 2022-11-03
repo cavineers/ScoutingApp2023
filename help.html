@@ -10,17 +10,10 @@
         <title>4541 Scouting App</title>
     </head>
     <body class="light-theme">
-        <header class="light-theme">
-            <nav>
-                <ul>
-                    <a href="index.html"><img src="" alt="Icon"></a>
-                    <a href="compselect.html" class="navitem light-theme">Scout</a>
-                    <a href="" class="navitem light-theme">Leaderboard</a>
-                    <a class="navitem light-theme" onclick="return checkDataAccess();">Data</a>
-                    <button id="toggle_darkmode" class="light-theme">Dark Mode</button>
-                <ul>
-            </nav>
-        </header>
+        <!-- Import navbar from template into the page. -->
+        <script> 
+            fetchNavbar();
+        </script>
 
         <div class="under-nav">
             This is the help page.

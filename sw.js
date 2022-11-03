@@ -4,6 +4,9 @@ const cacheLocation = "scouting-app-4541";
 const assets = [
     "manifest.json",
 
+    //navbar template
+    "navbar.html",
+
     //base app caches
     "index.html",
     "help.html",
@@ -21,6 +24,8 @@ const assets = [
     "img/icon/close_dark_250.png",
     "img/icon/close_light_32.png",
     "img/icon/close_light_250.png",
+    "img/icon/robotics_cavs_icon_109.png",
+    "img/icon/robotics_cavs_icon_656.png",
 
     //comps/2023
     "comps/2023/scout.html",
