@@ -11,13 +11,12 @@ function setThemeButtonText() {
  * @param {string} dir
  * @returns {Promise<any>}
  */
-function fetchNavbar(dir) {
-    if (!dir) dir = "";
-    return fetch(dir+"navbar.html").then((response) => { //get navbar template
+function fetchNavbar() {
+    return fetch("/navbar.html").then((response) => { //get navbar template
         return response.text();
     }).then((text) => { //get navbar template text
         //insert navbar at start of body
-        document.body.insertAdjacentHTML("afterbegin", text.replace(/\{dir\}/g, dir));
+        document.body.insertAdjacentHTML("afterbegin", text);
 
         //setup dark/light theme button
         toggleDarkThemeButton = document.getElementById("toggle_darkmode");
