@@ -1,14 +1,14 @@
 let scoreNodes = [];
 
 const NodeType = {
-    Cone: Symbol("cone"),
-    Cube: Symbol("cube"),
-    Hybrid: Symbol("hybrid")
+    Cone: "cone",
+    Cube: "cube",
+    Hybrid: "hybrid"
 };
 
 const GamePiece = {
-    Cone: Symbol("cone"),
-    Cube: Symbol("cube")
+    Cone: "cone",
+    Cube: "cube"
 };
 
 class ScoreNode {
@@ -16,7 +16,7 @@ class ScoreNode {
     /**
      * 
      * @param {Element} element Element to check the classList of.
-     * @returns {NodeType|null} The node type, or null if could not be determined.
+     * @returns {string|null} The node type, or null if could not be determined.
      */
 
     static nodeTypeFromClass(element) {
@@ -25,13 +25,15 @@ class ScoreNode {
 
     /**
      * 
-     * @param {NodeType} type Type of score node.
-     * @param {GamePiece} gamePiece Game piece that is in the node.
+     * @param {Element} element 
+     * @param {string} type Type of score node.
+     * @param {string|null} gamePiece Game piece that is in the node.
      */
 
-    constructor(type, gamePiece) {
-        this.type = type instanceof Element ? nodeTypeFromClass(type) : type;
-        this.gamePiece = !(gamePiece instanceof GamePiece) ? null : gamePiece;
+    constructor(element, type, gamePiece) {
+        this.element = element;
+        this.type = !type ? ScoreNode.nodeTypeFromClass(element) : type;
+        this.gamePiece = Object.values(GamePiece).includes(gamePiece) ? gamePiece : null;
     }
 }
 
@@ -39,7 +41,9 @@ class ScoreNode {
 window.addEventListener("load", () => {
     var selections = document.querySelectorAll(".node-cone, .node-cube, .node-hybrid");
     selections.forEach((selection) => {
-        scoreNodes.push(new ScoreNode(selection));
+        let node = new ScoreNode(selection);
+        scoreNodes.push(node);
+        setNodeClick(node);
     });
 });
 
@@ -58,15 +62,35 @@ function indexToCoordinates(index) {
     return; //TODO math :)
 }
 
-
-function setNodeClick(element, scoreNode) {
-    element.addEventListener("click", (e) => {
+/**
+ * @param {ScoreNode} scoreNode
+ */
+function setNodeClick(scoreNode) {
+    scoreNode.element.addEventListener("click", (e) => {
         switch(scoreNode.type) {
-            case ScoreNode.Cone:
+            case NodeType.Cone:
+                if (scoreNode.gamePiece == null) {
+                    scoreNode.gamePiece = GamePiece.Cone;
+                    scoreNode.element.style.background = "#ff0";
+                    scoreNode.element.style.borderColor = "#cc0";
+                }
+                else {
+                    scoreNode.gamePiece = null;
+                    scoreNode.element.style.background = "#777";
+                    scoreNode.element.style.borderColor = "#777";
+                }
                 break;
-            case ScoreNode.Cube:
-                break;
-            case ScoreNode.Hybrid:
+            case NodeType.Cube:
+                if (scoreNode.gamePiece == null) {
+                    scoreNode.gamePiece = GamePiece.Cube;
+                    scoreNode.element.style.background = "#b0f";
+                    scoreNode.element.style.borderColor = "#80c";
+                }
+                else {
+                    scoreNode.gamePiece = null;
+                    scoreNode.element.style.background = "#777";
+                    scoreNode.element.style.borderColor = "#777";
+                }
                 break;
         }
     });
