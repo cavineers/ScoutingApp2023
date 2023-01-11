@@ -61,7 +61,7 @@ function checkDataAccess() {
 
         //check password (ideally this wouldn't be verified client-side)
         if (popupInput.value == (!![]+[])[(+[])]+'w'+([]+[]+[][[]])[(+!+[]+((+!+[])+(+!+[])))]+(![]+[])[((+!+[])+(+!+[]))]+([]+[]+([]).constructor)[(+[+!+[]+[+[]+[+[]]]])/((+!+[])+(+!+[]))/((+!+[])+(+!+[]))-(+!+[])]+([]+[]+[][[]])[(+!+[]+((+!+[])+(+!+[])))]+(!![]+[])[(+[])]+'h'+([]+[]+[][[]])[(+[+!+[]+[+[]]])/((+!+[])+(+!+[]))]+(!![]+[])[(+!+[])]+(!![]+[])[(+[])]+(([]).constructor.name)[(+!+[])+(+!+[]+((+!+[])+(+!+[])))]+([]+[]+[][[]])[(+!+[]+((+!+[])+(+!+[])))]+([]+[]+[][[]])[(+[+!+[]+[+[]]])/((+!+[])+(+!+[]))]+(typeof ([]+[]))[(+[+!+[]+[+[]]])/((+!+[])+(+!+[]))]+'h'+(!![]+[])[(+[])]+(![]+[])[(+!+[])]+(typeof +[])[((+!+[])+(+!+[]))])
-            window.location = ""; //TODO go to data page (/data.html or something)
+            window.location = "/data.html";
         else {
             popupOutput.style.color = "#990000";
             popupOutput.innerHTML = "Invalid Password";
@@ -71,7 +71,7 @@ function checkDataAccess() {
 
 
     //add elements to menu
-    var menu = popup.children[0];
+    var menu = popup.children[1]; //children[0] is clickable background that closes popup, children[1] is the menu
     menu.appendChild(popupContent);
     popupContent.appendChild(popupOutput);
     popupContent.appendChild(prompt);

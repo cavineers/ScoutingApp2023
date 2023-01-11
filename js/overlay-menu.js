@@ -8,21 +8,32 @@
  */
 function createMenu(width, height) {
     //create menu container (darkened background)
-    var container = document.createElement("div");
-    container.classList.add("menu-container");
-
-    //create menu
-    var menu = document.createElement("div");
-    menu.classList.add("menu", getThemeName());
-
-    //create close button
-    var closeButton = document.createElement("button");
-    closeButton.onclick = (e) => {
+    closeMenu = (e) => {
         if (e.button != 0) //if not left click
             return;
 
         container.remove(); //remove menu and container from the page
-    }
+    };
+
+    var container = document.createElement("div");
+    container.classList.add("menu-container");
+
+    //create clickable section that closes menu behind the menu
+    var bg = document.createElement("div");
+    bg.style.position = "fixed";
+    bg.style.width = "100%";
+    bg.style.height = "100%";
+    bg.addEventListener("click", closeMenu);
+
+
+    //create menu
+    var menu = document.createElement("div");
+    menu.style.position = "absolute";
+    menu.classList.add("menu", getThemeName());
+
+    //create close button
+    var closeButton = document.createElement("button");
+    closeButton.addEventListener("click", closeMenu);
     closeButton.classList.add("menu-close-button", getThemeName());
     //add button image (src controlled by css)
     var closeImg = document.createElement("img");
@@ -38,11 +49,11 @@ function createMenu(width, height) {
 
     //add elements
     menu.appendChild(closeButton);
+    container.appendChild(bg);
     container.appendChild(menu);
     
     return container;
 }
-
 
 /**
  * Creates a popup menu to overlay onto the page and displays it.
