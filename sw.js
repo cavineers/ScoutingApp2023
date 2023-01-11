@@ -78,7 +78,10 @@ const assets = {
     "img/icon/robotics_cavs_icon_536.png": new CacheSettings(true, true),
 
     //comps/2023
-    "comps/2023/scout.html": new CacheSettings(),
+    "comps/2023/home.html": new CacheSettings(),
+    "comps/2023/scout.html" : new CacheSettings(),
+    "comps/2023/js/scout.js" : new CacheSettings(),
+    "comps/2023/css/scout.css" : new CacheSettings()
 
 };
 

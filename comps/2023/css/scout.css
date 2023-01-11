@@ -1,0 +1,24 @@
+/* Unselected node color: #777 */
+
+.node-cone {
+    background-color: #777;
+    border-color: #777;
+    padding: 11%;
+    border-radius: 100%;
+    border-style: double;
+}
+
+.node-cube {
+    background-color: #777;
+    border-color: #777;
+    padding: 11%;
+    border-radius: 5%;
+    border-style: double;
+}
+
+.node-hybrid {
+    background-color: #777;
+    padding: 11%;
+    border-radius: 10%;
+    border-style: none;
+}
