@@ -1,6 +1,6 @@
 //cite: https://css-tricks.com/a-complete-guide-to-dark-mode-on-the-web/
 
-let currentTheme = localStorage.getItem("theme") || "light";
+let currentTheme = localStorage.getItem("theme") || "dark";
 
 function setThemeDark() {
     console.log("Set Dark:");
