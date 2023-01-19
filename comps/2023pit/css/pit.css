@@ -1,0 +1,12 @@
+.textarea {
+    background-color: #dddddd;
+    color: #2a2a2a;
+    padding: 1em;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    outline: solid;
+    font-size: 16px;
+    width: 1650px;
+    height: 165px;
+    font-family: Geneva, Segoe UI, Verdana, sans-serif;
+}
