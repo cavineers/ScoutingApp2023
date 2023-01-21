@@ -80,6 +80,7 @@ const assets = {
     //comps/2023
     "comps/2023/home.html": new CacheSettings(),
     "comps/2023/scout.html" : new CacheSettings(),
+    "comps/2023/js/home.js" : new CacheSettings(),
     "comps/2023/js/scout.js" : new CacheSettings(),
     "comps/2023/css/scout.css" : new CacheSettings()
 
