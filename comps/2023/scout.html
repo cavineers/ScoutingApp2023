@@ -69,10 +69,21 @@
             </div>
             <div style="margin-top: 10%; width: 100%; text-align: center;">
                 <form>
-                    <h2>Charge Station</h2>
-                    <input type="radio" name = "station" value="off" checked> Off </input>
-                    <input type="radio" name = "station" value="docked"> Docked </input>
-                    <input type="radio" name = "station" value="engaged"> Engaged </input>
+                    <div class="charge">
+                        <h2>Charge Station</h2>
+                        <label>
+                            <input type="radio" name = "station" value="off" checked>
+                            <span class="left">Off</span>
+                        </label>
+                        <label>
+                            <input type="radio" name = "station" value="docked">
+                            <span class="mid">Docked</span>
+                        </label>
+                        <label>
+                            <input type="radio" name = "station" value="engaged">
+                            <span class="right">Engaged</span>
+                        </label>
+                    </div>
                 </form>
             </div>
         </div>
