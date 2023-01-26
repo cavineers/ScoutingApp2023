@@ -1,5 +1,11 @@
 /* Unselected node color: #777 */
 
+.table {
+    height: 300px;
+    width: 1450px;
+    margin-left: 10%;
+}
+
 .node-cone {
     height: 50px;
     width: 50px;
@@ -54,13 +60,19 @@
   transform: translateY(5px);
 }
 
+.pickup_button {
+    height: 100px;
+    width: 100px;
+    background-size: contain;
+}
+
 .platform-select {
     margin-left: 4%;
 }
 
 .charge {
     position: absolute;
-    top: 75%;
+    top: 80%;
     left: 50%;
     transform: translate(-50%, -75%);
     padding: 40px;
