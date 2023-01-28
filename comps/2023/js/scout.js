@@ -34,12 +34,14 @@ class ScoreNode {
      * @param {Element} element 
      * @param {string} type Type of score node.
      * @param {string|null} gamePiece Game piece that is in the node.
+     * @param {object} history
      */
 
-    constructor(element, type, gamePiece) {
+    constructor(element, type, gamePiece, history) {
         this.element = element;
         this.type = !type ? ScoreNode.nodeTypeFromClass(element) : type;
         this.gamePiece = Object.values(GamePiece).includes(gamePiece) ? gamePiece : null;
+        this.history = history?history:{};
     }
 
     /**
@@ -47,7 +49,8 @@ class ScoreNode {
      * @param {string|null} gamePiece 
      */
     setGamePiece(gamePiece) {
-        this.gamePiece = gamePiece; 
+        this.gamePiece = gamePiece;
+        this.history[new Date().getTime()] = Object.values(GamePiece).includes(gamePiece) ? gamePiece : null;
         if (gamePiece==GamePiece.Cone) {
             this.element.style.background = CONE_COLOR;
             this.element.style.borderColor = CONE_BORDER_COLOR;
@@ -60,6 +63,7 @@ class ScoreNode {
             this.element.style.background = UNSELECTED_COLOR;
             this.element.style.borderColor = UNSELECTED_COLOR;
         }
+        localStorage.setItem("scoreGrid", JSON.stringify(scoreNodes));
     }
 }
 
