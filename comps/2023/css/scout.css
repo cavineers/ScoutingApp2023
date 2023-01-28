@@ -51,9 +51,8 @@
     font-size: 16px;
     border-radius: 5px;
     box-shadow: 0 5px #777;
-    transform: translateY(-100px);
+    transform: translate(1400px, -100px);
 }
-  
 
 .next span {
     font-family: sans-serif;
@@ -69,7 +68,7 @@
 .next:active {
     background-color: #cf0000;
     box-shadow: 0 0px #666;
-    transform: translateY(-95px);
+    transform: translate(1400px, -95px);
 }
 
 .next span:after {
