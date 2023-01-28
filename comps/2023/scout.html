@@ -12,7 +12,6 @@
         <script src="/js/overlay-menu.js"></script>
         <script src="/js/navbar.js"></script>
 
-
         <!-- Comp-specific assets -->
         <link rel="stylesheet" href="css/scout.css"/>
         <script src="js/scout.js"></script>
@@ -26,7 +25,7 @@
         </script>
 
         <div class="under-nav">
-            <table style="width: 100%; height:50%; margin-left: 4%;">
+            <table class="table">
                 <tbody>
                     <tr>
                         <td><button class="node-cone"></button></td>
@@ -63,6 +62,42 @@
                     </tr>
                 </tbody>
             </table>
+            <br>
+            <div>
+                <button class="button_red">Picked Up Piece</button>
+            </div>
+            <br>
+            <div>
+                <button class="button_red" value="dropped">Game Piece Dropped</button>
+            </div>
+            <br>
+            <div>
+                <button class="button_red" value="defense">Played Defense</button>
+            </div>
+            <div style="margin-top: 10%; width: 100%; text-align: center;">
+                <form>
+                    <div class="charge">
+                        <h2>Charge Station</h2>
+                        <label>
+                            <input type="radio" name = "station" value="off" checked>
+                            <span class="left">Off</span>
+                        </label>
+                        <label>
+                            <input type="radio" name = "station" value="docked">
+                            <span class="mid">Docked</span>
+                        </label>
+                        <label>
+                            <input type="radio" name = "station" value="engaged">
+                            <span class="right">Engaged</span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="next_container">
+                <button class="next">
+                    <span>Next</span>
+                </button>
+            </div>
         </div>
     </body>
 </html>

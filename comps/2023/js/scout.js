@@ -11,6 +11,12 @@ const GamePiece = {
     Cube: "cube"
 };
 
+const UNSELECTED_COLOR = "#777";
+const CONE_COLOR = "#ff0";
+const CONE_BORDER_COLOR = "#cc0";
+const CUBE_COLOR = "#b0f";
+const CUBE_BORDER_COLOR = "#80c";
+
 class ScoreNode {
 
     /**
@@ -28,12 +34,36 @@ class ScoreNode {
      * @param {Element} element 
      * @param {string} type Type of score node.
      * @param {string|null} gamePiece Game piece that is in the node.
+     * @param {object} history
      */
 
-    constructor(element, type, gamePiece) {
+    constructor(element, type, gamePiece, history) {
         this.element = element;
         this.type = !type ? ScoreNode.nodeTypeFromClass(element) : type;
         this.gamePiece = Object.values(GamePiece).includes(gamePiece) ? gamePiece : null;
+        this.history = history?history:{};
+    }
+
+    /**
+     * Set the Score Node's Game Piece
+     * @param {string|null} gamePiece 
+     */
+    setGamePiece(gamePiece) {
+        this.gamePiece = gamePiece;
+        this.history[new Date().getTime()] = Object.values(GamePiece).includes(gamePiece) ? gamePiece : null;
+        if (gamePiece==GamePiece.Cone) {
+            this.element.style.background = CONE_COLOR;
+            this.element.style.borderColor = CONE_BORDER_COLOR;
+        }
+        else if (gamePiece==GamePiece.Cube) {
+            this.element.style.background = CUBE_COLOR;
+            this.element.style.borderColor = CUBE_BORDER_COLOR;
+        }
+        else {
+            this.element.style.background = UNSELECTED_COLOR;
+            this.element.style.borderColor = UNSELECTED_COLOR;
+        }
+        localStorage.setItem("scoreGrid", JSON.stringify(scoreNodes));
     }
 }
 
@@ -69,28 +99,58 @@ function setNodeClick(scoreNode) {
     scoreNode.element.addEventListener("click", (e) => {
         switch(scoreNode.type) {
             case NodeType.Cone:
-                if (scoreNode.gamePiece == null) {
-                    scoreNode.gamePiece = GamePiece.Cone;
-                    scoreNode.element.style.background = "#ff0";
-                    scoreNode.element.style.borderColor = "#cc0";
-                }
-                else {
-                    scoreNode.gamePiece = null;
-                    scoreNode.element.style.background = "#777";
-                    scoreNode.element.style.borderColor = "#777";
-                }
+                if (scoreNode.gamePiece == null)
+                    scoreNode.setGamePiece(GamePiece.Cone);
+                else
+                    scoreNode.setGamePiece(null);
                 break;
             case NodeType.Cube:
+                if (scoreNode.gamePiece == null)
+                    scoreNode.setGamePiece(GamePiece.Cube);
+                else
+                    scoreNode.setGamePiece(null);
+                break;
+            case NodeType.Hybrid:
+                //define popup menu, get menu element
                 if (scoreNode.gamePiece == null) {
-                    scoreNode.gamePiece = GamePiece.Cube;
-                    scoreNode.element.style.background = "#b0f";
-                    scoreNode.element.style.borderColor = "#80c";
+                    let menuContainer = addMenu(null, "20%", "fit-content");
+                    let menu = menuContainer.children[1];
+                    menu.style.textAlign = "center";
+
+                    //define button
+                    let coneButton = document.createElement("button");
+                    //set button style
+                    coneButton.classList.add("node-cone");
+                    coneButton.style.background = CONE_COLOR;
+                    coneButton.style.borderColor = CONE_BORDER_COLOR;
+                    coneButton.style.marginRight = "4%";
+                    //set button click event
+                    coneButton.addEventListener("click", (ev) => {
+                        if (ev.button != 0)
+                            return;
+                        scoreNode.setGamePiece(GamePiece.Cone);
+                        menuContainer.remove();
+                    });
+
+                    //define button
+                    let cubeButton = document.createElement("button")
+                    //set button style
+                    cubeButton.classList.add("node-cube");
+                    cubeButton.style.background = CUBE_COLOR;
+                    cubeButton.style.borderColor = CUBE_BORDER_COLOR;
+                    cubeButton.style.marginLeft = "4%";
+                    cubeButton.addEventListener("click", (ev) => {
+                        if (ev.button != 0)
+                            return;
+                        scoreNode.setGamePiece(GamePiece.Cube);
+                        menuContainer.remove();
+                    });
+
+                    menu.appendChild(coneButton);
+                    menu.appendChild(cubeButton);
                 }
-                else {
-                    scoreNode.gamePiece = null;
-                    scoreNode.element.style.background = "#777";
-                    scoreNode.element.style.borderColor = "#777";
-                }
+                else
+                    scoreNode.setGamePiece(null);
                 break;
         }
     });

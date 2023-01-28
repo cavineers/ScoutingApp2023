@@ -80,8 +80,18 @@ const assets = {
     //comps/2023
     "comps/2023/home.html": new CacheSettings(),
     "comps/2023/scout.html" : new CacheSettings(),
+    "comps/2023/js/home.js" : new CacheSettings(),
     "comps/2023/js/scout.js" : new CacheSettings(),
     "comps/2023/css/scout.css" : new CacheSettings(),
+    "comps/2023/result.html" : new CacheSettings(),
+    "comps/2023/result.css" : new CacheSettings(),
+    "comps/2023/auto.html" : new CacheSettings(),
+    "comps/2023/css/auto.css" : new CacheSettings(),
+
+    //QR scanner
+    "comps/2023/qrscanner.html" : new CacheSettings(),
+    "comps/2023/js/qrscanner.js" : new CacheSettings(),
+    "comps/2023/js/qrcode.js" : new CacheSettings(),
 
     //comps/2023pit
     "comps/2023pit/pit.html" : new CacheSettings()
