@@ -3,7 +3,7 @@
 .table {
     height: 300px;
     width: 1450px;
-    margin-left: 10%;
+    margin-left: 170px;
 }
 
 .node-cone {
@@ -38,12 +38,64 @@
     align-items: center;
 }
 
+.next {
+    height: 50px;
+    width: 200px;
+    margin: auto;
+    background-color: #ff0000; /* Red */
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    box-shadow: 0 5px #777;
+    transform: translateY(-100px);
+}
+  
+
+.next span {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 28px;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.next:hover {background-color: #cf0000}
+
+.next:active {
+    background-color: #cf0000;
+    box-shadow: 0 0px #666;
+    transform: translateY(-95px);
+}
+
+.next span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.next:hover span {
+    padding-right: 25px;
+}
+
+.next:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
 .button_red {
     height: 50px;
     width: 200px;
     background-color: #ff0000; /* Red */
     border: none;
-    color: rgb(255, 255, 255);
+    color: white;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -67,15 +119,13 @@
 }
 
 .platform-select {
-    margin-left: 4%;
+    margin-left: 4px;
 }
 
 .charge {
     position: absolute;
-    top: 80%;
-    left: 50%;
-    transform: translate(-50%, -75%);
-    padding: 40px;
+    transform: translateY(-350px);
+    margin-left: 525px;
     text-align: center;
 }
 
@@ -106,7 +156,7 @@
     height: 100px;
     line-height: 100px;
     background: #ff0000;
-    color: rgb(255, 255, 255);
+    color: white;
     border: 5px solid #ff0000;
     text-align: center;
     border-top-left-radius: 25px;
@@ -120,7 +170,7 @@
     height: 100px;
     line-height: 100px;
     background: #ff0000;
-    color: rgb(255, 255, 255);
+    color: white;
     border: 5px solid #ff0000;
     text-align: center;
     box-shadow: 0 10px #777;
@@ -132,7 +182,7 @@
     height: 100px;
     line-height: 100px;
     background: #ff0000;
-    color: rgb(255, 255, 255);
+    color: white;
     border: 5px solid #ff0000;
     text-align: center;
     border-top-right-radius: 25px;
