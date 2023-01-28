@@ -91,7 +91,10 @@ const assets = {
     //QR scanner
     "comps/2023/qrscanner.html" : new CacheSettings(),
     "comps/2023/js/qrscanner.js" : new CacheSettings(),
-    "comps/2023/js/qrcode.js" : new CacheSettings()
+    "comps/2023/js/qrcode.js" : new CacheSettings(),
+
+    //comps/2023pit
+    "comps/2023pit/pit.html" : new CacheSettings()
 
 };
 
