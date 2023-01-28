@@ -8,6 +8,7 @@
         <script src="js/link-sw.js"></script>
         <link rel="manifest" href="manifest.json" />
         <link rel="stylesheet" href="css/base.css">
+        <link rel="stylesheet" href="css/index.css">
         <link rel="stylesheet" href="css/overlay-menu.css">
         <link rel="stylesheet" href="css/navbar.css">
         <script src="js/darktheme.js"></script>
@@ -22,16 +23,15 @@
         </script>
         
         <div class="under-nav">
-            <div style="align-content: center; text-align: center;">
-                <h1>Robotics 4541 Scouting App</h1>
-                <br>
-                <button style="margin-top: 5%;" class="light-theme" onclick="window.location = 'help.html';">Help</button>
-                <br>
-                <button style="margin-top: 8.5%;" class="light-theme" onclick="window.location = 'compselect.html';">Select Competition to Scout</button>
-                <br>
-                <button style="margin-top: 10%;" class="light-theme" onclick="window.location = '';">View Leaderboard</button>
+            <div class="button_group">
+                <div>
+                    <h1>Robotics 4541 Scouting App</h1>
+                    <br>
+                    <button class="help" onclick="window.location = 'help.html';">Help</button>
+                    <button class="competition" onclick="window.location = 'compselect.html';">Select Competition to Scout</button>
+                    <button class="leaderboard" onclick="window.location = '';">View Leaderboard</button>
+                </div>
             </div>
-
         </div>
     </body>
 </html>
