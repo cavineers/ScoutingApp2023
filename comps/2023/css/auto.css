@@ -1,0 +1,50 @@
+.next {
+    height: 50px;
+    width: 200px;
+    margin: auto;
+    background-color: #ff0000; /* Red */
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    box-shadow: 0 5px #777;
+    transform: translate(1400px, 700px);
+}
+
+.next span {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 28px;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.next:hover {background-color: #cf0000}
+
+.next:active {
+    background-color: #cf0000;
+    box-shadow: 0 0px #666;
+    transform: translate(1400px, 705px);
+}
+
+.next span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.next:hover span {
+    padding-right: 25px;
+}
+
+.next:hover span:after {
+    opacity: 1;
+    right: 0;
+}

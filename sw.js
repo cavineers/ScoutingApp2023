@@ -85,6 +85,8 @@ const assets = {
     "comps/2023/css/scout.css" : new CacheSettings(),
     "comps/2023/result.html" : new CacheSettings(),
     "comps/2023/result.css" : new CacheSettings(),
+    "comps/2023/auto.html" : new CacheSettings(),
+    "comps/2023/css/auto.css" : new CacheSettings(),
 
     //QR scanner
     "comps/2023/qrscanner.html" : new CacheSettings(),
