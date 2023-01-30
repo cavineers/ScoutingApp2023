@@ -53,48 +53,49 @@ class CacheSettings {
 const cacheLocation = "scouting-app-4541";
 //define assets
 const assets = {
-    "manifest.json":new CacheSettings(),
+    "/manifest.json":new CacheSettings(),
 
     //navbar template
-    "navbar.html": new CacheSettings(true, true),
+    "/navbar.html": new CacheSettings(true, true),
 
     //base app caches
-    "index.html": new CacheSettings(),
-    "help.html": new CacheSettings(),
-    "compselect.html": new CacheSettings(),
-    "js/darktheme.js": new CacheSettings(),
-    "js/link-sw.js": new CacheSettings(),
-    "js/navbar.js": new CacheSettings(),
-    "js/overlay-menu.js": new CacheSettings(),
-    "css/base.css": new CacheSettings(),
-    "css/navbar.css": new CacheSettings(),
-    "css/overlay-menu.css": new CacheSettings(),
+    "/index.html": new CacheSettings(),
+    "/help.html": new CacheSettings(),
+    "/compselect.html": new CacheSettings(),
+    "/static/js/darktheme.js": new CacheSettings(),
+    "/static/js/link-sw.js": new CacheSettings(),
+    "/static/js/navbar.js": new CacheSettings(),
+    "/static/js/overlay-menu.js": new CacheSettings(),
+    "/static/css/base.css": new CacheSettings(),
+    "/static/css/navbar.css": new CacheSettings(),
+    "/static/css/overlay-menu.css": new CacheSettings(),
 
     //images
-    "img/icon/close_dark_32.png": new CacheSettings(true, true),
-    "img/icon/close_dark_250.png": new CacheSettings(true, true),
-    "img/icon/close_light_32.png": new CacheSettings(true, true),
-    "img/icon/close_light_250.png": new CacheSettings(true, true),
-    "img/icon/robotics_cavs_icon_536.png": new CacheSettings(true, true),
+    "/static/img/icon/close_dark_32.png": new CacheSettings(true, true),
+    "/static/img/icon/close_dark_250.png": new CacheSettings(true, true),
+    "/static/img/icon/close_light_32.png": new CacheSettings(true, true),
+    "/static/img/icon/close_light_250.png": new CacheSettings(true, true),
+    "/static/img/icon/robotics_cavs_icon_536.png": new CacheSettings(true, true),
 
     //comps/2023
-    "comps/2023/home.html": new CacheSettings(),
-    "comps/2023/scout.html" : new CacheSettings(),
-    "comps/2023/js/home.js" : new CacheSettings(),
-    "comps/2023/js/scout.js" : new CacheSettings(),
-    "comps/2023/css/scout.css" : new CacheSettings(),
-    "comps/2023/result.html" : new CacheSettings(),
-    "comps/2023/result.css" : new CacheSettings(),
-    "comps/2023/auto.html" : new CacheSettings(),
-    "comps/2023/css/auto.css" : new CacheSettings(),
+    "/comps/2023/home.html": new CacheSettings(),
+    "/comps/2023/scout.html" : new CacheSettings(),
+    "/static/2023/js/home.js" : new CacheSettings(),
+    "/static/2023/js/scout.js" : new CacheSettings(),
+    "/static/2023/css/scout.css" : new CacheSettings(),
+    "/comps/2023/result.html" : new CacheSettings(),
+    "/static/2023/css/result.css" : new CacheSettings(),
+    "/comps/2023/auto.html" : new CacheSettings(),
+    "/static/2023/css/auto.css" : new CacheSettings(),
 
     //QR scanner
-    "comps/2023/qrscanner.html" : new CacheSettings(),
-    "comps/2023/js/qrscanner.js" : new CacheSettings(),
-    "comps/2023/js/qrcode.js" : new CacheSettings(),
+    "/comps/2023/qrscanner.html" : new CacheSettings(),
+    "/static/2023/js/qrscanner.js" : new CacheSettings(),
+    "/static/2023/js/qrcode.js" : new CacheSettings(),
 
     //comps/2023pit
-    "comps/2023pit/pit.html" : new CacheSettings()
+    "/comps/2023pit/pit.html" : new CacheSettings(),
+    "/static/2023pit/css/pit.css" : new CacheSettings(),
 
 };
 
