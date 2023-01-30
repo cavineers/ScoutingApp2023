@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {% block head %}{% endblock %}
+        <link rel="stylesheet" href="/static/css/base.css">
+        <link rel="stylesheet" href="/static/css/overlay-menu.css">
+        <link rel="stylesheet" href="/static/css/navbar.css">
+        {% block styles %}
+        {% endblock %}
+        <script src="/static/js/darktheme.js"></script>
+        <script src="/static/js/overlay-menu.js"></script>
+        <script src="/static/js/navbar.js"></script>
+        {% block scripts %}
+        {% endblock %}
+        <title>{% block title %}{% endblock %}</title>
+    </head>
+    <body class="light-theme">
+        <header class="light-theme">
+            <nav>
+                <a href="/index.html" class="light-theme"><img src="/static/img/icon/robotics_cavs_icon_536.png" height="60" alt="Icon"></a>
+                <a href="/compselect.html" class="navitem light-theme">Scout</a>
+                <a href="/" class="navitem light-theme">Leaderboard</a>
+                <a class="navitem light-theme" onclick="return checkDataAccess();">Data</a>
+                <button id="toggle_darkmode" class="light-theme">Dark Mode</button>
+            </nav>
+        </header>
+        <div class="under-nav">
+            {% block contents %}
+            {% endblock %}
+        </div>
+    </body>
+</html>

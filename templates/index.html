@@ -1,37 +1,22 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
 <!-- For making pwa: https://www.freecodecamp.org/news/build-a-pwa-from-scratch-with-html-css-and-javascript/ -->
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+{% block head %}
+<script src="/static/js/link-sw.js"></script>
+<link rel="manifest" href="/manifest.json" />
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="/static/css/index.css">
+{% endblock %}
+{% block title %}4541 Scouting App{% endblock %}
 
-        <script src="js/link-sw.js"></script>
-        <link rel="manifest" href="manifest.json" />
-        <link rel="stylesheet" href="css/base.css">
-        <link rel="stylesheet" href="css/index.css">
-        <link rel="stylesheet" href="css/overlay-menu.css">
-        <link rel="stylesheet" href="css/navbar.css">
-        <script src="js/darktheme.js"></script>
-        <script src="js/overlay-menu.js"></script>
-        <script src="js/navbar.js"></script>
-        <title>4541 Scouting App</title>
-    </head>
-    <body class="light-theme">
-        <!-- Import navbar from template into the page. -->
-        <script> 
-            fetchNavbar();
-        </script>
-        
-        <div class="under-nav">
-            <div class="button_group">
-                <div>
-                    <h1>Robotics 4541 Scouting App</h1>
-                    <br>
-                    <button class="help" onclick="window.location = 'help.html';">Help</button>
-                    <button class="competition" onclick="window.location = 'compselect.html';">Select Competition to Scout</button>
-                    <button class="leaderboard" onclick="window.location = '';">View Leaderboard</button>
-                </div>
-            </div>
-        </div>
-    </body>
-</html>
+{% block contents%}
+<div class="button_group">
+    <div>
+        <h1>Robotics 4541 Scouting App</h1>
+        <br>
+        <button class="help" onclick="window.location = 'help.html';">Help</button>
+        <button class="competition" onclick="window.location = 'compselect.html';">Select Competition to Scout</button>
+        <button class="leaderboard" onclick="window.location = '';">View Leaderboard</button>
+    </div>
+</div>
+{% endblock %}

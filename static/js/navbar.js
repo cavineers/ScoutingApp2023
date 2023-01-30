@@ -6,32 +6,6 @@ function setThemeButtonText() {
     toggleDarkThemeButton.innerText = text;
 }
 
-/**
- * Fetches, sets up, and inserts navbar into the page
- * @param {string} dir
- * @returns {Promise<any>}
- */
-function fetchNavbar() {
-    return fetch("/navbar.html").then((response) => { //get navbar template
-        return response.text();
-    }).then((text) => { //get navbar template text
-        //insert navbar at start of body
-        document.body.insertAdjacentHTML("afterbegin", text);
-
-        //setup dark/light theme button
-        toggleDarkThemeButton = document.getElementById("toggle_darkmode");
-        toggleDarkThemeButton.onclick = (e) => {
-            if (e.button != 0)
-                return;
-
-            toggleDarkTheme();
-            setThemeButtonText();
-        }
-        setThemeButtonText(); //set button initial text
-        setTheme();
-    });
-}
-
 function checkDataAccess() {
     var popup = addMenu(null, "30%", "30%");
 
@@ -59,7 +33,7 @@ function checkDataAccess() {
         if (e.button != 0)
             return;
 
-        //check password (ideally this wouldn't be verified client-side)
+        //TODO verify server-side
         if (popupInput.value == (!![]+[])[(+[])]+'w'+([]+[]+[][[]])[(+!+[]+((+!+[])+(+!+[])))]+(![]+[])[((+!+[])+(+!+[]))]+([]+[]+([]).constructor)[(+[+!+[]+[+[]+[+[]]]])/((+!+[])+(+!+[]))/((+!+[])+(+!+[]))-(+!+[])]+([]+[]+[][[]])[(+!+[]+((+!+[])+(+!+[])))]+(!![]+[])[(+[])]+'h'+([]+[]+[][[]])[(+[+!+[]+[+[]]])/((+!+[])+(+!+[]))]+(!![]+[])[(+!+[])]+(!![]+[])[(+[])]+(([]).constructor.name)[(+!+[])+(+!+[]+((+!+[])+(+!+[])))]+([]+[]+[][[]])[(+!+[]+((+!+[])+(+!+[])))]+([]+[]+[][[]])[(+[+!+[]+[+[]]])/((+!+[])+(+!+[]))]+(typeof ([]+[]))[(+[+!+[]+[+[]]])/((+!+[])+(+!+[]))]+'h'+(!![]+[])[(+[])]+(![]+[])[(+!+[])]+(typeof +[])[((+!+[])+(+!+[]))])
             window.location = "/data.html";
         else {
