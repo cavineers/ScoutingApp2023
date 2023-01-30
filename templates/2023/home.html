@@ -1,45 +1,23 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        
-        <link rel="stylesheet" href="/static/css/base.css">
-        <link rel="stylesheet" href="/static/css/overlay-menu.css">
-        <link rel="stylesheet" href="/static/css/navbar.css">
-        <script src="/static/js/darktheme.js"></script>
-        <script src="/static/js/overlay-menu.js"></script>
-        <script src="/static/js/navbar.js"></script>
-        <script src="/static/2023/js/home.js"></script>
-        
-        <title>4541 Scouting App | 2023</title>
-    </head>
-    <body class="light-theme">
-        <!-- Import navbar from template into the page. -->
-        <script> 
-            fetchNavbar();
-        </script>
-
-        <div class="under-nav">
-            <div style="align-content: center; text-align: center;">
-                <form id="submitForm">
-                    <table style="width: 100%; border-style: none;">
-                        <tr>
-                            <td><label for="matchNumber">Match Number:&emsp;</label></td>
-                            <td><input name="matchNumber" type="number" /></td>
-                        </tr>
-                        <tr>
-                            <td><label for="teamNumber">Team Number:&emsp;</label></td>
-                            <td><input name="teamNumber" type="number" /></td>
-                        </tr>
-                        <tr>
-                            <td><label for="scouterName">Scouter:&emsp;</label></td>
-                            <td><input name="scouterName" /></td>
-                        </tr>
-                    </table>
-                    <button type="submit">Submit</button>
-                </form>
-            </div>
-        </div>
-    </body>
-</html>
+{% extends "base.html" %}
+{% block title %}4541 Scouting App | 2023{% endblock %}
+{% block contents %}
+<div style="align-content: center; text-align: center;">
+    <form id="submitForm">
+        <table style="width: 100%; border-style: none;">
+            <tr>
+                <td><label for="matchNumber">Match Number:&emsp;</label></td>
+                <td><input name="matchNumber" type="number" /></td>
+            </tr>
+            <tr>
+                <td><label for="teamNumber">Team Number:&emsp;</label></td>
+                <td><input name="teamNumber" type="number" /></td>
+            </tr>
+            <tr>
+                <td><label for="scouterName">Scouter:&emsp;</label></td>
+                <td><input name="scouterName" /></td>
+            </tr>
+        </table>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+{% endblock %}

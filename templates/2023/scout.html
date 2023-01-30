@@ -1,103 +1,84 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        
-        <!-- General assets -->
-        <link rel="stylesheet" href="/static/css/base.css"/>
-        <link rel="stylesheet" href="/static/css/overlay-menu.css"/>
-        <link rel="stylesheet" href="/static/css/navbar.css"/>
-        <script src="/static/js/darktheme.js"></script>
-        <script src="/static/js/overlay-menu.js"></script>
-        <script src="/static/js/navbar.js"></script>
+{% extends "base.html" %}
+{% block title %}4541 Scouting App | 2023{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="static/2023/css/scout.css" />
+{% endblock %}
+{% block scripts %}
+<script src="/static/2023/js/scout.js"></script>
+{% endblock %}
+{% block contents %}
 
-        <!-- Comp-specific assets -->
-        <link rel="stylesheet" href="/static/2023/css/scout.css"/>
-        <script src="/static/2023/js/scout.js"></script>
-        
-        <title>4541 Scouting App | 2023</title>
-    </head>
-    <body class="light-theme">
-        <!-- Import navbar from template into the page. -->
-        <script> 
-            fetchNavbar();
-        </script>
-
-        <div class="under-nav">
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <td><button class="node-cone"></button></td>
-                        <td><button class="node-cube"></button></td>
-                        <td><button class="node-cone"></button></td>
-                        <td><button class="node-cone"></button></td>
-                        <td><button class="node-cube"></button></td>
-                        <td><button class="node-cone"></button></td>
-                        <td><button class="node-cone"></button></td>
-                        <td><button class="node-cube"></button></td>
-                        <td><button class="node-cone"></button></td>
-                    </tr>
-                    <tr>
-                        <td><button class="node-cone"></button></td>
-                        <td><button class="node-cube"></button></td>
-                        <td><button class="node-cone"></button></td>
-                        <td><button class="node-cone"></button></td>
-                        <td><button class="node-cube"></button></td>
-                        <td><button class="node-cone"></button></td>
-                        <td><button class="node-cone"></button></td>
-                        <td><button class="node-cube"></button></td>
-                        <td><button class="node-cone"></button></td>
-                    </tr>
-                    <tr>
-                        <td><button class="node-hybrid"></button></td>
-                        <td><button class="node-hybrid"></button></td>
-                        <td><button class="node-hybrid"></button></td>
-                        <td><button class="node-hybrid"></button></td>
-                        <td><button class="node-hybrid"></button></td>
-                        <td><button class="node-hybrid"></button></td>
-                        <td><button class="node-hybrid"></button></td>
-                        <td><button class="node-hybrid"></button></td>
-                        <td><button class="node-hybrid"></button></td>
-                    </tr>
-                </tbody>
-            </table>
-            <br>
-            <div>
-                <button class="button_red">Picked Up Piece</button>
-            </div>
-            <br>
-            <div>
-                <button class="button_red" value="dropped">Game Piece Dropped</button>
-            </div>
-            <br>
-            <div>
-                <button class="button_red" value="defense">Played Defense</button>
-            </div>
-            <div style="margin-top: 10%; width: 100%; text-align: center;">
-                <form>
-                    <div class="charge">
-                        <h2>Charge Station</h2>
-                        <label>
-                            <input type="radio" name = "station" value="off" checked>
-                            <span class="left">Off</span>
-                        </label>
-                        <label>
-                            <input type="radio" name = "station" value="docked">
-                            <span class="mid">Docked</span>
-                        </label>
-                        <label>
-                            <input type="radio" name = "station" value="engaged">
-                            <span class="right">Engaged</span>
-                        </label>
-                    </div>
-                </form>
-            </div>
-            <div class="next_container">
-                <button class="next">
-                    <span>Next</span>
-                </button>
-            </div>
+<table class="table">
+    <tbody>
+        <tr>
+            <td><button class="node-cone"></button></td>
+            <td><button class="node-cube"></button></td>
+            <td><button class="node-cone"></button></td>
+            <td><button class="node-cone"></button></td>
+            <td><button class="node-cube"></button></td>
+            <td><button class="node-cone"></button></td>
+            <td><button class="node-cone"></button></td>
+            <td><button class="node-cube"></button></td>
+            <td><button class="node-cone"></button></td>
+        </tr>
+        <tr>
+            <td><button class="node-cone"></button></td>
+            <td><button class="node-cube"></button></td>
+            <td><button class="node-cone"></button></td>
+            <td><button class="node-cone"></button></td>
+            <td><button class="node-cube"></button></td>
+            <td><button class="node-cone"></button></td>
+            <td><button class="node-cone"></button></td>
+            <td><button class="node-cube"></button></td>
+            <td><button class="node-cone"></button></td>
+        </tr>
+        <tr>
+            <td><button class="node-hybrid"></button></td>
+            <td><button class="node-hybrid"></button></td>
+            <td><button class="node-hybrid"></button></td>
+            <td><button class="node-hybrid"></button></td>
+            <td><button class="node-hybrid"></button></td>
+            <td><button class="node-hybrid"></button></td>
+            <td><button class="node-hybrid"></button></td>
+            <td><button class="node-hybrid"></button></td>
+            <td><button class="node-hybrid"></button></td>
+        </tr>
+    </tbody>
+</table>
+<br>
+<div>
+    <button class="button_red">Picked Up Piece</button>
+</div>
+<br>
+<div>
+    <button class="button_red" value="dropped">Game Piece Dropped</button>
+</div>
+<br>
+<div>
+    <button class="button_red" value="defense">Played Defense</button>
+</div>
+<div style="margin-top: 10%; width: 100%; text-align: center;">
+    <form>
+        <div class="charge">
+            <h2>Charge Station</h2>
+            <label>
+                <input type="radio" name = "station" value="off" checked>
+                <span class="left">Off</span>
+            </label>
+            <label>
+                <input type="radio" name = "station" value="docked">
+                <span class="mid">Docked</span>
+            </label>
+            <label>
+                <input type="radio" name = "station" value="engaged">
+                <span class="right">Engaged</span>
+            </label>
         </div>
-    </body>
-</html>
+    </form>
+</div>
+<div class="next_container">
+    <button class="next">
+        <span>Next</span>
+    </button>
+</div>
+{% endblock %}

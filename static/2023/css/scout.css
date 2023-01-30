@@ -3,7 +3,7 @@
 .table {
     height: 300px;
     width: 1450px;
-    margin-left: 170px;
+    margin-left: 75px;
 }
 
 .node-cone {
@@ -51,7 +51,7 @@
     font-size: 16px;
     border-radius: 5px;
     box-shadow: 0 5px #777;
-    transform: translate(1400px, -100px);
+    transform: translate(1270px, -120px);
 }
 
 .next span {
@@ -68,7 +68,7 @@
 .next:active {
     background-color: #cf0000;
     box-shadow: 0 0px #666;
-    transform: translate(1400px, -95px);
+    transform: translate(1270px, -115px);
 }
 
 .next span:after {
@@ -124,7 +124,7 @@
 .charge {
     position: absolute;
     transform: translateY(-350px);
-    margin-left: 525px;
+    margin-left: 430px;
     text-align: center;
 }
 
