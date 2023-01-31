@@ -1,43 +1,24 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        
-        <link rel="stylesheet" href="/static/css/base.css">
-        <link rel="stylesheet" href="/static/css/overlay-menu.css">
-        <link rel="stylesheet" href="/static/css/navbar.css">
-        <link rel="stylesheet" href="/static/2023pit/css/pit.css">
-        <script src="/static/js/darktheme.js"></script>
-        <script src="/static/js/overlay-menu.js"></script>
-        <script src="/static/js/navbar.js"></script>
-        
-        <title>4541 Scouting App | 2023</title>
-
-    </head>
-    <body class="light-theme">
-        <!-- Import navbar from template into the page. -->
-        <script> 
-            fetchNavbar();
-        </script>
-        <div class="under-nav">
-            <label for="textarea">What is their score strategy?</label>
-                <br>
-                <br>
-                <textarea id="textarea1" class="textarea" placeholder="Enter text here..."></textarea>
-            <br>
-            <label for="textarea">What is their defense strategy?</label>
-                <br>
-                <br>
-                <textarea id="textarea2" class="textarea" placeholder="Enter text here..."></textarea>
-            <br>
-            <label for="textarea">Do it smell?</label>
-                <br>
-                <br>
-                <textarea id="textarea3" class="textarea" placeholder="Enter text here..."></textarea>
-            <br>
-        </div>
-        <br>
-        <button type="submit">Submit</button>
-    </body>
-</html>
+{% extends "base.html" %}
+{% block styles %}
+<link rel="stylesheet" href="/static/2023pit/css/pit.css">
+{% endblock %}        
+{% block title %}4541 Scouting App | 2023{% endblock %}
+{% block contents %}
+<label for="textarea">What is their score strategy?</label>
+    <br>
+    <br>
+    <textarea id="textarea1" class="textarea" placeholder="Enter text here..."></textarea>
+<br>
+<label for="textarea">What is their defense strategy?</label>
+    <br>
+    <br>
+    <textarea id="textarea2" class="textarea" placeholder="Enter text here..."></textarea>
+<br>
+<label for="textarea">Do it smell?</label>
+    <br>
+    <br>
+    <textarea id="textarea3" class="textarea" placeholder="Enter text here..."></textarea>
+<br>
+<br>
+<button type="submit">Submit</button>
+{% endblock %}
