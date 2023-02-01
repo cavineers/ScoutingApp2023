@@ -7,36 +7,46 @@
 <script src="/static/2023/js/auto.js"></script>
 {% endblock %}
 {% block contents %}
-<div class="next_container">
-    <button class="next" id="nextButton">
-        <span>Next</span>
-    </button>
+<div>
+    <div class="auto">
+        <h1>Autonomous</h1>
+        <table class="autorad">
+            <tbody>
+                <tr>
+                    <td><p>Starting Piece</p></td>
+                    <td><button type="radio" name="start" class="none" checked><span>x</span></button></td>
+                    <td><button type="radio" name="start" class="cube"></button></td>
+                    <td><button type="radio" name="start" class="cone"></button></td>
+                </tr>
+                <tr>
+                    <td><p>Piece Placed</p></td>
+                    <td><button type="radio" name="placed" class="none" checked><span>x</span></button></td>
+                    <td><button type="radio" name="placed" class="cube"></button></td>
+                    <td><button type="radio" name="placed" class="cone"></button></td>
+              </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="charge">
+        <h2>Charge Station</h2>
+        <label>
+            <input type="radio" id="chargeOff" name="station" value="off" checked>
+            <span class="left">Off</span>
+        </label>
+        <label>
+            <input type="radio" id="chargeDocked" name="station" value="docked">
+            <span class="mid">Docked</span>
+        </label>
+        <label>
+            <input type="radio" id="chargeEngaged" name="station" value="engaged">
+            <span class="right">Engaged</span>
+        </label>
+    </div>
+    <div class="next_container">
+      <button class="next" id="nextButton">
+          <span>Next</span>
+      </button>
+    </div>
 </div>
-<div style="margin-top: 10%; width: 100%; text-align: center;">
-  <h1>Checkboxes</h1>
-  <label class="container"> Did they start with a cube?
-    <input type="checkbox">
-    <span class="checkmark"></span>
-  </label>
-  <label class="container"> Did they start with a cone?
-    <input type="checkbox">
-    <span class="checkmark"></span>
-  </label>
-  <label class="container"> Did they place a cone on the grid?
-    <input type="checkbox">
-    <span class="checkmark"></span>
-  </label>
-  <label class="container"> Did they place a cube on the grid?
-    <input type="checkbox">
-    <span class="checkmark"></span>
-  </label>
-  <label class="container"> Did the robot go onto the charging station?
-    <input type="checkbox">
-    <span class="checkmark"></span>
-  </label>
-  <label class="container"> Did they balance on the charging station?
-    <input type="checkbox">
-    <span class="checkmark"></span>
-  </label>
-</div>
+
 {% endblock %}

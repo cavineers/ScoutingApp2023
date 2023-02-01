@@ -1,122 +1,175 @@
-/* next button */
+.autorad {
+    margin-top: 75px;
+    height: 150px;
+    width: 500px;
+}
+
+.autorad {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.auto {
+    margin-left: 500px;
+}
+
+.auto h1{
+    margin-left: 125px;
+}
+
+.none {
+    
+    background-color: transparent;
+    border: none;
+}
+
+.none span{
+    font-size: 50px;
+    color: #777;
+    font-weight: bolder;
+}
+.none span:active {color: #cf0000;}
+
+.cube {
+    height: 50px;
+    width: 50px;
+    background-color: #777;
+    border-color: #777;
+    padding: 11%;
+    border-radius: 20%;
+    border-style: double;
+    align-items: center;
+}
+.cube:active {background-color: #b0f;}
+
+.cone {
+    height: 50px;
+    width: 50px;
+    background-color: #777;
+    border-color: #777;
+    padding: 11%;
+    border-radius: 100%;
+    border-style: double;
+    align-items: center;
+}
+.cone:active {background-color: #ff0;}
+
+.charge {
+    position: absolute;
+    margin-top: 50px;
+    margin-left: 430px;
+    text-align: center;
+}
+
+.charge label {
+    position: relative;
+}
+
+.charge label input {
+    display: none;
+}
+
+.charge label input:checked ~ span{
+    background-color: #999;
+    border: 5px solid #ffa600;
+    box-shadow: 0 0px #666;
+    transform: translateY(10px);
+}
+
+.charge label span {
+    position: relative;
+    text-align: center;
+    display: inline-block;
+    font-size: 24px;
+}
+
+.left {
+    width: 200px;
+    height: 100px;
+    line-height: 100px;
+    background: #ff0000;
+    color: white;
+    border: 5px solid #ff0000;
+    text-align: center;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    box-shadow: 0 10px #777;
+}
+.left:hover {background-color: #cf0000;}
+
+.mid {
+    width: 200px;
+    height: 100px;
+    line-height: 100px;
+    background: #ff0000;
+    color: white;
+    border: 5px solid #ff0000;
+    text-align: center;
+    box-shadow: 0 10px #777;
+}
+.mid:hover {background-color: #cf0000;}
+
+.right {
+    width: 200px;
+    height: 100px;
+    line-height: 100px;
+    background: #ff0000;
+    color: white;
+    border: 5px solid #ff0000;
+    text-align: center;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    box-shadow: 0 10px #777;
+}
+.right:hover {background-color: #cf0000;}
 
 .next {
-    height: 50px;
-    width: 200px;
-    margin: auto;
-    background-color: #ff0000; /* Red */
-    border: none;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    border-radius: 5px;
-    box-shadow: 0 5px #777;
-    transform: translate(1400px, 700px);
+  height: 50px;
+  width: 200px;
+  margin: auto;
+  background-color: #ff0000; /* Red */
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 5px;
+  box-shadow: 0 5px #777;
+  transform: translate(1270px, -120px);
 }
 
 .next span {
-    font-family: sans-serif;
-    font-weight: bold;
-    font-size: 28px;
-    display: inline-block;
-    position: relative;
-    transition: 0.5s;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 28px;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
 }
 
 .next:hover {background-color: #cf0000}
 
 .next:active {
-    background-color: #cf0000;
-    box-shadow: 0 0px #666;
-    transform: translate(1400px, 705px);
+  background-color: #cf0000;
+  box-shadow: 0 0px #666;
+  transform: translate(1270px, -115px);
 }
 
 .next span:after {
-    content: '\00bb';
-    position: absolute;
-    opacity: 0;
-    top: 0;
-    right: -20px;
-    transition: 0.5s;
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
 }
 
 .next:hover span {
-    padding-right: 25px;
+  padding-right: 25px;
 }
 
 .next:hover span:after {
-    opacity: 1;
-    right: 0;
+  opacity: 1;
+  right: 0;
 }
-
-/* checkboxes */
-
-/* The container */
-.container {
-    display: block;
-    position: relative;
-    padding-left: 35px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    font-size: 22px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
-  
-  /* Hide the browser's default checkbox */
-  .container input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-  }
-  
-  /* Create a custom checkbox */
-  .checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 25px;
-    width: 25px;
-    background-color: #666;
-  }
-  
-  /* On mouse-over, add a grey background color */
-  .container:hover input ~ .checkmark {
-    background-color: #666;
-  }
-  
-  /* When the checkbox is checked, add a blue background */
-  .container input:checked ~ .checkmark {
-    background-color: #cf0000;
-  }
-  
-  /* Create the checkmark/indicator (hidden when not checked) */
-  .checkmark:after {
-    content: "";
-    position: absolute;
-    display: none;
-  }
-  
-  /* Show the checkmark when checked */
-  .container input:checked ~ .checkmark:after {
-    display: block;
-  }
-  
-  /* Style the checkmark/indicator */
-  .container .checkmark:after {
-    left: 9px;
-    top: 5px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 3px 3px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
-  }
