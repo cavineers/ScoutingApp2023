@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}4541 Scouting App | 2023{% endblock %}
 {% block styles %}
-<link rel="stylesheet" href="static/2023/css/scout.css" />
+<link rel="stylesheet" href="/static/2023/css/scout.css" />
 {% endblock %}
 {% block scripts %}
 <script src="/static/2023/js/scout.js"></script>
@@ -47,37 +47,35 @@
 </table>
 <br>
 <div>
-    <button class="button_red">Picked Up Piece</button>
+    <button class="button_red" id="pickUpPiece">Picked Up Piece</button>
 </div>
 <br>
 <div>
-    <button class="button_red" value="dropped">Game Piece Dropped</button>
+    <button class="button_red" id="dropPiece">Game Piece Dropped</button>
 </div>
 <br>
 <div>
-    <button class="button_red" value="defense">Played Defense</button>
+    <button class="button_red" id="markDefense">Played Defense</button>
 </div>
 <div style="margin-top: 10%; width: 100%; text-align: center;">
-    <form>
-        <div class="charge">
-            <h2>Charge Station</h2>
-            <label>
-                <input type="radio" name = "station" value="off" checked>
-                <span class="left">Off</span>
-            </label>
-            <label>
-                <input type="radio" name = "station" value="docked">
-                <span class="mid">Docked</span>
-            </label>
-            <label>
-                <input type="radio" name = "station" value="engaged">
-                <span class="right">Engaged</span>
-            </label>
-        </div>
-    </form>
+    <div class="charge">
+        <h2>Charge Station</h2>
+        <label>
+            <input type="radio" id="chargeOff" name="station" value="off" checked>
+            <span class="left">Off</span>
+        </label>
+        <label>
+            <input type="radio" id="chargeDocked" name="station" value="docked">
+            <span class="mid">Docked</span>
+        </label>
+        <label>
+            <input type="radio" id="chargeEngaged" name="station" value="engaged">
+            <span class="right">Engaged</span>
+        </label>
+    </div>
 </div>
 <div class="next_container">
-    <button class="next">
+    <button class="next" id="nextButton">
         <span>Next</span>
     </button>
 </div>

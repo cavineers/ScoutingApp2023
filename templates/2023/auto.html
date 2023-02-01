@@ -1,11 +1,14 @@
 {% extends "base.html" %}
 {% block title %}4541 Scouting App | 2023{% endblock %}
 {% block styles %}
-<link rel="stylesheet" href="static/2023/css/auto.css" />
+<link rel="stylesheet" href="/static/2023/css/auto.css">
+{% endblock %}
+{% block scripts %}
+<script src="/static/2023/js/auto.js"></script>
 {% endblock %}
 {% block contents %}
 <div class="next_container">
-    <button class="next">
+    <button class="next" id="nextButton">
         <span>Next</span>
     </button>
 </div>

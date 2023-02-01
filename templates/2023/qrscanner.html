@@ -1,27 +1,15 @@
-<!DOCTYPE html>
-<!-- For making pwa: https://www.freecodecamp.org/news/build-a-pwa-from-scratch-with-html-css-and-javascript/ -->
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="stylesheet" href="/static/css/base.css">
-        <link rel="stylesheet" href="/static/css/overlay-menu.css">
-        <link rel="stylesheet" href="/static/css/navbar.css">
-        <script src="/static/js/darktheme.js"></script>
-        <script src="/static/js/overlay-menu.js"></script>
-        <script src="/static/js/navbar.js"></script>
-        <script src="/static/2023/js/qrcode.js"></script>
-        <script src="/static/2023/js/qrscanner.js"></script>
-        <title>4541 Scouting App</title>
-    </head>
-    <body class="light-theme">
-        <div id="qr">
-            
-        </div>
-        <div>
-            <button id="qrbutton" onclick="gencode()" class="button_red">Generate QR</button>
-        </div>
-    </body>
-</html>
+{% extends "base.html" %}
+{% block title %}4541 Scouting App{% endblock %}
+{% block styles %}
+{% endblock %}
+{% block scripts %}
+<script src="/static/2023/js/qrcode.js"></script>
+<script src="/static/2023/js/qrscanner.js"></script>
+{% endblock %}
+{% block contents %}
+<div id="qr">            
+</div>
+<div>
+    <button id="qrbutton" onclick="gencode()" class="button_red">Generate QR</button>
+</div>
+{% endblock %}
