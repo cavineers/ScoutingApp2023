@@ -17,19 +17,17 @@ class Competition:
         self.module = None
 
 
-def import_competition(path:str)->Competition:
+def import_competition(path:str, name:str=...)->Competition:
     "Imports the competition-specific code file."
-    if os.path.isdir(path):
-        path = os.path.join(path, "__init__.py")
     if not os.path.isfile(path):
         raise FileNotFoundError(f"File {path} does not exist.")
-    name = os.path.basename(path).rsplit(".",1)[0]
+    name = os.path.split(path)[1].rsplit(".",1)[0] if name is ... else str(name)
     spec = importlib.util.spec_from_file_location(name, path)
     module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    
     #add module to sys so that it works right with import
     sys.modules[name] = module
+    spec.loader.exec_module(module)
+    
     #get competition object
     module.__competition__
     if not hasattr(module, "__competition__"):
