@@ -1,4 +1,18 @@
+/** @type {Array.<ScoreNode>} */
 let scoreNodes = [];
+/** @type {Array.<number>} */
+let pickUps = []
+/** @type {Array.<number>} */
+let drops = [];
+/** @type {Array.<number>} */
+let defenses = [];
+
+
+const SCORE_GRID_STORAGE = "scoreGrid";
+const PICK_UPS_STORAGE = "pickUps";
+const DROPS_STORAGE = "pieceDrops";
+const DEFENSES_STORAGE = "defenses";
+const CHARGE_STORAGE = "chargeState";
 
 const NodeType = {
     Cone: "cone",
@@ -16,6 +30,11 @@ const CONE_COLOR = "#ff0";
 const CONE_BORDER_COLOR = "#cc0";
 const CUBE_COLOR = "#b0f";
 const CUBE_BORDER_COLOR = "#80c";
+
+function getUTCNow() {
+    let d = new Date();
+    return d.getTime() + d.getTimezoneOffset()*60000; //60000 ms in 1 minute
+}
 
 class ScoreNode {
 
@@ -50,7 +69,7 @@ class ScoreNode {
      */
     setGamePiece(gamePiece) {
         this.gamePiece = gamePiece;
-        this.history[new Date().getTime()] = Object.values(GamePiece).includes(gamePiece) ? gamePiece : null;
+        this.history[getUTCNow()] = Object.values(GamePiece).includes(gamePiece) ? gamePiece : null;
         if (gamePiece==GamePiece.Cone) {
             this.element.style.background = CONE_COLOR;
             this.element.style.borderColor = CONE_BORDER_COLOR;
@@ -63,20 +82,64 @@ class ScoreNode {
             this.element.style.background = UNSELECTED_COLOR;
             this.element.style.borderColor = UNSELECTED_COLOR;
         }
-        localStorage.setItem("scoreGrid", JSON.stringify(scoreNodes));
+        localStorage.setItem(SCORE_GRID_STORAGE, JSON.stringify(scoreNodes));
     }
 }
 
 
 window.addEventListener("load", () => {
-    var selections = document.querySelectorAll(".node-cone, .node-cube, .node-hybrid");
+    const selections = document.querySelectorAll(".node-cone, .node-cube, .node-hybrid");
     selections.forEach((selection) => {
         let node = new ScoreNode(selection);
         scoreNodes.push(node);
         setNodeClick(node);
     });
+
+    //track button press times
+    const pickUpPiece = document.getElementById("pickUpPiece");
+    const dropPiece = document.getElementById("dropPiece");
+    const markDefense = document.getElementById("markDefense");
+
+    setMarkTime(pickUpPiece, PICK_UPS_STORAGE, pickUps);
+    setMarkTime(dropPiece, DROPS_STORAGE, drops);
+    setMarkTime(markDefense, DEFENSES_STORAGE, defenses);
+
+    //next button
+    const nextButton = document.getElementById("nextButton");
+    nextButton.addEventListener("click", (ev) => {
+        if (ev.button != 0)
+            return;
+        
+        const chargeOff = document.getElementById("chargeOff");
+        const chargeDocked = document.getElementById("chargeDocked");
+        const chargeEngaged = document.getElementById("chargeEngaged");
+        const state = chargeEngaged.checked ? chargeEngaged.value :
+                      chargeDocked.checked ? chargeDocked.value :
+                      chargeOff.value;
+
+        //save
+        localStorage.setItem(CHARGE_STORAGE, JSON.stringify(state));
+        //redundant save
+        localStorage.setItem(SCORE_GRID_STORAGE, JSON.stringify(scoreNodes));
+        localStorage.setItem(PICK_UPS_STORAGE, JSON.stringify(pickUps));
+        localStorage.setItem(DROPS_STORAGE, JSON.stringify(drops));
+        localStorage.setItem(DEFENSES_STORAGE, JSON.stringify(defenses));
+
+        //go to result.html
+        window.location.href = "/comps/2023/result.html";
+    });
+
 });
 
+function setMarkTime(element, storageKey, array) {
+    element.addEventListener("click", (ev) => {
+        if (ev.button != 0)
+            return;
+
+        array.push(getUTCNow());
+        localStorage.setItem(storageKey, JSON.stringify(array));
+    });
+}
 
 /**
  * 

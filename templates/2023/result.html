@@ -3,6 +3,9 @@
 {% block styles %}
 <link rel="stylesheet" href="/static/2023/css/result.css"/>
 {% endblock %}
+{% block scripts %}
+<script src="/static/2023/js/result.js"></script>
+{% endblock %}
 {% block contents %}
 <div style="align-content: center; text-align: center;">
 <label for="commentarea">All comments go here</label>
@@ -10,9 +13,5 @@
     <br>
     <textarea id="commentarea1" class="commentarea" placeholder="Enter text here..."></textarea>
 <br>
-<div style="align-content: center; text-align: center;">
-    <form>
-        <button type="submit">Submit</button>
-    </form>
-</div>
+<button id="finishButton">Finish</button>
 {% endblock %}

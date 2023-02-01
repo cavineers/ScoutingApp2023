@@ -1,31 +1,15 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        
-        <link rel="stylesheet" href="/static/css/base.css">
-        <link rel="stylesheet" href="/static/css/overlay-menu.css">
-        <link rel="stylesheet" href="/static/css/navbar.css">
-        <link rel="stylesheet" href="/static/2023/css/auto.css">
-        <script src="/static/js/darktheme.js"></script>
-        <script src="/static/js/overlay-menu.js"></script>
-        <script src="/static/js/navbar.js"></script>
-        <script src="/static/2023/js/scout.js"></script>
-        
-        <title>4541 Scouting App | 2023</title>
-    </head>
-    <body class="light-theme">
-        <!-- Import navbar from template into the page. -->
-        <script> 
-            fetchNavbar();
-        </script>
-        <div class="under-nav">
-            <div class="next_container">
-                <button class="next">
-                    <span>Next</span>
-                </button>
-                </div>
-            </div>
-    </body>
-</html>
+{% extends "base.html" %}
+{% block title %}4541 Scouting App | 2023{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="/static/2023/css/auto.css">
+{% endblock %}
+{% block scripts %}
+<script src="/static/2023/js/auto.js"></script>
+{% endblock %}
+{% block contents %}
+<div class="next_container">
+    <button class="next" id="nextButton">
+        <span>Next</span>
+    </button>
+</div>
+{% endblock %}

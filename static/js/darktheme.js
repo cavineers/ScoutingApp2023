@@ -3,7 +3,7 @@
 let currentTheme = localStorage.getItem("theme") || "dark";
 
 function setThemeDark() {
-    console.log("Set Dark:");
+    console.log("Set Dark");
     //iterate through all elements with light-theme class found by querySelector
     var elements = document.querySelectorAll(".light-theme");
     if (elements == null || elements == undefined)
@@ -18,7 +18,7 @@ function setThemeDark() {
 }
 
 function setThemeLight() {
-    console.log("Set Light:");
+    console.log("Set Light");
     var elements = document.querySelectorAll(".dark-theme");
     if (elements == null || elements == undefined)
         return;
@@ -31,7 +31,7 @@ function setThemeLight() {
     localStorage.setItem("theme", currentTheme);
 }
 
-function toggleDarkTheme() {
+function toggleTheme() {
     if (currentTheme == "light")
         setThemeDark();
     else
@@ -51,4 +51,11 @@ function setTheme() {
 
 window.addEventListener("load", () => {
     setTheme();
+    const toggleButton = document.getElementById("toggle_darkmode");
+    toggleButton.addEventListener("click", (ev) => {
+        if (ev.button != 0)
+            return;
+        toggleTheme();
+        toggleButton.innerText = currentTheme == "light" ? "Light Mode" : "Dark Mode";
+    });
 });

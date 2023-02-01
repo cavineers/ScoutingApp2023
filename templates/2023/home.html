@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}4541 Scouting App | 2023{% endblock %}
 {% block scripts %}
-<script src="/static/2023/home.js"></script>
+<script src="/static/2023/js/home.js"></script>
 {% endblock %}
 {% block contents %}
 <div style="align-content: center; text-align: center;">
@@ -17,7 +17,7 @@
             </tr>
             <tr>
                 <td><label for="scouterName">Scouter:&emsp;</label></td>
-                <td><input name="scouterName" /></td>
+                <td><input name="scouterName" autocomplete="off" /></td>
             </tr>
         </table>
         <button type="submit">Submit</button>
