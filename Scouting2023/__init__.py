@@ -40,19 +40,20 @@ def serve(host:str="localhost", port:int=8080):
 
 def load_competitions(dir:str=competition.COMPETITIONS_DIR):
     "Load competition blueprints from the competitions folder. Default is 'comps'."
-    for filename in os.listdir(dir): #get paths to all files 
+    dir = os.path.abspath(dir)
+    for filename in os.listdir(dir): #get paths to all files
         path = os.path.join(dir, filename)
-        #skip file if it does not end with .py or .pyw, or skip folder if it does not contain file __init__.py or __init__.pyw
-        if not (os.path.isfile(path) or path.endswith((".py", ".pyw"))) and all(not os.path.isdir(os.path.join(path, fn)) for fn in ("__init__.py", "__init__.pyw")):
-            continue
-        try:
-            comp = competition.import_competition(path)
-        except:
-            traceback.print_exc() #print caught exception's traceback and message, continue
-        else:
-            #handle the rest outside of try as to not skip over any exceptions raised here
-            add_competition(comp)
-            print(f"Loaded blueprint for competition '{comp.name}'.")
+        if os.path.isdir(path):
+            path = os.path.join(path, "__init__.py")
+        if os.path.isfile(path) and path.endswith((".py", ".pyw")):
+            try:
+                comp = competition.import_competition(path, filename)
+            except:
+                traceback.print_exc() #print caught exception's traceback and message, continue
+            else:
+                #handle the rest outside of try as to not skip over any exceptions raised here
+                add_competition(comp)
+                print(f"Loaded blueprint for competition '{comp.name}'.")
 
 def add_competition(comp:competition.Competition):
     "Add the competition to the list if it hasn't already been added, register its blueprint."
