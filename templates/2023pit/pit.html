@@ -4,21 +4,26 @@
 {% endblock %}        
 {% block title %}4541 Scouting App | 2023{% endblock %}
 {% block contents %}
-<label for="textarea">What is their score strategy?</label>
+<div>
+    <h1>Pit Scouting</h1>
     <br>
-    <br>
-    <textarea id="textarea1" class="textarea" placeholder="Enter text here..."></textarea>
-<br>
-<label for="textarea">What is their defense strategy?</label>
-    <br>
-    <br>
-    <textarea id="textarea2" class="textarea" placeholder="Enter text here..."></textarea>
-<br>
-<label for="textarea">Do it smell?</label>
-    <br>
-    <br>
-    <textarea id="textarea3" class="textarea" placeholder="Enter text here..."></textarea>
-<br>
-<br>
-<button type="submit">Submit</button>
+    <div class="textboxes">
+        <label for="textarea">
+            <p>What is their score strategy?</p>
+            <textarea id="textarea1" class="textarea" placeholder="Enter text here..."></textarea>
+        <br>
+        <br>
+        <label for="textarea">
+            <p>What is their defense strategy?</p>
+            <textarea id="textarea2" class="textarea" placeholder="Enter text here..."></textarea>
+        <br>
+        <br>
+        <label for="textarea">
+            <p>Do it smell?</p>
+            <textarea id="textarea3" class="textarea" placeholder="Enter text here..."></textarea>
+        <br>
+        <br>
+        <button class="submit" type="submit">Submit</button>
+    </div>
+</div>
 {% endblock %}
