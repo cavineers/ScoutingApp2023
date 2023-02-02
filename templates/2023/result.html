@@ -8,11 +8,13 @@
 {% endblock %}
 {% block contents %}
 <div style="align-content: center; text-align: center;">
-  <label for="commentarea">All comments go here</label>
-  <br>
-  <br>
-  <textarea id="commentarea1" class="commentarea" placeholder="Enter text here..."></textarea>
-  <br>
-  <button id="finishButton">Finish</button>
+    <div>
+        <h1>Comments</h1>
+        <div>
+            <textarea id="commentarea1" class="commentarea" placeholder="Enter text here..."></textarea>
+            <br>
+            <button class="submit" id="finishButton">Submit</button>
+        </div>
+    </div>
 </div>
 {% endblock %}
