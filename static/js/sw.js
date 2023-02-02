@@ -1,3 +1,13 @@
+/** @returns {Promise<Array.<string>>} */
+async function getAssets() {
+    let response = await fetch("/assets");
+    if (!response.ok) {
+        console.error("Failed to get asset list.");
+        return [];
+    }
+    return await response.json()
+}
+
 //cite: https://www.freecodecamp.org/news/build-a-pwa-from-scratch-with-html-css-and-javascript/
 
 class CacheSettings {
@@ -52,94 +62,27 @@ class CacheSettings {
 
 const cacheLocation = "scouting-app-4541";
 //define assets
-const assets = {
-    "/manifest.json":new CacheSettings(),
+let assets;
 
-    //navbar template
-    "/navbar.html": new CacheSettings(true, true),
-
-    //base app caches
-    "/index.html": new CacheSettings(),
-    "/help.html": new CacheSettings(),
-    "/compselect.html": new CacheSettings(),
-    "/static/js/darktheme.js": new CacheSettings(),
-    "/static/js/link-sw.js": new CacheSettings(),
-    "/static/js/navbar.js": new CacheSettings(),
-    "/static/js/overlay-menu.js": new CacheSettings(),
-    "/static/css/base.css": new CacheSettings(),
-    "/static/css/navbar.css": new CacheSettings(),
-    "/static/css/overlay-menu.css": new CacheSettings(),
-
-    //images
-    "/static/img/icon/close_dark_32.png": new CacheSettings(true, true),
-    "/static/img/icon/close_dark_250.png": new CacheSettings(true, true),
-    "/static/img/icon/close_light_32.png": new CacheSettings(true, true),
-    "/static/img/icon/close_light_250.png": new CacheSettings(true, true),
-    "/static/img/icon/robotics_cavs_icon_536.png": new CacheSettings(true, true),
-
-    //comps/2023
-    "/comps/2023/home.html": new CacheSettings(),
-    "/comps/2023/scout.html" : new CacheSettings(),
-    "/static/2023/js/home.js" : new CacheSettings(),
-    "/static/2023/js/scout.js" : new CacheSettings(),
-    "/static/2023/css/scout.css" : new CacheSettings(),
-    "/comps/2023/result.html" : new CacheSettings(),
-    "/static/2023/css/result.css" : new CacheSettings(),
-    "/comps/2023/auto.html" : new CacheSettings(),
-    "/static/2023/css/auto.css" : new CacheSettings(),
-
-    //QR scanner
-    "/comps/2023/qrscanner.html" : new CacheSettings(),
-    "/static/2023/js/qrscanner.js" : new CacheSettings(),
-    "/static/2023/js/qrcode.js" : new CacheSettings(),
-
-    //comps/2023pit
-    "/comps/2023pit/pit.html" : new CacheSettings(),
-    "/static/2023pit/css/pit.css" : new CacheSettings(),
-
-};
-
-self.addEventListener("install", (installEvent) => {
-    const cachePromise = caches.open(cacheLocation);
-    //for each asset, cache if doCache
-    for (let name in assets) {
-        let cacheSet = assets[name];
-        if (cacheSet.doCache)
-            installEvent.waitUntil(cacheSet.cache(name), cachePromise);
-    }
+self.addEventListener("install", async (installEvent) => {
+    assets = await getAssets();
+    const cache = await caches.open(cacheLocation);
+    cache.addAll(assets);
 });
 
 //Network then cache method: https://stackoverflow.com/a/70216365
-self.addEventListener('fetch', (event) => {
+self.addEventListener("fetch", (event) => {
     event.respondWith(async function() {
         var path = event.request.url.split(self.location.hostname)[1].slice(1); //https://stackoverflow.com/a/11898963
-        if (self.location.port)
-            path = path.slice(self.location.port.length+1); //get rid of port and slash after it
-        
-        const cacheSet = assets[path];
-        //if asset is set to not cache, fetch
-        if (!cacheSet.doCache && self.navigator.onLine)
-            return await fetch(event.request);
-        //else if asset prioritizes cache
-        else if (cacheSet.prioritizeCache && self.navigator.onLine) {
-            //if asset is cached, respond with cached asset
-            if (caches.has(path))
-                return caches.match(event.request);  
-            //else, fetch and cache the response
-            else { 
-                const response = await fetch(event.request);
-                caches.open(cacheLocation).then((cache) => {
-                    cache.put(event.request, response);
-                });
-                return response;
-            }
+        try {
+            if (navigator.onLine || !caches.has(path))
+                return await fetch(event.request);
+            throw new Error("Skip to cache");
         }
-        //else, try to fetch, fall back on cache
-        else {
-            try { return await fetch(event.request, ); }
-            catch (err) { return caches.match(event.request); }
+        catch (err) {
+            return caches.match(path);
         }
     }());
-});
+  });
 
 console.log("Registered service worker");
