@@ -1,5 +1,5 @@
 from . import data_manage
-from Scouting2023 import STATIC, TEMPLATES
+from Scouting2023 import STATIC, TEMPLATES, not_content_route
 from flask import Blueprint, render_template, request
 import json
 
@@ -29,7 +29,7 @@ def result():
 
 #api routes
 UPLOAD_DATA_KEY = "data"
-@blueprint.route("/upload", methods=["POST"])
+@not_content_route("/upload", onto=blueprint, methods=["POST"])
 def upload():
     if "data" in request.files:
         data = data_manage.parse_qr_code(request.files[UPLOAD_DATA_KEY])
