@@ -1,14 +1,3 @@
-.autorad {
-    margin-top: 75px;
-    height: 150px;
-    width: 500px;
-}
-
-.autorad {
-    font-size: 24px;
-    font-weight: bold;
-}
-
 .auto {
     margin-left: 500px;
 }
@@ -17,42 +6,65 @@
     margin-left: 125px;
 }
 
-.none {
-    
-    background-color: transparent;
-    border: none;
+.autorad {
+    margin-top: 75px;
+    height: 150px;
+    width: 500px;
+    font-size: 24px;
+    font-weight: bold;
 }
 
-.none span{
-    font-size: 50px;
-    color: #777;
-    font-weight: bolder;
+.autorad label {
+    position: relative;
 }
-.none span:active {color: #cf0000;}
+
+.autorad label input {
+    display: none;
+}
+
+.autorad label span {
+    position: relative;
+    text-align: center;
+    display: inline-block;
+    font-size: 24px;
+}
+
+.none {
+    height: 35px;
+    width: 35px;
+    margin: 10px;
+    background-color: #777;
+    border: none;
+    padding: 10px;
+    border-radius: 20%;
+    align-items: center;
+    clip-path: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);
+}
+.autorad label input:checked ~ span.none{background-color: #ff0000;}
 
 .cube {
-    height: 50px;
-    width: 50px;
+    height: 40px;
+    width: 40px;
+    margin: 10px;
     background-color: #777;
-    border-color: #777;
-    padding: 11%;
+    border: none;
+    padding: 10px;
     border-radius: 20%;
-    border-style: double;
     align-items: center;
 }
-.cube:active {background-color: #b0f;}
+.autorad label input:checked ~ span.cube{background-color: #b0f;}
 
 .cone {
-    height: 50px;
-    width: 50px;
+    height: 40px;
+    width: 40px;
+    margin: 10px;
     background-color: #777;
-    border-color: #777;
-    padding: 11%;
+    border: none;
+    padding: 10px;
     border-radius: 100%;
-    border-style: double;
     align-items: center;
 }
-.cone:active {background-color: #ff0;}
+.autorad label input:checked ~ span.cone{background-color: #ff0;}
 
 .charge {
     position: absolute;
@@ -136,7 +148,7 @@
   font-size: 16px;
   border-radius: 5px;
   box-shadow: 0 5px #777;
-  transform: translate(1270px, -120px);
+  transform: translate(1270px, 225px);
 }
 
 .next span {
