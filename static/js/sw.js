@@ -8,81 +8,64 @@ async function getAssets() {
     return await response.json()
 }
 
-//cite: https://www.freecodecamp.org/news/build-a-pwa-from-scratch-with-html-css-and-javascript/
-
-class CacheSettings {
-    /**
-     * Settings for caching and loading an asset.
-     * @param {boolean} doCache Whether or not to cache the asset. true by default.
-     * @param {boolean} prioritizeCache If the asset should be checked for in cache first instead of network. false by default.
-     */
-    constructor(doCache, prioritizeCache) {
-        this.doCache = doCache==null||doCache==undefined?true:doCache?true:false;
-        this.prioritizeCache = prioritizeCache?true:false;
+async function ping() {
+    try {
+        return (await fetch("/ping")).ok;
     }
-
-    /**
-     * Get the asset path (url) that the CacheSettings are for.
-     * @returns {string|undefined}
-     */
-    getAssetPath() {
-        if ("assetPath" in this)
-            return this.assetPath;
-        for (let path in assets) {
-            if (Object.is(assets[path], this)) {
-                this.assetPath = path;
-                return path;
-            }
-        }
-    }
-
-    /**
-     * Cache the asset.
-     * @param {string} path The path of the asset to cache. Calls getAssetPath by default.
-     * @param {} cacheFile The cache file to write into. Opens up file at cacheLoction by default.
-     * @returns {Promise<...>}
-     */
-    cache(path, cacheFile) {
-        return (cacheFile||caches.open(cacheLocation)).then((cache) => {
-            let cachePath = path||this.getAssetPath();
-            if (cachePath) {
-                try {
-                    cache.add(cachePath);
-                    
-                }
-                catch(err) {
-                    console.error("Asset could not be cached:", err);
-                }
-            }
-            else
-                console.error("Failed to cache asset, could not identify asset path.");
-        });
-    }
+    catch { return false; }
 }
+async function updateConnectionStatus() {
+    const next = navigator.onLine ? await ping() : false;
+    if (connectionStatus != next)
+        console.log(`Connection status: ${connectionStatus} -> ${next}`);
+    connectionStatus = next;
+}
+let connectionStatus = navigator.onLine;
+let _interval = null;
 
+const CONNECTION_STATUS_INTERVAL = 3000; //ms
 const cacheLocation = "scouting-app-4541";
+
 //define assets
 let assets;
 
-self.addEventListener("install", async (installEvent) => {
+self.addEventListener("install", async (event) => {
+    if (!_interval)
+        _interval = setInterval(updateConnectionStatus, CONNECTION_STATUS_INTERVAL);
     assets = await getAssets();
     const cache = await caches.open(cacheLocation);
     cache.addAll(assets);
 });
 
+async function getResponse(request) {
+    try {
+        if (connectionStatus) {
+            const response = await fetch(request);
+            for (let url of assets) {
+                if (request.url.split("?")[0].endsWith(url)) {
+                    (await caches.open(cacheLocation)).put(request, response);
+                    break;
+                }
+            }
+            return response;
+        }
+    }
+    catch (error) { console.error(error); }
+
+    const cached = await caches.match(request.url);
+    if (cached)
+        return cached;
+    return new Response("Network error happened", {
+        status: 408,
+        headers: { "Content-Type": "text/plain" },
+    });
+}
+
 //Network then cache method: https://stackoverflow.com/a/70216365
 self.addEventListener("fetch", (event) => {
-    event.respondWith(async function() {
-        var path = event.request.url.split(self.location.hostname)[1].slice(1); //https://stackoverflow.com/a/11898963
-        try {
-            if (navigator.onLine || !caches.has(path))
-                return await fetch(event.request);
-            throw new Error("Skip to cache");
-        }
-        catch (err) {
-            return caches.match(path);
-        }
-    }());
-  });
+    if (!_interval)
+        _interval = setInterval(updateConnectionStatus, CONNECTION_STATUS_INTERVAL);
+    event.respondWith(getResponse(event.request));
+});
 
 console.log("Registered service worker");
