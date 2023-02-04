@@ -1,6 +1,6 @@
 from . import data_manage
 from Scouting2023 import STATIC, TEMPLATES, not_content_route
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request; import flask.blueprints
 import json
 
 blueprint = Blueprint("2023", __name__, url_prefix="/comps/2023", static_folder=STATIC, template_folder=TEMPLATES)

@@ -1,5 +1,5 @@
 from . import competition
-from flask import Flask, render_template, send_file, url_for
+from flask import Flask, render_template, send_file, url_for; import flask.app
 import json
 import os
 import traceback
@@ -7,9 +7,13 @@ import waitress #production quality WSGI server to host the flask app with. more
 
 STATIC = os.path.abspath("static")
 TEMPLATES = os.path.abspath("templates")
+DB_PATH = os.path.abspath(".") #cwd
+DB_URI =  f"sqlite:///{DB_PATH}"
+DB_BINDS = {}
 
 app = Flask(__name__, static_folder=STATIC, template_folder=TEMPLATES)
 app.url_map.strict_slashes = False
+app.config #TODO set up config https://flask-sqlalchemy.palletsprojects.com/en/2.x/binds/   https://www.digitalocean.com/community/tutorials/how-to-use-flask-sqlalchemy-to-interact-with-databases-in-a-flask-application
 
 comps = []
 not_content = []
