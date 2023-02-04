@@ -1,15 +1,35 @@
+h1 {
+  font-weight: bolder;
+  font-size: 48px;
+  margin-left: 625px;
+  margin-bottom: 50px;
+}
+
+.commentboxes {
+  margin-left: 75px;
+  padding-top: 10px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 80px;
+  width: 1250px;
+}
+
+.commentboxes p {
+  font-weight: bold;
+}
+
 .commentarea {
-    background-color: #dddddd;
-    color: #2a2a2a;
-    padding: 1em;
-    border-radius: 10px;
-    border: 2px solid transparent;
-    outline: solid;
-    font-size: 16px;
-    width: 750px;
-    height: 165px;
-    font-family: Geneva, Segoe UI, Verdana, sans-serif;
-    resize: none;
+  background-color: transparent;
+  color: #ffffff;
+  padding: 1em;
+  border-radius: 10px;
+  border: 3px solid #ffffff;
+  outline: solid;
+  font-size: 16px;
+  width: 1200px;
+  height: 165px;
+  font-family: Geneva, Segoe UI, Verdana, sans-serif;
+  resize: none;
 }
 
 .submit {
