@@ -1,5 +1,9 @@
+const version = "1.0";
+
 function buildQRContents() {
   let contents = {}
+  contents["version"] = version;
+  contents["contentType"] = "match"; //as opposed to contentType="pit"
   //get home data
   contents["preliminaryData"] = JSON.parse(localStorage.getItem("preliminaryData"));
   //get auto data
@@ -7,7 +11,7 @@ function buildQRContents() {
   //scoreGrid: just array of ScoreNode.history    =   [ScoreNode, ScoreNode, ...] -> [ScoreNode.history, ...]
   contents["scoreGrid"] = trimScoreGrid(JSON.parse(localStorage.getItem("scoreGrid")));
   contents["pickUps"] = JSON.parse(localStorage.getItem("pickUps"));
-  contents["pieceDrops"] = JSON.parse(localStorage.getItem("pierceDrops"));
+  contents["pieceDrops"] = JSON.parse(localStorage.getItem("pieceDrops"));
   contents["defenses"] = JSON.parse(localStorage.getItem("defenses"));
   contents["chargeState"] = JSON.parse(localStorage.getItem("chargeState"));
   //get result data

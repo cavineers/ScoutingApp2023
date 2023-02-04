@@ -151,10 +151,6 @@ function coordinatesToIndex(col, row) {
     return row*9+col;
 }
 
-function indexToCoordinates(index) {
-    return; //TODO math :)
-}
-
 /**
  * @param {ScoreNode} scoreNode
  */
