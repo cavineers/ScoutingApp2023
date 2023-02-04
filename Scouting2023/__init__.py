@@ -57,6 +57,7 @@ def _get_static_routes(dir=STATIC, name="static")->"list[str]":
             rtv.append(f"/{name}/{filename}")
     return rtv
 
+#api routes
 @not_content_route("/assets")
 def assets():
     routes = list({
@@ -65,6 +66,10 @@ def assets():
         if "GET" in rule.methods and has_no_empty_params(rule) and url_for(rule.endpoint, **(rule.defaults or {})) not in not_content
     })
     return json.dumps(routes+_get_static_routes())
+
+@not_content_route("/ping")
+def ping():
+    return "pong" #TODO return something more useful later
 
 
 #functions
