@@ -3,19 +3,20 @@ import importlib.util
 import os
 import sys
 
-COMPETITIONS_DIR = "comps"
+COMPETITIONS_DIR = os.path.abspath("comps")
 
 class NoCompetitionException(Exception):
     "File does not specify a Competition object."
 
 class Competition:
-    def __init__(self, name:str, display_name:str, start_url:str, blueprint:Blueprint):
+    "Object representing a competition."
+    def __init__(self, name:str, display_name:str, start_url:str, db_uri:str, blueprint:Blueprint):
         self.name = name
         self.display_name = display_name
         self.start_url = start_url
+        self.db_uri = db_uri
         self.blueprint = blueprint
         self.module = None
-
 
 def import_competition(path:str, name:str=...)->Competition:
     "Imports the competition-specific code file."

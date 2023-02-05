@@ -1,5 +1,6 @@
 from . import competition
-from flask import Flask, render_template, send_file, url_for; import flask.app
+from flask import Flask, redirect, render_template, send_file, url_for; import flask.app
+from flask_sqlalchemy import SQLAlchemy
 import json
 import os
 import traceback
@@ -7,15 +8,17 @@ import waitress #production quality WSGI server to host the flask app with. more
 
 STATIC = os.path.abspath("static")
 TEMPLATES = os.path.abspath("templates")
-DB_PATH = os.path.abspath(".") #cwd
-DB_URI =  f"sqlite:///{DB_PATH}"
+#https://flask-sqlalchemy.palletsprojects.com/en/2.x/binds/
+#https://www.digitalocean.com/community/tutorials/how-to-use-flask-sqlalchemy-to-interact-with-databases-in-a-flask-application
+DB_PATH = os.getcwd()
 DB_BINDS = {}
 
 app = Flask(__name__, static_folder=STATIC, template_folder=TEMPLATES)
 app.url_map.strict_slashes = False
-app.config #TODO set up config https://flask-sqlalchemy.palletsprojects.com/en/2.x/binds/   https://www.digitalocean.com/community/tutorials/how-to-use-flask-sqlalchemy-to-interact-with-databases-in-a-flask-application
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(DB_PATH, '.db')}"
+db = SQLAlchemy()
 
-comps = []
+comps:"list[competition.Competition]" = []
 not_content = []
 
 def not_content_route(rule:str, onto=app, **options):
@@ -27,11 +30,14 @@ def not_content_route(rule:str, onto=app, **options):
 
 #define routes
 #for info on decorators, see https://realpython.com/primer-on-python-decorators/, or look up "python decorators"
+@not_content_route("/")
+def to_first_page():
+    return redirect(url_for(compselect.__name__))
+
 @app.route("/manifest.json")
 def get_manifest():
     return send_file(os.path.abspath("manifest.json"))
 
-@app.route("/")
 @app.route("/index.html")
 def index():
     return render_template("index.html")
@@ -42,7 +48,8 @@ def help():
 
 @app.route("/compselect.html")
 def compselect():
-    return render_template("compselect.html")
+    #TODO update compselect.html to use jinja scripting to display link to go to 
+    return render_template("compselect.html", competitions={comp.display_name:comp.start_url for comp in comps})
 
 #api routes
 #cite: https://stackoverflow.com/a/13318415
@@ -61,7 +68,6 @@ def _get_static_routes(dir=STATIC, name="static")->"list[str]":
             rtv.append(f"/{name}/{filename}")
     return rtv
 
-#api routes
 @not_content_route("/assets")
 def assets():
     routes = list({
@@ -81,6 +87,10 @@ def ping():
 def serve(host:str="localhost", port:int=8080):
     "Serve the webapp."
     print("Serving", host, f"on port {port}.")
+    app.config["SQLALCHEMY_BINDS"] = DB_BINDS
+    db.init_app(app)
+    with app.app_context():
+        db.create_all()
     waitress.serve(app, host=host, port=int(port), threads=48)
 
 def load_competitions(dir:str=competition.COMPETITIONS_DIR):
@@ -106,3 +116,5 @@ def add_competition(comp:competition.Competition):
         return
     app.register_blueprint(comp.blueprint)
     comps.append(comp)
+    if comp.db_uri is not None:
+        DB_BINDS[comp.name] = comp.db_uri
