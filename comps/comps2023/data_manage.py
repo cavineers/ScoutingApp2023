@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 import json
 from PIL import Image
 from pyzbar import pyzbar
-from Scouting2023 import db
+from ScoutingApp import db
 import sqlalchemy, sqlalchemy.orm
 
 #cite: https://stackoverflow.com/a/43587551

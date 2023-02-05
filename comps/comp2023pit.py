@@ -1,4 +1,4 @@
-from Scouting2023 import competition, STATIC, TEMPLATES
+from ScoutingApp import competition, STATIC, TEMPLATES
 from flask import Blueprint, render_template
 import os
 

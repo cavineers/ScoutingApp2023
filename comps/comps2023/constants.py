@@ -1,6 +1,6 @@
 from datetime import datetime, tzinfo
 import os
-from Scouting2023 import DB_PATH as DB_DIR
+from ScoutingApp import DB_PATH as DB_DIR
 
 PARSE_VERSION = "1.0"
 CONTENT_MATCH = "match"

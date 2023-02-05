@@ -1,4 +1,4 @@
-from Scouting2023 import __main__
+from ScoutingApp import __main__
 
 
 def main():

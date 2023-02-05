@@ -1,5 +1,5 @@
 from . import data_manage
-from Scouting2023 import STATIC, TEMPLATES, not_content_route
+from ScoutingApp import STATIC, TEMPLATES, not_content_route
 from flask import Blueprint, render_template, request; import flask.blueprints
 import json
 
