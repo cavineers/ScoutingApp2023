@@ -69,6 +69,9 @@ class MatchData(db.Model):
     def __setitem__(self, key:str, value): self.__dict__[key] = value
     def __contains__(self, key:str): return key in self.__dict__
 
+    def __repr__(self):
+        return f"<MatchData {self.id} from '{self.scouter_name}' at {hex(id(self))}>"
+
     @property
     def id(self)->int:
         if not (isinstance(self.team_number, int) and isinstance(self.match_number, int)):
@@ -208,10 +211,17 @@ def parse_qr_code(fp)->"dict[str]":
     return json.loads(decoded[0].data.decode("ascii"))
 
 def load_qr_code(fp):
-    "Parses qr code data and turns it into usable objects for comparions and such."
-    fields = parse_qr_code(fp)
+    "Parses qr code data and turns it into usable objects."
+    return read_data(parse_qr_code(fp))
+    
+def load_json_data(data:str):
+    "Parses JSON string and turns it into usable objects."
+    return read_data(json.loads(data))
+
+def read_data(fields:dict):
+    "Read the given data (dict) and return the appropriate object."
     if not isinstance(fields, dict):
-        raise TypeError(f"Expected QR code to contain JSON object (dict), got {type(fields).__name__}.")
+        raise TypeError(f"Expected dict, got {type(fields).__name__}.")
     elif ContentKeys.CONTENT_TYPE not in fields:
         raise KeyError(repr(ContentKeys.CONTENT_TYPE))
 
@@ -219,7 +229,8 @@ def load_qr_code(fp):
     if content_type == CONTENT_MATCH:
         return MatchData.get(fields)
     else:
-        raise ValueError(f"Unknow QR content type '{content_type}'.")
+        raise ValueError(f"Unknow content type '{content_type}'.")
+
 
 def _debug(path:str): #debug used in scouting app presentation on 2/4/2023
     from pprint import pprint

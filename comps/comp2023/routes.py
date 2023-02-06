@@ -1,7 +1,7 @@
 from . import data_manage
-from ScoutingApp import STATIC, TEMPLATES, not_content_route
-from flask import Blueprint, render_template, request; import flask.blueprints
-import json
+from ScoutingApp import db, not_content_route, STATIC, TEMPLATES
+from flask import Blueprint, render_template, request
+import traceback
 
 blueprint = Blueprint("2023", __name__, url_prefix="/comps/2023", static_folder=STATIC, template_folder=TEMPLATES)
 
@@ -31,9 +31,23 @@ def result():
 UPLOAD_DATA_KEY = "data"
 @not_content_route("/upload", onto=blueprint, methods=["POST"])
 def upload():
-    if "data" in request.files:
-        data = data_manage.parse_qr_code(request.files[UPLOAD_DATA_KEY])
-    elif UPLOAD_DATA_KEY in request.form:
-        data = json.loads(request.form[UPLOAD_DATA_KEY])
+    try:
+        if "data" in request.files:
+            data = data_manage.load_qr_code(request.files[UPLOAD_DATA_KEY])
+        elif UPLOAD_DATA_KEY in request.form:
+            data = data_manage.load_json_data(request.form[UPLOAD_DATA_KEY])
+        else:
+            return f"You must upload a QR code or JSON data under key '{UPLOAD_DATA_KEY}'.", 400
+    except Exception as e:
+        traceback.print_exception(e)
+        return "Got error while processing uploaded data.", 500
+    
+    try:
+        db.session.add(data)
+        db.session.commit()
+    except Exception as e:
+        traceback.print_exception(e)
+        return "Got error while committing uploaded data.", 500
     else:
-        return f"You must upload a QR code or JSON data under key '{UPLOAD_DATA_KEY}'.", 400
+        print(request.remote_addr, "uploaded data:", repr(data))
+        return "Committed uploaded data.", 200

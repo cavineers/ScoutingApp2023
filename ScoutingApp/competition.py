@@ -31,7 +31,6 @@ def import_competition(path:str, name:str=...)->Competition:
     spec.loader.exec_module(module)
     
     #get competition object
-    module.__competition__
     if not hasattr(module, "__competition__"):
         raise NoCompetitionException(f"File {path} missing Competition object. Set it under the variable '__competition__'.")
     comp:Competition = module.__competition__
