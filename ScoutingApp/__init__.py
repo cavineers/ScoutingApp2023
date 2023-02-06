@@ -49,7 +49,7 @@ def help():
 @app.route("/compselect.html")
 def compselect():
     #TODO update compselect.html to use jinja scripting to display link to go to 
-    return render_template("compselect.html", competitions={comp.display_name:comp.start_url for comp in comps})
+    return render_template("compselect.html", competitions={comp.display_name:f"/comps/{comp.name}/{comp.start_url}" for comp in comps})
 
 #api routes
 #cite: https://stackoverflow.com/a/13318415

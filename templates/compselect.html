@@ -8,12 +8,13 @@
 <h1>Select Scouting App Competition</h1>
 <div style="margin-left: 1%;">
     <ul style="list-style: none;">
+        {% if competitions %}
+        {% for name, url in competitions.items() %}
         <li>
-            <a class="light-theme" href="/comps/2023/home.html">2023: Charged Up</a>
+            <a class="light-theme" href="{{ url }}">{{ name }}</a>
         </li>
-        <li>
-            <a class="light-theme" href="/comps/2023pit/pit.html">2023: Pit Scouting</a>
-        </li>
+        {% endfor %}
+        {% endif %}
     </ul>
 </div>
 {% endblock %}
