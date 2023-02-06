@@ -1,5 +1,6 @@
 from flask import Blueprint
 import importlib.util
+import inspect
 import os
 import sys
 
@@ -36,3 +37,10 @@ def import_competition(path:str, name:str=...)->Competition:
     comp:Competition = module.__competition__
     comp.module = module
     return comp
+
+
+def define(instance:Competition):
+    "Defines the Competition instance as the target Competition of the file or package.\nIf being used in a package, this must be called in the '__init__.py' file."
+    frame = inspect.currentframe().f_back #gets the info for where the function was called
+    frame.f_globals["__competition__"] = instance #creates variable __competition__ in that place's global scope
+    return instance

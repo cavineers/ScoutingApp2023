@@ -8,4 +8,5 @@ blueprint = Blueprint("2023pit", __name__, url_prefix="/comps/2023pit", static_f
 def pit():
     return render_template("2023pit/pit.html")
 
-__competition__ = competition.Competition("2023pit", "2023: Pit Scouting", "pit", None, blueprint)
+
+competition.define(competition.Competition("2023pit", "2023: Pit Scouting", "pit", None, blueprint))
