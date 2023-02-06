@@ -10,12 +10,12 @@ STATIC = os.path.abspath("static")
 TEMPLATES = os.path.abspath("templates")
 #https://flask-sqlalchemy.palletsprojects.com/en/2.x/binds/
 #https://www.digitalocean.com/community/tutorials/how-to-use-flask-sqlalchemy-to-interact-with-databases-in-a-flask-application
-DB_PATH = os.getcwd()
+DB_DIR = os.getcwd()
 DB_BINDS = {}
 
 app = Flask(__name__, static_folder=STATIC, template_folder=TEMPLATES)
 app.url_map.strict_slashes = False
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(DB_PATH, '.db')}"
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(DB_DIR, '.db')}"
 db = SQLAlchemy()
 
 comps:"list[competition.Competition]" = []

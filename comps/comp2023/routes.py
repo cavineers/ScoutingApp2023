@@ -1,4 +1,5 @@
 from . import data_manage
+from datetime import datetime
 from ScoutingApp import db, not_content_route, STATIC, TEMPLATES
 from flask import Blueprint, render_template, request
 import traceback
@@ -43,6 +44,7 @@ def upload():
         return "Got error while processing uploaded data.", 500
     
     try:
+        data.submission_time = data_manage.to_utc_timestamp(datetime.now())
         db.session.add(data)
         db.session.commit()
     except Exception as e:

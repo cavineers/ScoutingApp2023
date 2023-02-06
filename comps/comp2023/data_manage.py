@@ -22,18 +22,19 @@ class MatchData(db.Model):
     __bind_key__ = "2023" #NOTE: bind key must be name attribute set in the Comptetition object
     __tablename__ = "match_data"
 
-    #define columns, where the "C_" prefix indicates a column
-    C_ID = db.Column("id", db.Integer, primary_key=True)
-    C_VERSION = db.Column("version", db.String)
-    C_TEAM_NUMBER = db.Column("team_number", db.Integer)
-    C_MATCH_NUMBER = db.Column("match_number", db.Integer)
-    C_SCOUTER_NAME = db.Column("scouter_name", db.String)
-    C_SCORE_HISTORY = db.Column("score_history", JSON)
-    C_PICKUPS = db.Column("pickups", JSON)
-    C_DROPS = db.Column("drops", JSON)
-    C_DEFENSES = db.Column("defenses", JSON)
-    C_CHARGE_STATE = db.Column("charge_state", db.String(16))
-    C_COMMENTS = db.Column("comments", JSON)
+    #define columns
+    id = db.Column("id", db.Integer, primary_key=True)
+    version = db.Column("version", db.String, nullable=True)
+    team_number = db.Column("team_number", db.Integer, nullable=True)
+    match_number = db.Column("match_number", db.Integer, nullable=True)
+    scouter_name = db.Column("scouter_name", db.String, nullable=True)
+    score = db.Column("score_history", JSON, nullable=True)
+    pickups = db.Column("pickups", JSON, nullable=True)
+    drops = db.Column("drops", JSON, nullable=True)
+    defenses = db.Column("defenses", JSON, nullable=True)
+    charge_state = db.Column("charge_state", db.String(16), nullable=True)
+    comments = db.Column("comments", JSON, nullable=True)
+    submission_time = db.Column("submission_time", db.Integer, nullable=True)
 
 
     @classmethod
@@ -53,10 +54,11 @@ class MatchData(db.Model):
         )
 
     def __init__(self, version:str=None, team_number:int=None, match_number:int=None, scouter_name:str=None, score:"dict[str, dict[str, str|None]]"=None,
-                 pickups:"list[int]"=None, drops:"list[int]"=None, defenses:"list[int]"=None, charge_state:str=None, comments:"list[str]"=None):
+                 pickups:"list[int]"=None, drops:"list[int]"=None, defenses:"list[int]"=None, charge_state:str=None, comments:"list[str]"=None, submission_time:int=None):
         self.version = version
         self.team_number = team_number
         self.match_number = match_number
+        self.id = self._construct_id()
         self.scouter_name = scouter_name
         self.score = score
         self.pickups = pickups
@@ -64,6 +66,7 @@ class MatchData(db.Model):
         self.defenses = defenses
         self.charge_state = charge_state
         self.comments = comments
+        self.submission_time = submission_time
 
     def __getitem__(self, key:str): return self.__dict__[key]
     def __setitem__(self, key:str, value): self.__dict__[key] = value
@@ -72,29 +75,11 @@ class MatchData(db.Model):
     def __repr__(self):
         return f"<MatchData {self.id} from '{self.scouter_name}' at {hex(id(self))}>"
 
-    @property
-    def id(self)->int:
+    def _construct_id(self)->int:
         if not (isinstance(self.team_number, int) and isinstance(self.match_number, int)):
             raise TypeError("MatchData team number and match number must both be of type int to generate a MatchData id.")
         #":04" will ensure that match number takes up at least 4 digits of space in the id, any untaken space is replaced with leading 0s
         return int(f"{self.team_number}{self.match_number:04}")
-
-    @sqlalchemy.orm.reconstructor
-    def _sql_reconstruct(self):
-        "Runs after object is reconstructed from the database."
-        self.__class__.__init__(
-            self,
-            version=self.C_VERSION,
-            team_number=self.C_TEAM_NUMBER,
-            match_number=self.C_MATCH_NUMBER,
-            scouter_name=self.C_SCOUTER_NAME,
-            score=self.C_SCORE_HISTORY,
-            pickups=self.C_PICKUPS,
-            drops=self.C_DROPS,
-            defenses=self.C_DEFENSES,
-            charge_state=self.C_CHARGE_STATE,
-            comments=self.C_COMMENTS
-        )
 
     #construction methods
     def construct_score_events(self)->"list[Event]":
