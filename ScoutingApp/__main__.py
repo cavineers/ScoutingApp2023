@@ -1,9 +1,13 @@
-from . import competition, serve, load_competitions
+from . import competition, db, serve, load_competitions
 import sys
 
 def main(**kw):
     load_competitions(kw.pop("dir", competition.COMPETITIONS_DIR))
-    serve(**kw)
+    try:
+        serve(**kw)
+    finally:
+        db.close()
+
 
 def _get_args():
     for a in sys.argv[1:]:

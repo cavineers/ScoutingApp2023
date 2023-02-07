@@ -15,7 +15,7 @@ DB_BINDS = {}
 
 app = Flask(__name__, static_folder=STATIC, template_folder=TEMPLATES)
 app.url_map.strict_slashes = False
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(DB_DIR, '.db')}"
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(DB_DIR, '.db')}" #sadly, there needs to be an empty db, perhaps some day it will find its use
 db = SQLAlchemy()
 
 comps:"list[competition.Competition]" = []
