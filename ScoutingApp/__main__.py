@@ -1,4 +1,4 @@
-from . import competition, db, serve, load_competitions
+from . import app, competition, db, serve, load_competitions
 import sys
 
 def main(**kw):
@@ -6,7 +6,8 @@ def main(**kw):
     try:
         serve(**kw)
     finally:
-        db.close()
+        with app.app_context():
+            db.session.close()
 
 
 def _get_args():
