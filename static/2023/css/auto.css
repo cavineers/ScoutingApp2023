@@ -1,32 +1,64 @@
+.node-hybrid {
+    height: 60px;
+    width: 60px;
+    background-color: #777;
+    border-radius: 20%;
+    margin-right: 50px;
+    border-style: none;
+    align-items: center;
+}
+
 .auto {
-    margin-left: 500px;
+    margin-left: 300px;
 }
 
 .auto h1{
-    margin-left: 125px;
+    margin-left: 345px;
+    margin-bottom: 50px;
+    font-size: 48px;
 }
 
-.autorad {
-    margin-top: 75px;
-    height: 150px;
-    width: 500px;
+.start {
+    margin-top: 10px;
+    margin-left: 330px;
+    height: 50px;
+    width: 300px;
+}
+
+.start h2 {
     font-size: 24px;
     font-weight: bold;
+    margin-top: 50px;
+    margin-left: 50px;
 }
 
-.autorad label {
+.start label {
     position: relative;
 }
 
-.autorad label input {
+.start label input {
     display: none;
 }
 
-.autorad label span {
+.start label span {
     position: relative;
     text-align: center;
     display: inline-block;
     font-size: 24px;
+}
+
+.layout {
+    margin-top: 10px;
+    margin-left: 250px;
+    height: 50px;
+    width: 300px;
+}
+
+.layout h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 125px;
+    margin-left: 135px;
 }
 
 .none {
@@ -39,8 +71,9 @@
     border-radius: 20%;
     align-items: center;
     clip-path: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);
+    
 }
-.autorad label input:checked ~ span.none{background-color: #ff0000;}
+.start label input:checked ~ span.none{background-color: #ff0000;}
 
 .cube {
     height: 40px;
@@ -52,7 +85,7 @@
     border-radius: 20%;
     align-items: center;
 }
-.autorad label input:checked ~ span.cube{background-color: #b0f;}
+.start label input:checked ~ span.cube{background-color: #b0f;}
 
 .cone {
     height: 40px;
@@ -64,12 +97,12 @@
     border-radius: 100%;
     align-items: center;
 }
-.autorad label input:checked ~ span.cone{background-color: #ff0;}
+.start label input:checked ~ span.cone{background-color: #ff0;}
 
 .charge {
     position: absolute;
-    margin-top: 50px;
-    margin-left: 430px;
+    margin-top: 75px;
+    margin-left: 440px;
     text-align: center;
 }
 
@@ -148,7 +181,7 @@
   font-size: 16px;
   border-radius: 5px;
   box-shadow: 0 5px #777;
-  transform: translate(1270px, 225px);
+  transform: translate(1170px, 290px);
 }
 
 .next span {
@@ -165,7 +198,7 @@
 .next:active {
   background-color: #cf0000;
   box-shadow: 0 0px #666;
-  transform: translate(1270px, 230px);
+  transform: translate(1170px, 300px);
 }
 
 .next span:after {

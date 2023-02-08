@@ -9,53 +9,47 @@
 {% block contents %}
 <div>
     <div class="auto">
-        <h1>Autonomous</h1>
-        <table class="autorad">
-            <tbody>
-                <tr>
-                    <td><p>Starting Piece</p></td>
-                    <td>
-                        <label>
-                            <input type="radio" id="startNone" name="start" value="startNone" checked>
-                            <span class="none">
-                        </label>
-                    </td>
-                    <td>
-                        <label>
-                            <input type="radio" id="startCube" name="start" value="startCube">
-                            <span class="cube">
-                        </label>
-                    </td>
-                    <td>
-                        <label>
-                            <input type="radio" id="startCone" name="start" value="startCone">
-                            <span class="cone">
-                        </label>
-                    </td>
-                </tr>
-                <tr>
-                    <td><p>Piece Placed</p></td>
-                    <td>
-                        <label>
-                            <input type="radio" id="placedNone" name="placed" value="placedNone" checked>
-                            <span class="none">
-                        </label>
-                    </td>
-                    <td>
-                        <label>
-                            <input type="radio" id="placedCube" name="placed" value="placedCube">
-                            <span class="cube">
-                        </label>
-                    </td>
-                    <td>
-                        <label>
-                            <input  type="radio" id="placedCone" name="placed">
-                            <span class="cone">
-                        </label>
-                    </td>
-              </tr>
-            </tbody>
-        </table>
+        <h1>Pre-Match</h1>
+        <div class="start">
+            <h2>Starting Piece</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <label>
+                                <input type="radio" id="startNone" name="start" value="startNone" checked>
+                                <span class="none">
+                            </label>
+                        </td>
+                        <td>
+                            <label>
+                                <input type="radio" id="startCube" name="start" value="startCube">
+                                <span class="cube">
+                            </label>
+                        </td>
+                        <td>
+                            <label>
+                                <input type="radio" id="startCone" name="start" value="startCone">
+                                <span class="cone">
+                            </label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="layout">
+            <h2>Piece Layout</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <td><button class="node-hybrid"></button></td>
+                        <td><button class="node-hybrid"></button></td>
+                        <td><button class="node-hybrid"></button></td>
+                        <td><button class="node-hybrid"></button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="charge">
         <h2>Charge Station</h2>
@@ -77,6 +71,6 @@
           <span>Next</span>
       </button>
     </div>
-</div>
+</div> 
 
 {% endblock %}
