@@ -15,9 +15,9 @@ def home():
 def scout():
     return render_template("2023/scout.html")
 
-@blueprint.route("/auto.html")
+@blueprint.route("/prematch.html")
 def auto():
-    return render_template("2023/auto.html")
+    return render_template("2023/prematch.html")
 
 @blueprint.route("/qrscanner.html")
 def qr_scanner():

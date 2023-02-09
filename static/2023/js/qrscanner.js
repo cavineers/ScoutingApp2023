@@ -6,7 +6,8 @@ function buildQRContents() {
   contents["contentType"] = "match"; //as opposed to contentType="pit"
   //get home data
   contents["preliminaryData"] = JSON.parse(localStorage.getItem("preliminaryData"));
-  //get auto data
+  //get prematch data
+  
   //get scout data
   //scoreGrid: just array of ScoreNode.history    =   [ScoreNode, ScoreNode, ...] -> [ScoreNode.history, ...]
   contents["scoreGrid"] = trimScoreGrid(JSON.parse(localStorage.getItem("scoreGrid")));
@@ -16,6 +17,8 @@ function buildQRContents() {
   contents["chargeState"] = JSON.parse(localStorage.getItem("chargeState"));
   //get result data
   contents["comments"] = JSON.parse(localStorage.getItem("comments"));
+
+  //get navigation timestamps
 
   return JSON.stringify(contents);
 }

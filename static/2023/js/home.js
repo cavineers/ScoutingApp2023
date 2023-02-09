@@ -1,3 +1,5 @@
+const navTime = new Date();
+
 function verifyInfo(inputs) {
     console.log(inputs.matchNumber)
     if (inputs.matchNumber < 1) {
@@ -31,7 +33,9 @@ window.addEventListener("load", () => {
             return;
         //save info
         localStorage.setItem("preliminaryData", JSON.stringify(inputs));
+        if (localStorage.getItem("navigation")==null)
+        localStorage.setItem
         
-        window.location.href = "/comps/2023/auto.html";
+        window.location.href = "/comps/2023/prematch.html";
     });
 });
