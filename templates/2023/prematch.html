@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block title %}4541 Scouting App | 2023{% endblock %}
 {% block styles %}
-<link rel="stylesheet" href="/static/2023/css/prematch.css">
+<link rel="stylesheet" href="/static/2023/css/auto.css">
 {% endblock %}
 {% block scripts %}
-<script src="/static/2023/js/prematch.js"></script>
+<script src="/static/2023/js/auto.js"></script>
 {% endblock %}
 {% block contents %}
 <div>
@@ -51,19 +51,19 @@
             </table>
         </div>
     </div>
-    <div class="charge">
-        <h2>Charge Station</h2>
+    <div class="roboPos">
+        <h2>Robot Location</h2>
         <label>
-            <input type="radio" id="chargeOff" name="station" value="off" checked>
-            <span class="left">Off</span>
+            <input type="radio" id="roboLeft" name="roboPos" value="left">
+            <span></span>
         </label>
         <label>
-            <input type="radio" id="chargeDocked" name="station" value="docked">
-            <span class="mid">Docked</span>
+            <input type="radio" id="roboMid" name="roboPos" value="mid" checked>
+            <span></span>
         </label>
         <label>
-            <input type="radio" id="chargeEngaged" name="station" value="engaged">
-            <span class="right">Engaged</span>
+            <input type="radio" id="roboRight" name="roboPos" value="right">
+            <span></span>
         </label>
     </div>
     <div class="next_container">
