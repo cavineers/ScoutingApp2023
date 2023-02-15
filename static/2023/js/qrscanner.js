@@ -17,9 +17,8 @@ function buildQRContents() {
   contents["chargeState"] = JSON.parse(localStorage.getItem("chargeState"));
   //get result data
   contents["comments"] = JSON.parse(localStorage.getItem("comments"));
-
   //get navigation timestamps
-
+  contents["navStamps"] = JSON.parse(localStorage.getItem("navStamps"));
   return JSON.stringify(contents);
 }
 

@@ -13,13 +13,22 @@ import sqlalchemy, sqlalchemy.orm
 #cite: see manual 6.4.3:46-47 for point values
 
 #cite: https://stackoverflow.com/a/43587551
-class JSON(sqlalchemy.types.TypeDecorator):
+class Json(sqlalchemy.TypeDecorator):
     "Represents JSON encoded content." #sqlite is so easy to set up, yet so restrictive :(  ...oh well :)
     impl = sqlalchemy.Text
-    def process_bind_param(self, value, dialect:sqlalchemy.Dialect):
+    def process_bind_param(self, value, dialect):
         return value if value is None else json.dumps(value)
-    def process_result_value(self, value, dialect:sqlalchemy.Dialect):
-        return json.loads(value) if value is not None else value 
+    def process_result_value(self, value, dialect):
+        return json.loads(value) if value is not None else value
+    
+class Datetime(sqlalchemy.TypeDecorator):
+    "Represents datetime object."
+    impl = sqlalchemy.Integer
+    def process_bind_param(self, value:datetime, dialect):
+        return to_utc_timestamp(value) if isinstance(value, datetime) else None
+    def process_result_value(self, value:int, dialect):
+        return from_utc_timestamp(value) if isinstance(value, int) else None
+
 
 class MatchData(db.Model):
     "Object for accessing data gotten from scouting a match via submission."
@@ -33,12 +42,12 @@ class MatchData(db.Model):
     team_number = db.Column("team_number", db.Integer, nullable=True)
     match_number = db.Column("match_number", db.Integer, nullable=True)
     scouter_name = db.Column("scouter_name", db.String, nullable=True)
-    score = db.Column("score_history", JSON, nullable=True)
-    pickups = db.Column("pickups", JSON, nullable=True)
-    drops = db.Column("drops", JSON, nullable=True)
-    defenses = db.Column("defenses", JSON, nullable=True)
+    score = db.Column("score_history", Json, nullable=True)
+    pickups = db.Column("pickups", Json, nullable=True)
+    drops = db.Column("drops", Json, nullable=True)
+    defenses = db.Column("defenses", Json, nullable=True)
     charge_state = db.Column("charge_state", db.String(16), nullable=True)
-    comments = db.Column("comments", JSON, nullable=True)
+    comments = db.Column("comments", Json, nullable=True)
     submission_time = db.Column("submission_time", db.Integer, nullable=True)
     #navigational timestamps
     navigation_start = db.Column("navigation_start", db.Integer, nullable=True) #to home.html
@@ -62,7 +71,8 @@ class MatchData(db.Model):
     @classmethod
     def generate(cls, data:dict):
         "Create a MatchData object from raw data."
-        preliminary_data = data.get(ContentKeys.PRELIMINARY_DATA)
+        preliminary_data = data.get(ContentKeys.PRELIMINARY_DATA,{})
+        nav_stamps = data.get(ContentKeys.NAV_STAMPS,{})
         return cls(
             version=data.get(ContentKeys.VERSION),
             team_number=preliminary_data.get(ContentKeys.TEAM_NUMBER),
@@ -73,7 +83,12 @@ class MatchData(db.Model):
             drops=data.get(ContentKeys.DROPS),
             defenses=data.get(ContentKeys.DEFENSES),
             charge_state=data.get(ContentKeys.CHARGE_STATE),
-            comments=data.get(ContentKeys.COMMENTS)
+            comments=data.get(ContentKeys.COMMENTS),
+            navigation_start=nav_stamps.get("home.html"),
+            navigation_prematch=nav_stamps.get("prematch.html"),
+            navigation_match=nav_stamps.get("scout.html"),
+            navigation_result=nav_stamps.get("result.html"),
+            navigation_finish=nav_stamps.get("qrscanner.html")
         )
 
     def __init__(self, version:str=None, team_number:int=None, match_number:int=None, scouter_name:str=None, score:"dict[str, dict[str, str|None]]"=None,
@@ -149,17 +164,17 @@ class Event(db.Model):
     __bind_key__ = BIND_KEY
     __tablename__ = TableNames.Event
 
-    timestamp = db.Column("timestamp", db.Integer, primary_key=True)
+    time = db.Column("time", Datetime, primary_key=True)
     action = db.Column("action", db.String, nullable=False)
     team_number = db.Column("team_number", db.Integer, nullable=False)
     match_number = db.Column("match_number", db.Integer, nullable=False)
     scouter_name = db.Column("scouter_name", db.String)
-    other = db.Column("other", JSON, nullable=False)
+    other = db.Column("other", Json, nullable=False)
 
     @staticmethod
-    def get(timestamp:int)->"Event|None":
+    def get(time:int)->"Event|None":
         "Query for the Event object by timestamp."
-        return filter_search(Event, timestamp=timestamp).first()
+        return filter_search(Event, time=time).first()
 
     @staticmethod
     def search(**by):
@@ -167,9 +182,9 @@ class Event(db.Model):
         return filter_search(Event, by)
 
     "Object representing an event that happened during the match."
-    def __init__(self, action:str, timestamp:int, team_number:int, match_number:int, scouter_name:str, **other):
+    def __init__(self, action:str, time:datetime, team_number:int, match_number:int, scouter_name:str, **other):
         self.action = action
-        self.timestamp = timestamp
+        self.time = time if isinstance(time, datetime) else from_utc_timestamp(time)
         #reference fields: can be used in database subclass to access the related objects
         self.team_number = team_number
         self.match_number = match_number
@@ -180,38 +195,25 @@ class Event(db.Model):
     def __setitem__(self, key:str, value): self._other[key] = value
 
     def __repr__(self):
-        return f"<Event '{self.action}' : {self.time or '-'} at {hex(id(self))}>"
+        return f"<Event '{self.action}' : {to_utc_timestamp(self.time) or '-'} at {hex(id(self))}>"
 
     def __gt__(self, value):
         if isinstance(value, Event):
-            return self.timestamp > value.timestamp
+            return self.time > value.time
         else:
             return super().__gt__(value)
 
     def __lt__(self, value):
         if isinstance(value, Event):
-            return self.timestamp < value.timestamp
+            return self.time < value.time
         else:
             return super().__lt__(value)
 
     def __eq__(self, value):
         if isinstance(value, Event):
-            return self.timestamp == value.timestamp and self.action == value.action
+            return self.time == value.time and self.action == value.action
         else:
             return super().__eq__(value)
-
-    @property
-    def time(self):
-        return from_utc_timestamp(self.timestamp)
-
-    @time.setter
-    def time(self, value:"datetime|timedelta"):
-        if isinstance(value, datetime):
-            self.timestamp = to_utc_timestamp(value)
-        elif isinstance(value, timedelta):
-            self.timestamp = int(value.total_seconds()*1000)
-        else:
-            raise TypeError(f"Expected datetime or timedelta object, got {type(value).__name__}.")
 
 
 
@@ -220,8 +222,8 @@ class Match(db.Model):
     __tablename__ = TableNames.Match
 
     number = db.Column("number", db.Integer, primary_key=True)
-    teams = db.Column("teams", JSON, nullable=False)
-    events = db.Column("events", JSON, nullable=False)
+    teams = db.Column("teams", Json, nullable=False)
+    events = db.Column("events", Json, nullable=False)
 
     @staticmethod
     def get(id:int)->"Match|None":
@@ -249,7 +251,7 @@ class Scouter(db.Model):
 
     name = db.Column("name", db.String, primary_key=True)
     year = db.Column("year", db.Integer, nullable=True)
-    submissions = db.Column("submissions", JSON, nullable=False)
+    submissions = db.Column("submissions", Json, nullable=False)
 
     def __init__(self, name:str, year:int, submissions:"list[int]"):
         self.name = name
@@ -359,7 +361,7 @@ class TeamMatchReport:
         self.events.sort()
 
     def before_auto(self, event:Event):
-        return event.timestamp < self.end_auto.timestamp
+        return event.time < self.end_auto.time
 
     def categorize_events(self):
         "Categorize events by action, timestamp, and other things."
@@ -434,8 +436,8 @@ def map_index_to_node_row(index:int):
                 return row
     raise IndexError("Index out of range.")
 
-def from_utc_timestamp(value:int)->datetime:
-    return datetime.fromtimestamp(value, tz=timezone.utc).astimezone(LOCAL_TIMEZONE)
+def from_utc_timestamp(value:int)->datetime: #assuming that value is a javascript timestamp in ms since python takes timestamp in seconds
+    return datetime.fromtimestamp(value/1000, tz=timezone.utc).astimezone(LOCAL_TIMEZONE)
 
 def to_utc_timestamp(dt:datetime)->int:
     return int(dt.astimezone(timezone.utc).timestamp()*1000) #from seconds.microseconds -> milliseconds

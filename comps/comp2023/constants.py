@@ -36,6 +36,7 @@ class ContentKeys:
     DEFENSES = "defenses"
     CHARGE_STATE = "chargeState"
     COMMENTS = "comments"
+    NAV_STAMPS = "navStamps"
 class GamePiece:
     CONE = "cone"
     CUBE = "cube"
