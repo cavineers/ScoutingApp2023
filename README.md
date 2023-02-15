@@ -4,37 +4,36 @@ Scouting App Code for the 2023 FRC Season
 ---
 # Contents
 1. [Installation](#installation)
+   - [Python Packages](#python-packages)
 2. [Running](#running)
-   - [Testing](#testing)
-   - [Release](#release)
 3. [Modification](#modification)
+   - [Adding Routes](#adding-routes)
+   - [Adding Static Assets](#adding-static-assets)
 
 ---
 
 ## Installation
+### Python Packages
+The following packages need to be installed to run the Scouting App server:
+- [Flask](https://pypi.org/project/Flask/)
+- [Flask-SQLAlchemy](https://pypi.org/project/Flask-SQLAlchemy/)
+- [waitress](https://pypi.org/project/waitress/)
+- [pyzbar](https://pypi.org/project/waitress/)
+
+They can be installed by running the command `python -m pip install <package-name>` in a terminal.
 
 ## Running
-### Testing
-During testing, we just hosted it locally using python `http.server`:
-- Command in project dir: `python -m http.server 8080`
-- Then go to  `localhost:8080/index.html` in a browser to connect.
+To quickrun the app, you can run the `main.py` file, which will host the app on localhost:8080.
 
-### Release
-[//]: # (Add info when we figure out how to distribute the finished product)
+To specify the host IP and port, use run `python -m ScoutingApp [host=<ip>] [port=<port>]`
 
 ## Modification
 
 When modifying this file for future competitions, a couple of changes need to be made.
 
-1. A folder containing all of the assets needed for that competition must be added to [`comps`](comps).
-2. A link going to a page in your competition's folder must be added in [`compselect.html`](compselect.html). The link for the newest competition should be added to the top. \
-Example:
-```
-<!-- In compselect.html body -->
-<ul ...>
-    <li> <!-- Insert link to page for latest competition --> </li>
-    ...
-    <!-- Older links below -->
-</ul>
-```
-3. All assets you add must be added to the `assets` array in [`sw.js`](sw.js).
+1. A [package](https://packaging.python.org/en/latest/tutorials/packaging-projects/)/file containing all of the backend code for that competition must be added to [`comps`](comps).
+2. Add any html files for the competition under a new folder in [`templates`](templates), and any images/javascript/css in a new folder in [`static`](static).
+
+### Adding Routes
+
+### Adding Static Assets
