@@ -13,6 +13,7 @@ const PICK_UPS_STORAGE = "pickUps";
 const DROPS_STORAGE = "pieceDrops";
 const DEFENSES_STORAGE = "defenses";
 const CHARGE_STORAGE = "chargeState";
+const END_AUTO = "endAuto";
 
 const NodeType = {
     Cone: "cone",
@@ -103,6 +104,14 @@ window.addEventListener("load", () => {
     setMarkTime(pickUpPiece, PICK_UPS_STORAGE, pickUps);
     setMarkTime(dropPiece, DROPS_STORAGE, drops);
     setMarkTime(markDefense, DEFENSES_STORAGE, defenses);
+
+    //end auto button
+    switchAuto();
+    const endAutoButton = document.getElementById("endAuto");
+    endAutoButton.addEventListener("click", (ev) => {
+        localStorage.setItem(END_AUTO, getUTCNow());
+        switchTele();
+    })
 
     //next button
     const nextButton = document.getElementById("nextButton");
@@ -213,4 +222,29 @@ function setNodeClick(scoreNode) {
                 break;
         }
     });
+}
+
+let autoState = true;
+
+function switchTele() {
+    for (let elm of document.getElementsByClassName("auto"))
+        elm.hidden = true;
+    for (let elm of document.getElementsByClassName("tele"))
+        elm.hidden = false;
+}
+
+function switchAuto() {
+    for (let elm of document.getElementsByClassName("auto"))
+        elm.hidden = false;
+    for (let elm of document.getElementsByClassName("tele"))
+        elm.hidden = true;
+}
+
+function toggleAutoTele() {
+    autoState = !autoState;
+    if (autoState)
+        switchAuto();
+    else
+        switchTele();
+
 }
