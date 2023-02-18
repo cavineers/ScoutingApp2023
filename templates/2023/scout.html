@@ -47,37 +47,76 @@
     </tbody>
 </table>
 <br>
-<div>
-    <button class="button_red" id="pickUpPiece">Picked Up Piece</button>
-</div>
-<br>
-<div>
-    <button class="button_red" id="dropPiece">Game Piece Dropped</button>
-</div>
-<br>
-<div>
-    <button class="button_red" id="markDefense">Played Defense</button>
-</div>
-<div style="margin-top: 10%; width: 100%; text-align: center;">
-    <div class="charge">
-        <h2>Charge Station</h2>
-        <label>
-            <input type="radio" id="chargeOff" name="station" value="off" checked>
-            <span class="left">Off</span>
-        </label>
-        <label>
-            <input type="radio" id="chargeDocked" name="station" value="docked">
-            <span class="mid">Docked</span>
-        </label>
-        <label>
-            <input type="radio" id="chargeEngaged" name="station" value="engaged">
-            <span class="right">Engaged</span>
-        </label>
+<div class="auto">
+    <div>
+        <button class="button_red" id="pickUpPieceAuto">Picked Up Piece</button>
+    </div>
+    <br>
+    <div>
+        <button class="button_red" id="dropPieceAuto">Game Piece Dropped</button>
+    </div>
+    <br>
+    <div>
+        <button class="button_red" id="passesMidLineAuto">Exits Community</button>
+    </div>
+    <br>
+    <div style="margin-top: 10%; width: 100%; text-align: center;">
+        <div class="charge">
+            <h2>Charge Station</h2>
+            <label>
+                <input type="radio" id="chargeOff" name="stationAuto" value="off" checked>
+                <span class="left">Off</span>
+            </label>
+            <label>
+                <input type="radio" id="chargeDocked" name="stationAuto" value="docked">
+                <span class="mid">Docked</span>
+            </label>
+            <label>
+                <input type="radio" id="chargeEngaged" name="stationAuto" value="engaged">
+                <span class="right">Engaged</span>
+            </label>
+        </div>
+    </div>
+    <div>
+        <button class="next" id="endAuto">
+            <span>End Auto</span>
+        </button>
     </div>
 </div>
-<div class="next_container">
-    <button class="next" id="nextButton">
-        <span>Next</span>
-    </button>
+<div class="tele">
+    <div>
+        <button class="button_red" id="pickUpPiece">Picked Up Piece</button>
+    </div>
+    <br>
+    <div>
+        <button class="button_red" id="dropPiece">Game Piece Dropped</button>
+    </div>
+    <br>
+    <div>
+        <button class="button_red" id="markDefense">Played Defense</button>
+    </div>
+    <br>
+    <div style="margin-top: 10%; width: 100%; text-align: center;">
+        <div class="charge">
+            <h2>Charge Station</h2>
+            <label>
+                <input type="radio" id="chargeOff" name="stationTele" value="off" checked>
+                <span class="left">Off</span>
+            </label>
+            <label>
+                <input type="radio" id="chargeDocked" name="stationTele" value="docked">
+                <span class="mid">Docked</span>
+            </label>
+            <label>
+                <input type="radio" id="chargeEngaged" name="stationTele" value="engaged">
+                <span class="right">Engaged</span>
+            </label>
+        </div>
+    </div>
+    <div class="next_container">
+        <button class="next" id="nextButton">
+            <span>Next</span>
+        </button>
+    </div>
 </div>
 {% endblock %}
