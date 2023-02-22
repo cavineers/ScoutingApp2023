@@ -18,7 +18,7 @@ The following packages need to be installed to run the Scouting App server:
 - [Flask](https://pypi.org/project/Flask/)
 - [Flask-SQLAlchemy](https://pypi.org/project/Flask-SQLAlchemy/)
 - [waitress](https://pypi.org/project/waitress/)
-- [pyzbar](https://pypi.org/project/waitress/)
+- [pyzbar](https://pypi.org/project/pyzbar/)
 
 They can be installed by running the command `python -m pip install <package-name>` in a terminal.
 
