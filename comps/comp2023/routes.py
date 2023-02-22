@@ -2,9 +2,13 @@ from . import data_manage
 from datetime import datetime
 from ScoutingApp import db, not_content_route, STATIC, TEMPLATES
 from flask import Blueprint, render_template, request
+import json
+import os
 import traceback
 
 blueprint = Blueprint("2023", __name__, url_prefix="/comps/2023", static_folder=STATIC, template_folder=TEMPLATES)
+
+NAMES_FILE = os.path.join(os.path.dirname(__file__), "names.txt")
 
 #content routes
 @blueprint.route("/home.html")
@@ -26,6 +30,15 @@ def qr_scanner():
 @blueprint.route("/result.html")
 def result():
     return render_template("2023/result.html")
+
+@blueprint.route("/names")
+def names():
+    with open(NAMES_FILE) as f:
+        return json.dumps([name.strip() for name in f.readlines()])
+
+@blueprint.route("/sheets/<filter>")
+def sheets(filter:str="TODO default"):
+    return ""
 
 
 #api routes
