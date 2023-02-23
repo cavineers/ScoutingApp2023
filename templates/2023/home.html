@@ -8,23 +8,91 @@
 <script src="/static/2023/js/navstamp.js"></script>
 {% endblock %}
 {% block contents %}
-<div style="text-align: center; align-items: center;">
+<div class="content">
     <form id="submitForm">
-        <table class="table">
+        <table class="table" autocomplete="off">
             <tr>
                 <td><label for="matchNumber">Match Number:&emsp;</label></td>
-                <td><input name="matchNumber" type="number" /></td>
+                <td><input class="input" name="matchNumber" type="number" /></td>
             </tr>
             <tr>
                 <td><label for="teamNumber">Team Number:&emsp;</label></td>
-                <td><input name="teamNumber" type="number" /></td>
+                <td><input class="input" name="teamNumber" type="number" /></td>
             </tr>
             <tr>
                 <td><label for="scouterName">Scouter:&emsp;</label></td>
-                <td>
-                    <div class="autocomplete" style="width:300px;">
-                        <input id="name" name="scouterName" autocomplete="off" />
-                    </div>
+                <td class="select">
+                    <select class="input" id="name" name="scouterName">
+                        <option value="placeholder">Pick Your Name</option>
+                        <option value="AbellanoJonah">Jonah Abellano</option>
+                        <option value="AvillaAnthony">Anthony Avilla</option>
+                        <option value="BakerTaryn">Taryn Baker</option>
+                        <option value="BechtelLogan">Logan Bechtel</option>
+                        <option value="BellLaura">Laura Bell</option>
+                        <option value="BoomerBrett">Brett Boomer</option>
+                        <option value="BostJames">James Bost</option>
+                        <option value="BuchtLucas">Lucas Bucht</option>
+                        <option value="CeryesSadie">Sadie Ceryes</option>
+                        <option value="CollinsBrennen">Brennen Collins</option>
+                        <option value="ComeauDulcey">Dulcey Comeau</option>
+                        <option value="ComeauBrady">Brady Comeau </option>
+                        <option value="D'AmicoPeter">Peter D'Amico</option>
+                        <option value="DavisPaul">Paul Davis</option>
+                        <option value="DavisElijah">Elijah Davis</option>
+                        <option value="DonyinahJay">Jay Donyinah</option>
+                        <option value="FlynnGavin">Gavin Flynn</option>
+                        <option value="FlynnPatrick">Patrick Flynn</option>
+                        <option value="GardinerAndrew">Andrew Gardiner</option>
+                        <option value="GardinerThomas ">Thomas Gardiner</option>
+                        <option value="GashNick">Nick Gash</option>
+                        <option value="GoodyearJake">Jake Goodyear </option>
+                        <option value="GrantChad">Chad Grant</option>
+                        <option value="GreenhillKate">Kate Greenhill</option>
+                        <option value="GreensfelderCaden">Caden Greensfelder</option>
+                        <option value="GriceAshley">Ashley Grice</option>
+                        <option value="GriceThomas">Thomas Grice</option>
+                        <option value="HaBryan">Bryan Ha</option>
+                        <option value="HaydenGrant">Grant Hayden</option>
+                        <option value="HaynesReid">Reid Haynes</option>
+                        <option value="HaynesMax">Max Haynes</option>
+                        <option value="HeckerCharles">Charles Hecker</option>
+                        <option value="HennAlex">Alex Henn</option>
+                        <option value="HerberichEric">Eric Herberich</option>
+                        <option value="JablinskeSierra">Sierra Jablinske</option>
+                        <option value="KearneyMatthew">Matthew Kearney</option>
+                        <option value="KellamKit">Kit Kellam</option>
+                        <option value="KellyBrody">Brody Kelly</option>
+                        <option value="LamTrystan">Trystan Lam</option>
+                        <option value="LarsonEvan">Evan Larson</option>
+                        <option value="LawrenceKayley">Kayley Lawrence</option>
+                        <option value="LevinRosie">Rosie Levin</option>
+                        <option value="LisiewskiAubrie">Aubrie Lisiewski</option>
+                        <option value="MaginnisMax">Max Maginnis</option>
+                        <option value="MaltaMaggie">Maggie Malta</option>
+                        <option value="MaltaSam">Sam Malta</option>
+                        <option value="MarquesMateo ">Mateo Marques</option>
+                        <option value="McCabeSean">Sean McCabe</option>
+                        <option value="McManusAiden">Aiden McManus</option>
+                        <option value="MeachamDylan">Dylan Meacham</option>
+                        <option value="MooreAddisyn">Addisyn Moore</option>
+                        <option value="MooreSavannah">Savannah Moore</option>
+                        <option value="MoultaAliAliyah">Aliyah Moulta</option>
+                        <option value="ObaraKate">Kate Obara</option>
+                        <option value="PhelpsAndrew">Andrew Phelps</option>
+                        <option value="PhelpsJacob">Jacob Phelps</option>
+                        <option value="RichardsonKaleb">Kaleb Richardson</option>
+                        <option value="RobinsonAeryn">Aeryn Robinson</option>
+                        <option value="RussNolan">Nolan Russ</option>
+                        <option value="RyanDakota">Dakota Ryan</option>
+                        <option value="SayanNicholas">Nicholas Sayan</option>
+                        <option value="SnellRobert">Robert Snell</option>
+                        <option value="StifflemireGrace">Grace Stifflemire</option>
+                        <option value="StudgeonMatthew">Matthew Studgeon</option>
+                        <option value="TracyDaniel">Daniel Tracy</option>
+                        <option value="TsamposMichael">Michael Tsampos</option>
+                        <option value="WebbMichael">Michael Webb</option>
+                        <option value="YoshidaGabe">Gabe Yoshida</option>
+                    </select>
                 </td>
             </tr>
         </table>
