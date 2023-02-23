@@ -43,7 +43,7 @@ async function getResponse(request) {
             const response = await fetch(request);
             for (let url of assets) {
                 if (request.url.split("?")[0].endsWith(url)) {
-                    (await caches.open(cacheLocation)).put(request, response);
+                    (await caches.open(cacheLocation)).put(request, response.clone());
                     break;
                 }
             }

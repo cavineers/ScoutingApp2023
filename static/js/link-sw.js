@@ -1,7 +1,8 @@
 
 if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/static/js/sw.js");
+    window.addEventListener("load", async () => {
+        if (!(await navigator.serviceWorker.getRegistration()))
+            navigator.serviceWorker.register("/sw.js");
     });
 
 }

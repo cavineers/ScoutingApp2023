@@ -38,6 +38,10 @@ def to_first_page():
 def get_manifest():
     return send_file(os.path.abspath("manifest.json"))
 
+@not_content_route("/sw.js")
+def get_serviceworker():
+    return send_file(os.path.join(STATIC, "js", "sw.js"))
+
 @app.route("/index.html")
 def index():
     return render_template("index.html")
@@ -48,7 +52,6 @@ def help():
 
 @app.route("/compselect.html")
 def compselect():
-    #TODO update compselect.html to use jinja scripting to display link to go to 
     return render_template("compselect.html", competitions={comp.display_name:f"/comps/{comp.name}/{comp.start_url}" for comp in comps})
 
 #api routes
