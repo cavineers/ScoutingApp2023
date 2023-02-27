@@ -5,16 +5,16 @@
 {% endblock %}
 
 {% block contents %}
-<h1>Select Scouting App Competition</h1>
-<div style="margin-left: 1%;">
-    <ul style="list-style: none;">
-        {% if competitions %}
-        {% for name, url in competitions.items() %}
-        <li>
-            <a class="light-theme" href="{{ url }}">{{ name }}</a>
-        </li>
-        {% endfor %}
-        {% endif %}
-    </ul>
+<div>
+<h1 style="margin-left: 5%; margin-top: 10%">Select Scouting App Competition</h1>
+    <div style="font-size: 2em">
+            {% if competitions %}
+            {% for name, url in competitions.items() %}
+            <li>
+                <a class="light-theme" href="{{ url }}">{{ name }}</a>
+            </li>
+            {% endfor %}
+            {% endif %}
+    </div>
 </div>
 {% endblock %}
