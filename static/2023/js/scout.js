@@ -181,17 +181,16 @@ function setNodeClick(scoreNode) {
             case NodeType.Hybrid:
                 //define popup menu, get menu element
                 if (scoreNode.gamePiece == null) {
-                    let menuContainer = addMenu(null, "20%", "fit-content");
+                    let menuContainer = addMenu(null, "50%", "fit-content");
                     let menu = menuContainer.children[1];
-                    menu.style.textAlign = "center";
+                    menu.style.alignItems = "center";
 
                     //define button
                     let coneButton = document.createElement("button");
                     //set button style
-                    coneButton.classList.add("node-cone");
+                    coneButton.classList.add("node-cone_button");
                     coneButton.style.background = CONE_COLOR;
                     coneButton.style.borderColor = CONE_BORDER_COLOR;
-                    coneButton.style.marginRight = "4%";
                     //set button click event
                     coneButton.addEventListener("click", (ev) => {
                         if (ev.button != 0)
@@ -203,10 +202,9 @@ function setNodeClick(scoreNode) {
                     //define button
                     let cubeButton = document.createElement("button")
                     //set button style
-                    cubeButton.classList.add("node-cube");
+                    cubeButton.classList.add("node-cube_button");
                     cubeButton.style.background = CUBE_COLOR;
                     cubeButton.style.borderColor = CUBE_BORDER_COLOR;
-                    cubeButton.style.marginLeft = "4%";
                     cubeButton.addEventListener("click", (ev) => {
                         if (ev.button != 0)
                             return;

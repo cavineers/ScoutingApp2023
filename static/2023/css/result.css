@@ -1,17 +1,13 @@
 h1 {
   font-weight: bolder;
   font-size: 48px;
-  margin-left: 625px;
+  margin-left: 30%;
   margin-bottom: 50px;
 }
 
 .commentboxes {
-  margin-left: 75px;
-  padding-top: 10px;
-  padding-left: 50px;
-  padding-right: 50px;
-  padding-bottom: 80px;
-  width: 1250px;
+  margin-left: 25px;
+  width: 500px;
 }
 
 .commentboxes p {
@@ -26,7 +22,7 @@ h1 {
   border: 3px solid #ffffff;
   outline: solid;
   font-size: 16px;
-  width: 1200px;
+  width: 500px;
   height: 165px;
   font-family: Geneva, Segoe UI, Verdana, sans-serif;
   resize: none;

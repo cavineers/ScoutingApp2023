@@ -1,9 +1,13 @@
 /* Unselected node color: #777 */
 
 .table {
-    height: 300px;
-    width: 1450px;
-    margin-left: 75px;
+    height: 200px;
+    width: 600px;
+    margin-left: 0%;
+}
+
+.auto {
+
 }
 
 .node-cone {
@@ -28,6 +32,27 @@
     align-items: center;
 }
 
+.node-cube_button {
+    height: 100px;
+    width: 100px;
+    background-color: #777;
+    border-color: #777;
+    padding: 11%;
+    border-radius: 20%;
+    align-items: center;
+}
+
+.node-cone_button {
+    height: 100px;
+    width: 100px;
+    margin: 30px;
+    background-color: #777;
+    border-color: #777;
+    padding: 11%;
+    border-radius: 100%;
+    align-items: center;
+}
+
 .node-hybrid {
     height: 50px;
     width: 50px;
@@ -41,7 +66,7 @@
 .next {
     height: 50px;
     width: 200px;
-    margin: auto;
+    margin-top: 20%;
     background-color: #ff0000; /* Red */
     border: none;
     color: white;
@@ -51,7 +76,6 @@
     font-size: 16px;
     border-radius: 5px;
     box-shadow: 0 5px #777;
-    transform: translate(1270px, -120px);
 }
 
 .next span {
@@ -68,7 +92,7 @@
 .next:active {
     background-color: #cf0000;
     box-shadow: 0 0px #666;
-    transform: translate(1270px, -115px);
+    transform: translateY(5px);
 }
 
 .next span:after {
@@ -91,13 +115,12 @@
 
 .button_red {
     height: 50px;
-    width: 200px;
+    width: 175px;
     background-color: #ff0000; /* Red */
     border: none;
     color: white;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
     font-size: 16px;
     border-radius: 5px;
     box-shadow: 0 5px #777;
@@ -111,20 +134,12 @@
   transform: translateY(5px);
 }
 
-.pickup_button {
-    height: 100px;
-    width: 100px;
-    background-size: contain;
-}
-
 .platform-select {
     margin-left: 4px;
 }
 
 .charge {
-    position: absolute;
-    transform: translateY(-350px);
-    margin-left: 430px;
+    margin-top: 15%;
     text-align: center;
 }
 
@@ -151,9 +166,9 @@
 }
 
 .left {
-    width: 200px;
-    height: 100px;
-    line-height: 100px;
+    width: 150px;
+    height: 75px;
+    line-height: 75px;
     background: #ff0000;
     color: white;
     border: 5px solid #ff0000;
@@ -165,9 +180,9 @@
 .left:hover {background-color: #cf0000;}
 
 .mid {
-    width: 200px;
-    height: 100px;
-    line-height: 100px;
+    width: 150px;
+    height: 75px;
+    line-height: 75px;
     background: #ff0000;
     color: white;
     border: 5px solid #ff0000;
@@ -177,9 +192,9 @@
 .mid:hover {background-color: #cf0000;}
 
 .right {
-    width: 200px;
-    height: 100px;
-    line-height: 100px;
+    width: 150px;
+    height: 75px;
+    line-height: 75px;
     background: #ff0000;
     color: white;
     border: 5px solid #ff0000;
