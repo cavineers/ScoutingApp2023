@@ -1,13 +1,12 @@
 .button_group {
-    margin-top: 200px;
-    width: 1000px;
+    margin-top: 50%;
+    width: 100%;
     text-align: center;
-    transform: translateX(150px);
 }
 
 .button_group button{
     height: 100px;
-    width: 300px;
+    width: 125px;
     color: white;
     font-weight: bold;
     background-color: #ff0000;
