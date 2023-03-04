@@ -52,6 +52,7 @@ function setTheme() {
 window.addEventListener("load", () => {
     setTheme();
     const toggleButton = document.getElementById("toggle_darkmode");
+    if (toggleButton==null) return;
     toggleButton.addEventListener("click", (ev) => {
         if (ev.button != 0)
             return;

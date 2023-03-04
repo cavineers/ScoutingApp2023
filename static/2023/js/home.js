@@ -1,21 +1,32 @@
 function verifyInfo(inputs) {
     console.log(inputs.matchNumber)
     if (inputs.matchNumber < 1) {
-        //TODO output error message to user
-        console.error("Invalid match number.")
+        outputError("Invalid match number.");
         return false;
     }
-    else if ((inputs.teamNumber).toString().length < 3) {
-        //TODO output error to user
-        console.error("Invalid team number.")
+    else if (inputs.teamNumber < 1) {
+        outputError("Invalid team number.")
         return false;
     }
-    else if (!inputs.scouterName.trim()) {
-        //TODO output error
-        console.error("Enter your name (The name of the person scouting).");
+    else if (!inputs.scouterName.trim() || inputs.scouterName=="placeholder") {
+        outputError("Enter your name (The name of the person scouting).");
         return false;
     }
     return true;
+}
+
+function outputError(message) {
+  console.error(message);
+  let errorOutput = document.getElementById("errorOutput");
+  if (errorOutput==null) {
+    const submitForm = document.getElementById("submitForm");
+    if (submitForm==null) return; //nowhere to visibly output error to
+    errorOutput = document.createElement("p");
+    errorOutput.style.color = "#be0000";
+    errorOutput.id = "errorOutput";
+    submitForm.prepend(errorOutput);
+  }
+  errorOutput.innerHTML = message;
 }
 
 window.addEventListener("load", async () => {
@@ -28,7 +39,7 @@ window.addEventListener("load", async () => {
   let submitForm = document.getElementById("submitForm");
   submitForm.addEventListener("submit", (ev) => {
       ev.preventDefault();
-      const found = document.getElementsByTagName("input");
+      const found = document.getElementsByClassName("input");
       let inputs = {};
       for(let input of found)
           inputs[input.name] = input.type == "number" ? Number(input.value) : input.value;

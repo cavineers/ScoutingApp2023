@@ -7,12 +7,12 @@
 {% block contents %}
 <div>
 <h1 style="margin-left: 5%; margin-top: 10%">Select Scouting App Competition</h1>
-    <div style="font-size: 2em">
+    <div style="font-size: 2em; margin-left: 5%;">
             {% if competitions %}
             {% for name, url in competitions.items() %}
-            <li>
+            <p>
                 <a class="light-theme" href="{{ url }}">{{ name }}</a>
-            </li>
+            </p>
             {% endfor %}
             {% endif %}
     </div>

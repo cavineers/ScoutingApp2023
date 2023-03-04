@@ -27,7 +27,7 @@ const CONNECTION_STATUS_INTERVAL = 3000; //ms
 const cacheLocation = "scouting-app-4541";
 
 //define assets
-let assets;
+let assets = [];
 
 self.addEventListener("install", async (event) => {
     if (!_interval)

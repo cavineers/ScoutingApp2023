@@ -14,6 +14,8 @@ const DROPS_STORAGE = "pieceDrops";
 const DEFENSES_STORAGE = "defenses";
 const CHARGE_STORAGE = "chargeState";
 const END_AUTO = "endAuto";
+const AUTO_CHARGE_STORAGE = "autoChargeState";
+const COMMUNITY_EXIT_STORAGE = "communityExit";
 
 const NodeType = {
     Cone: "cone",
@@ -98,20 +100,39 @@ window.addEventListener("load", () => {
 
     //track button press times
     const pickUpPiece = document.getElementById("pickUpPiece");
+    const pickUpPieceAuto = document.getElementById("pickUpPieceAuto");
     const dropPiece = document.getElementById("dropPiece");
+    const dropPieceAuto = document.getElementById("dropPieceAuto");
     const markDefense = document.getElementById("markDefense");
+    const passesMidLineAuto = document.getElementById("passesMidLineAuto");
+    if (!localStorage.getItem(COMMUNITY_EXIT_STORAGE))
+        localStorage.setItem(COMMUNITY_EXIT_STORAGE, "null");
 
     setMarkTime(pickUpPiece, PICK_UPS_STORAGE, pickUps);
+    setMarkTime(pickUpPieceAuto, PICK_UPS_STORAGE, pickUps);
     setMarkTime(dropPiece, DROPS_STORAGE, drops);
+    setMarkTime(dropPieceAuto, DROPS_STORAGE, drops);
     setMarkTime(markDefense, DEFENSES_STORAGE, defenses);
+
+    passesMidLineAuto.addEventListener("click", (ev)=>{
+        if (ev.button!=0) return;
+        localStorage.setItem(COMMUNITY_EXIT_STORAGE, getUTCNow());
+    })
 
     //end auto button
     switchAuto();
     const endAutoButton = document.getElementById("endAuto");
     endAutoButton.addEventListener("click", (ev) => {
-        localStorage.setItem(END_AUTO, getUTCNow());
+        const chargeOff = document.getElementById("chargeOffAuto");
+        const chargeDocked = document.getElementById("chargeDockedAuto");
+        const chargeEngaged = document.getElementById("chargeEngagedAuto");
+        const state = chargeEngaged.checked ? chargeEngaged.value :
+                      chargeDocked.checked ? chargeDocked.value :
+                      chargeOff.value;
+        localStorage.setItem(AUTO_CHARGE_STORAGE, JSON.stringify(state))
+        localStorage.setItem(END_AUTO, JSON.stringify(getUTCNow()));
         switchTele();
-    })
+    });
 
     //next button
     const nextButton = document.getElementById("nextButton");
