@@ -29,6 +29,74 @@ class Datetime(sqlalchemy.TypeDecorator):
     def process_result_value(self, value:int, dialect):
         return from_utc_timestamp(value) if isinstance(value, int) else None
 
+class Points:
+    __slots__ = "value", "type"
+
+    def __init__(self, value:int, type:str):
+        self.value = value
+        self.type = type
+
+    def __int__(self): return self.value
+
+    def __add__(self, value):
+        if isinstance(value, Points):
+            if self.type != value.type:
+                raise ValueError("Point types must be the same to add.")
+            return Points(self.value+value.value, self.type)
+        else:
+            return Points(self.value+value, self.type)
+        
+    def __sub__(self, value):
+        if isinstance(value, Points):
+            if self.type != value.type:
+                raise ValueError("Point types must be the same to subtract.")
+            return Points(self.value-value.value, self.type)
+        else:
+            return Points(self.value-value, self.type)
+        
+    def __mul__(self, value):
+        if isinstance(value, Points):
+            if self.type != value.type:
+                raise ValueError("Point types must be the same to multiply.")
+            return Points(self.value*value.value, self.type)
+        else:
+            return Points(self.value*value, self.type)
+        
+    def __truediv__(self, value):
+        if isinstance(value, Points):
+            if self.type != value.type:
+                raise ValueError("Point types must be the same to divide.")
+            return Points(int(self.value/value.value), self.type)
+        else:
+            return Points(int(self.value/value), self.type)
+        
+    def __floordiv__(self, value):
+        if isinstance(value, Points):
+            if self.type != value.type:
+                raise ValueError("Point types must be the same to divide.")
+            return Points(self.value//value.value, self.type)
+        else:
+            return Points(self.value//value, self.type)
+        
+    def __eq__(self, value):
+        if isinstance(value, Points):
+            return self.value == value.value and self.type == value.type
+        else:
+            return super().__eq__(value)
+        
+    def __gt__(self, value):
+        if isinstance(value, Points):
+            return self.value > value.value and self.type > value.type
+        else:
+            return super().__eq__(value)
+        
+    def __lt__(self, value):
+        if isinstance(value, Points):
+            return self.value < value.value and self.type < value.type
+        else:
+            return super().__eq__(value)
+
+
 
 class MatchData(db.Model):
     "Object for accessing data gotten from scouting a match via submission."
@@ -49,6 +117,7 @@ class MatchData(db.Model):
     charge_state = db.Column("charge_state", db.String(16), nullable=True)
     comments = db.Column("comments", Json, nullable=True)
     submission_time = db.Column("submission_time", db.Integer, nullable=True)
+    end_auto = db.Column("end_auto", db.Integer, nullable=True)
     #navigational timestamps
     navigation_start = db.Column("navigation_start", db.Integer, nullable=True) #to home.html
     navigation_prematch = db.Column("navigation_prematch", db.Integer, nullable=True) #to prematch.html
@@ -84,6 +153,7 @@ class MatchData(db.Model):
             defenses=data.get(ContentKeys.DEFENSES),
             charge_state=data.get(ContentKeys.CHARGE_STATE),
             comments=data.get(ContentKeys.COMMENTS),
+            end_auto=data.get(ContentKeys.END_AUTO),
             navigation_start=nav_stamps.get("home.html"),
             navigation_prematch=nav_stamps.get("prematch.html"),
             navigation_match=nav_stamps.get("scout.html"),
@@ -93,11 +163,11 @@ class MatchData(db.Model):
 
     def __init__(self, version:str=None, team_number:int=None, match_number:int=None, scouter_name:str=None, score:"dict[str, dict[str, str|None]]"=None,
                  pickups:"list[int]"=None, drops:"list[int]"=None, defenses:"list[int]"=None, charge_state:str=None, comments:"list[str]"=None, submission_time:int=None,
-                 navigation_start:int=None, navigation_prematch:int=None, navigation_match:int=None, navigation_result:int=None, navigation_finish:int=None):
+                 end_auto:int=None, navigation_start:int=None, navigation_prematch:int=None, navigation_match:int=None, navigation_result:int=None, navigation_finish:int=None):
         self.version = version
         self.team_number = team_number
         self.match_number = match_number
-        self.id = self._construct_id()
+        self.id = MatchData._construct_id(team_number, match_number)
         self.scouter_name = scouter_name
         self.score = score
         self.pickups = pickups
@@ -106,6 +176,7 @@ class MatchData(db.Model):
         self.charge_state = charge_state
         self.comments = comments
         self.submission_time = submission_time
+        self.end_auto = end_auto
         #navigation timestamps
         self.navigation_start = navigation_start
         self.navigation_prematch = navigation_prematch
@@ -120,11 +191,12 @@ class MatchData(db.Model):
     def __repr__(self):
         return f"<MatchData {self.id} from '{self.scouter_name}' at {hex(id(self))}>"
 
-    def _construct_id(self)->int:
-        if not (isinstance(self.team_number, int) and isinstance(self.match_number, int)):
+    @staticmethod
+    def _construct_id(team_number:int, match_number:int)->int:
+        if not (isinstance(team_number, int) and isinstance(match_number, int)):
             raise TypeError("MatchData team number and match number must both be of type int to generate a MatchData id.")
         #":04" will ensure that match number takes up at least 4 digits of space in the id, any untaken space is replaced with leading 0s
-        return int(f"{self.team_number}{self.match_number:04}")
+        return int(f"{team_number}{match_number:04}")
 
     #construction methods
     def construct_score_events(self)->"list[Event]":
@@ -158,6 +230,17 @@ class MatchData(db.Model):
         if self.pickups is None:
             raise KeyError(ContentKeys.PICKUPS)
         return [Event(EventActions.PICK_UP, timestamp, self.team_number, self.match_number, self.scouter_name) for timestamp in self.pickups]
+
+    def construct_events(self)->"list[Event]":
+        for e in self.construct_drop_events():
+            yield e
+        for e in self.contruct_defense_events():
+            yield e
+        for e in self.construct_pickup_events():
+            yield e
+        yield Event(EventActions.END_AUTO, self.end_auto, self.team_number, self.match_number, self.scouter_name)
+        yield Event(EventActions.START, self.navigation_match, self.team_number, self.match_number, self.scouter_name)
+        yield Event(EventActions.END, self.navigation_result, self.team_number, self.match_number, self.scouter_name)
 
 
 class Event(db.Model):
@@ -278,9 +361,9 @@ class ScoreGroup:
         return (self.first, self.second)[index]
 
     def __setitem__(self, index:int, value):
-        if index is 0:
+        if index == 0:
             self.first = value
-        elif index is 1:
+        elif index == 1:
             self.second = value
         else:
             raise IndexError("ScoreGroup assignment index out of range.")
@@ -325,54 +408,94 @@ class ScoreGroup:
         self._column = self._index % 9 if self._index is not None else None
 
     def get_score(self):
-        raise NotImplementedError("TODO determine the points (regular & ranking) gained from this action, or 0 if dropped")
+        for row, points in SCORE_VALUE_INDEX.items():
+            if self.row in row:
+                return points
+        return 0
 
 
 class TeamMatchReport:
-    "An object representing what a team did in a match based on Events. Should not be used to mutate or modify database contents, just for analytics."
+    "An object representing what a team did in a match based on Events and other match data. Should not be used to mutate or modify database contents, just for analytics."
 
     def __init__(self, team_number:int, match_number:int):
+        self._init = False
         self.team_number = team_number
         self.match_number = match_number
+        #match_data = MatchData.get(MatchData._construct_id(team_number, match_number))
         #all events
         self.events:"list[Event]" = list(Event.search(team_number=team_number, match_number=match_number))
         self.events.sort()
         #event categories
-        self.pickups = []
-        self.drops = []
-        self.scores = []
+        self.event_categories:"dict[str, list[Event]]" = {
+            EventActions.PICK_UP:[],
+            EventActions.DROP:[],
+            EventActions.SCORE:[],
+            EventActions.DEFENSE:[]
+        }
+        self.started:Event = None
+        self.ended:Event = None
         self.end_auto:Event = None #event that marks the end of auto
         self.score_groups:"list[ScoreGroup]" = []
+        self.links:"list[tuple[ScoreGroup, ScoreGroup, ScoreGroup]]" = []
+        self.events_auto = []
+        self.events_teleop = []
+        self.score_deltas = []
+        #as seen on manual 6.4.3 (pg 46) {Award Name: value}
+        #TODO cooperation bonus requires both alliances to do 3, so thats a MatchReport thing (boolean)
+        self.points_auto:"dict[str, int]" = {
+            ScoreAwardName.MOBILITY:0,
+            ScoreAwardName.GAME_PIECES:0,
+            #TODO have docked and engaged points calculated in AllianceMatchReport (depends on stats of multiple team reports)
+        }
+        self.points_teleop:"dict[str, int]" = {
+            ScoreAwardName.GAME_PIECES:0,
+            ScoreAwardName.LINK:0,
+            ScoreAwardName.PARK:0
+        }
+        self.points_ranking:"dict[str, int]" = {
+            ScoreAwardName.SUSTAINABILITY:0,
+            ScoreAwardName.ACTIVATION:0 #TODO figure out how this is earned, because one team can not earn 26 charging station points alone
+            #TODO Tie and Win go in the AllianceMatchReport
+        }
 
-    def add_events(self, *events:"list[Event|int]"):
-        "Add events to the score grid."
-        for event in events:
-            if isinstance(event, Event) and event not in self.events:
-                to_add = event
-            elif isinstance(event, int):
-                e = Event.get(event)
-                if e is None or e in self.events:
-                    continue
-                to_add = e
-            else: continue
-
-            if to_add.team_number==self.team_number and to_add.match_number==self.match_number:
-                self.events.append(to_add)
-        self.events.sort()
-
-    def before_auto(self, event:Event):
+    def before_teleop(self, event:Event)->bool:
         return event.time < self.end_auto.time
-
-    def categorize_events(self):
-        "Categorize events by action, timestamp, and other things."
-        #TODO categorize based on action self.pickups = [...]; self.drops = [...]; ...
-        ...
-        #TODO find the auto_end/teleop_start event and split events into auto and teleop lists
-        ...
+    
+    def initialize_report(self):
+        if self._init: return
+        self._init = True
+        self._categorize_events()
         self._get_score_groups()
-        #TODO get navigational events (scout_start:home.html, prematch_start:prematch.html, match_start:scout.html, result_start:result.html, scout_finish:qrscanner.html)
-        ...
-        #TODO autogenerate self.end_auto event at 15 seconds from scout.html start timestamp if its missing in self.events, else set
+        self._get_score_links()
+        self._get_score_deltas()
+        self._get_points()
+
+    def _categorize_events(self):
+        "Categorize events by action, timestamp, and other things."
+        #sort based on action name
+        for event in self.events:
+            if event.action in self.event_categories:
+                self.event_categories[event.action].append(event)
+            elif not self.started and event.action == EventActions.START:
+                self.started = event
+            elif not self.ended and event.action == EventActions.END:
+                self.ended = event
+        #find the auto_end/teleop_start event and split events into auto and teleop lists
+        for i, event in enumerate(self.events):
+            if event.action == EventActions.END_AUTO:
+                self.end_auto = event
+                self.events_auto = self.events[:i]
+                self.events_teleop = self.events[i+1:]
+                break
+        else: #TODO autogenerate self.end_auto event at 15 seconds from scout.html start timestamp if its missing in self.events, else set
+            self.end_auto = Event(EventActions.END_AUTO, self.started.time+timedelta(seconds=15), self.started.team_number, self.started.match_number, self.started.scouter_name)
+            for i, event in enumerate(self.events):
+                if event.time < self.end_auto.time:
+                    self.events_auto.append(event)
+                elif event.time >= self.end_auto.time:
+                    self.events_teleop = self.events[i:]
+                    break
+
 
     def _get_score_groups(self):
         "Group each pickup event with a score or drop event.\nIf there is no pickup event to go with the found score or drop event, thescore/drop event is put into a ScoreGroup on its own."
@@ -396,6 +519,63 @@ class TeamMatchReport:
             if event.action == action:
                 return i+search_start, event
         return -1, None
+
+    def _get_score_links(self):
+        for irow in range(len(SCORE_GRID_ROW_INDEX)): #0, 1, 2
+            current_link:"list[ScoreGroup]" = []
+            for sg in self.score_groups:
+                if not (sg.score and sg.row == irow):
+                    continue
+                elif not current_link or sg.index == current_link[-1].index+1: #sg is first in link or sg is right after last
+                    current_link.append(sg)
+                else:
+                    current_link = [sg] #the current link starts with this sg
+
+                if len(current_link)==3:
+                    self.links.append(tuple(current_link))
+                    current_link.clear()
+
+    def _get_score_deltas(self):
+        self.score_deltas = []
+        for sg in self.score_groups:
+            if not sg.score:
+                continue
+            self.score_deltas.append(sg.second.time-sg.first.time)
+
+    def _get_points(self):
+        for sg in self.score_groups:
+            if not sg.score:
+                continue
+            if self.before_teleop(sg.second):
+                self.points_auto[ScoreAwardName.GAME_PIECES] += sg.score+1
+            else:
+                self.points_teleop[ScoreAwardName.GAME_PIECES] += sg.score
+
+class AllianceMatchReport:
+    def __init__(self, t1:int, t2:int, t3:int, match_number:int):
+        self.t1 = t1
+        self.t2 = t2
+        self.t3 = t3
+        self.match_number = match_number
+        self.reports = self.r1, self.r2, self.r3 = TeamMatchReport(t1, match_number), TeamMatchReport(t2, match_number), TeamMatchReport(t3, match_number)
+        #TODO make points dicts (auto, teleop, ranking)
+        self.points_auto:"dict[str, int]" = {
+
+        }
+        self.points_teleop:"dict[str, int]" = {
+
+        }
+        self.points_ranking:"dict[str, int]" = {
+
+        }
+
+    def initialize_report(self):
+        for report in self.reports:
+            report.initialize_report()
+        self.points_auto = {k:sum(di[k] for di in (self.r1.points_auto, self.r2.points_auto, self.r3.points_auto)) for k in (*self.r1.points_auto, *self.r2.points_auto, *self.r3.points_auto)}
+        
+        
+
 
 class Team:
     "A FRC Team. Team-specific data is gotten from The Blue Alliance API instead of being stored locally." #NOTE: this may change :)

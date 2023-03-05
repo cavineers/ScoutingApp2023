@@ -13,7 +13,8 @@ NAMES_FILE = os.path.join(os.path.dirname(__file__), "names.txt")
 #content routes
 @blueprint.route("/home.html")
 def home():
-    return render_template("2023/home.html")
+    with open(NAMES_FILE) as f:
+        return render_template("2023/home.html", names=sorted([name.strip() for name in f.readlines()], key=lambda name: name.rsplit(" ",1)[-1]))
 
 @blueprint.route("/scout.html")
 def scout():
@@ -36,8 +37,8 @@ def names():
     with open(NAMES_FILE) as f:
         return json.dumps([name.strip() for name in f.readlines()])
 
-@blueprint.route("/sheets/<filter>")
-def sheets(filter:str="TODO default"):
+@blueprint.route("/sheets")
+def sheets():
     return ""
 
 
@@ -59,7 +60,7 @@ def upload():
     try:
         data.submission_time = data_manage.to_utc_timestamp(datetime.now())
         db.session.add(data)
-        db.session.commit()
+        db.session.flush()
     except Exception as e:
         traceback.print_exception(e)
         return "Got error while committing uploaded data.", 500

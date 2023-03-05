@@ -19,6 +19,9 @@ class EventActions:
     DROP = "drop"
     SCORE = "score"
     DEFENSE = "defense"
+    END_AUTO = "end_auto"
+    START = "start"
+    END = "end"
 class ChargeStates:
     OFF = "off"
     DOCKED = "docked"
@@ -37,6 +40,7 @@ class ContentKeys:
     CHARGE_STATE = "chargeState"
     COMMENTS = "comments"
     NAV_STAMPS = "navStamps"
+    END_AUTO = "endAuto"
 class GamePiece:
     CONE = "cone"
     CUBE = "cube"
@@ -48,6 +52,20 @@ class ScoreType:
     TELEOP = "teleop"
     AUTO = "auto"
     RANKING = "ranking"
+class ScoreAwardName:
+    MOBILITY = "MOBILITY"
+    GAME_PIECES = "GAME PIECES"
+    LINK = "LINK"
+    PARK = "PARK"
+    DOCKED = "DOCKED and not ENGAGED"
+    ENGAGED = "DOCKED and ENGAGED"
+    WIN = "Win"
+    TIE = "Tie"
+    #---Bonuses---
+    SUSTAINABILITY = "SUSTAINABILITY BONUS"
+    COOPERATION = "COOPERATION BONUS"
+    ACTIVATION = "ACTIVATION BONUS"
+
 class ScoreGridRow:
     TOP = "top"
     MIDDLE = "middle"
@@ -60,3 +78,15 @@ COOP_SCORE_NODES = (3, 4, 5, 12, 13, 14, 21, 22, 23) #middle 3 for each row
 
 SCORE_GRID_ROW_INDEX = (0, 1, 2, 3, 4, 5, 6, 7, 8), (9, 10, 11, 12, 13, 14, 15, 16, 17), (18, 19, 20, 21, 22, 23, 24, 25, 26)
 SCORE_GRID_ROW_NAMES = ScoreGridRow.TOP, ScoreGridRow.MIDDLE, ScoreGridRow.BOTTOM
+
+#add 1 for auto
+SCORE_VALUE_NAME = {
+    ScoreGridRow.TOP: 5,
+    ScoreGridRow.MIDDLE: 3,
+    ScoreGridRow.BOTTOM: 2
+}
+SCORE_VALUE_INDEX = {
+    SCORE_GRID_ROW_INDEX[0]: 5,
+    SCORE_GRID_ROW_INDEX[1]: 3,
+    SCORE_GRID_ROW_INDEX[2]: 2
+}
