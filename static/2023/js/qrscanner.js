@@ -42,5 +42,10 @@ function trimScoreGrid(array) {
 
 
 function gencode() {
-  new QRCode(document.getElementById("qr"), {text:buildQRContents()});
+  new QRCode(document.getElementById("qr"), {text:document.getElementById("qrtext").value});
 }
+
+window.addEventListener("load", ()=>{
+  const text = document.getElementById("qrtext");
+  text.value = buildQRContents();
+});
