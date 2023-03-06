@@ -1,6 +1,6 @@
 .content {
     margin-top: 10%;
-    margin-left: 10%;
+    margin-left: 0%;
 }
 
 .submit {
@@ -10,7 +10,7 @@
     border: none;
     color: white;
     margin-top: 50px;
-    margin-left: 30%;
+    margin-left: 23%;
     text-align: center;
     text-decoration: none;
     font-size: 24px;
@@ -35,7 +35,7 @@
     border-radius: 10px;
     border: 1px solid #ffffff;
     outline: solid white;
-    width: 250px;
+    width: 200px;
     font-family: Geneva, Segoe UI, Verdana, sans-serif;
     resize: none;
 }

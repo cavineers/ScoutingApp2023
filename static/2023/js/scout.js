@@ -99,8 +99,8 @@ window.addEventListener("load", () => {
     });
 
     //track button press times
-    const pickUpPiece = document.getElementById("pickUpPiece");
-    const pickUpPieceAuto = document.getElementById("pickUpPieceAuto");
+    const pickUpPiece = document.getElementById("pickedUpGround");
+    const pickUpPieceAuto = document.getElementById("pickUpAuto");
     const dropPiece = document.getElementById("dropPiece");
     const dropPieceAuto = document.getElementById("dropPieceAuto");
     const markDefense = document.getElementById("markDefense");
@@ -108,7 +108,7 @@ window.addEventListener("load", () => {
     if (!localStorage.getItem(COMMUNITY_EXIT_STORAGE))
         localStorage.setItem(COMMUNITY_EXIT_STORAGE, "null");
 
-    setMarkTime(pickUpPiece, PICK_UPS_STORAGE, pickUps);
+    setMarkTime(pickedUpGround, PICK_UPS_STORAGE, pickUps);
     setMarkTime(pickUpPieceAuto, PICK_UPS_STORAGE, pickUps);
     setMarkTime(dropPiece, DROPS_STORAGE, drops);
     setMarkTime(dropPieceAuto, DROPS_STORAGE, drops);
