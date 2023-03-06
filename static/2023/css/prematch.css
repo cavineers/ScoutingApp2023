@@ -1,6 +1,6 @@
 .node-hybrid {
-    height: 60px;
-    width: 60px;
+    height: 40px;
+    width: 40px;
     background-color: #777;
     border-radius: 20%;
     margin-right: 50px;
@@ -9,19 +9,19 @@
 }
 
 .auto {
-    width: 100%;
-    height: 600px;
+    width: 340px;
+    height: 400px;
 }
 
 .auto h1{
-    margin-left: 39%;
-    margin-bottom: 50px;
-    font-size: 48px;
+    margin-left: 27%;
+    margin-bottom: 25px;
+    font-size: 32px;
 }
 
 .start {
     margin-top: 10px;
-    margin-left: 42%;
+    margin-left: 20%;
     height: 25%;
     width: 100%;
 }
@@ -29,11 +29,12 @@
 .start h2 {
     font-size: 24px;
     font-weight: bold;
-    margin-top: 50px;
+    margin-top: 25px;
     margin-left: 5%;
 }
 
 .start label {
+    margin-left: 30%;
     position: relative;
 }
 
@@ -50,7 +51,7 @@
 
 .layout {
     margin-top: 10px;
-    margin-left: 25%;
+    margin-left: 5%;
     height: 25%;
     width: 100%;
 }
@@ -58,12 +59,13 @@
 .layout h2 {
     font-size: 24px;
     font-weight: bold;
+    margin-top: 30px;
     margin-left: 23%;
 }
 
 .none {
-    height: 35px;
-    width: 35px;
+    height: 15px;
+    width: 15px;
     margin: 10px;
     background-color: #777;
     border: none;
@@ -76,8 +78,8 @@
 .start label input:checked ~ span.none{background-color: #ff0000;}
 
 .cube {
-    height: 40px;
-    width: 40px;
+    height: 20px;
+    width: 20px;
     margin: 10px;
     background-color: #777;
     border: none;
@@ -88,8 +90,8 @@
 .start label input:checked ~ span.cube{background-color: #b0f;}
 
 .cone {
-    height: 40px;
-    width: 40px;
+    height: 20px;
+    width: 20px;
     margin: 10px;
     background-color: #777;
     border: none;
@@ -101,14 +103,14 @@
 
 .roboPos {
     text-align: center;
-    margin-left: 21%;
+    margin-left: 0%;
     height: 15%
 }
 
 .roboPos h2{
     font-size: 24px;
     font-weight: bold;
-    margin-left: 50px;
+    margin-left: 7%;
 }
 
 .roboPos label {
@@ -120,9 +122,9 @@
 }
 
 .roboPos label span{
-    height: 35px;
-    width: 35px;
-    margin-left: 50px;
+    height: 15px;
+    width: 15px;
+    margin-left: 25px;
     display: inline-block;
     border: 15px solid #777;
     border-radius: 100%;
@@ -131,17 +133,17 @@
 .roboPos label input:checked ~ span{background-color: #ff0000; border-color: #ff0000;}
 
 .next {
-  height: 50px;
-  width: 200px;
-  margin-top: 10%;
-  margin-left: 85%;
+  height: 38px;
+  width: 150px;
+  margin-top: 14%;
+  margin-left: 50%;
   background-color: #ff0000; /* Red */
   border: none;
   color: white;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 8px;
   border-radius: 5px;
   box-shadow: 0 10px #777;
 }

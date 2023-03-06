@@ -1,18 +1,14 @@
 /* Unselected node color: #777 */
 
 .table {
-    height: 200px;
-    width: 600px;
+    height: 100px;
+    width: 100%;
     margin-left: 0%;
 }
 
-.auto {
-
-}
-
 .node-cone {
-    height: 50px;
-    width: 50px;
+    height: 35px;
+    width: 35px;
     background-color: #777;
     border-color: #777;
     padding: 11%;
@@ -22,8 +18,8 @@
 }
 
 .node-cube {
-    height: 50px;
-    width: 50px;
+    height: 35px;
+    width: 35px;
     background-color: #777;
     border-color: #777;
     padding: 11%;
@@ -54,8 +50,8 @@
 }
 
 .node-hybrid {
-    height: 50px;
-    width: 50px;
+    height: 35px;
+    width: 35px;
     background-color: #777;
     padding: 11%;
     border-radius: 20%;
@@ -66,7 +62,7 @@
 .next {
     height: 50px;
     width: 200px;
-    margin-top: 20%;
+    margin-top: 10%;
     background-color: #ff0000; /* Red */
     border: none;
     color: white;
@@ -115,7 +111,9 @@
 
 .button_red {
     height: 50px;
-    width: 175px;
+    width: 150px;
+    margin-top: 10px;
+    line-height: 20px;
     background-color: #ff0000; /* Red */
     border: none;
     color: white;
@@ -139,7 +137,7 @@
 }
 
 .charge {
-    margin-top: 15%;
+    margin-top: 5%;
     text-align: center;
 }
 
@@ -155,52 +153,52 @@
     background-color: #999;
     border: 5px solid #ffa600;
     box-shadow: 0 0px #666;
-    transform: translateY(10px);
+    transform: translateY(5px);
 }
 
 .charge label span {
     position: relative;
     text-align: center;
     display: inline-block;
-    font-size: 24px;
+    font-size: 16px;
 }
 
 .left {
-    width: 150px;
-    height: 75px;
-    line-height: 75px;
+    width: 100px;
+    height: 50px;
+    line-height: 50px;
     background: #ff0000;
     color: white;
     border: 5px solid #ff0000;
     text-align: center;
     border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;
-    box-shadow: 0 10px #777;
+    box-shadow: 0 5px #777;
 }
 .left:hover {background-color: #cf0000;}
 
 .mid {
-    width: 150px;
-    height: 75px;
-    line-height: 75px;
+    width: 100px;
+    height: 50px;
+    line-height: 50px;
     background: #ff0000;
     color: white;
     border: 5px solid #ff0000;
     text-align: center;
-    box-shadow: 0 10px #777;
+    box-shadow: 0 5px #777;
 }
 .mid:hover {background-color: #cf0000;}
 
 .right {
-    width: 150px;
-    height: 75px;
-    line-height: 75px;
+    width: 100px;
+    height: 50px;
+    line-height: 50px;
     background: #ff0000;
     color: white;
     border: 5px solid #ff0000;
     text-align: center;
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
-    box-shadow: 0 10px #777;
+    box-shadow: 0 5px #777;
 }
 .right:hover {background-color: #cf0000;}
