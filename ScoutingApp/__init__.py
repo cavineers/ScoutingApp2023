@@ -1,22 +1,18 @@
 from . import competition
-from flask import Flask, redirect, render_template, send_file, url_for; import flask.app
-from flask_sqlalchemy import SQLAlchemy
+import __main__
+from datetime import datetime
+from flask import Flask, redirect, render_template, Response, request, send_file, url_for; import flask.app
 import json
 import os
 import traceback
 import waitress #production quality WSGI server to host the flask app with. more: https://docs.pylonsproject.org/projects/waitress/en/stable/index.html
 
-STATIC = os.path.abspath("static")
-TEMPLATES = os.path.abspath("templates")
-#https://flask-sqlalchemy.palletsprojects.com/en/2.x/binds/
-#https://www.digitalocean.com/community/tutorials/how-to-use-flask-sqlalchemy-to-interact-with-databases-in-a-flask-application
-DB_DIR = os.getcwd()
-DB_BINDS = {}
+DIR = os.path.dirname(__main__.__file__)
+STATIC = os.path.abspath(os.path.join(DIR, "static"))
+TEMPLATES = os.path.abspath(os.path.join(DIR, "templates"))
 
 app = Flask(__name__, static_folder=STATIC, template_folder=TEMPLATES)
 app.url_map.strict_slashes = False
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(DB_DIR, '.db')}" #sadly, there needs to be an empty db, perhaps some day it will find its use
-db = SQLAlchemy()
 
 comps:"list[competition.Competition]" = []
 not_content = []
@@ -27,6 +23,15 @@ def not_content_route(rule:str, onto=app, **options):
         not_content.append(rule)
         return onto.route(rule, **options)(f)
     return decor
+
+#event handlers
+@app.before_request
+def before_request():
+    print(f"[{datetime.now().strftime('%m/%d/%y - %H:%M:%S.%f')}] Got request {request.method} from {request.remote_addr}: {request.url}")
+
+@app.after_request
+def after_request(response:Response):
+    print(f"[{datetime.now().strftime('%m/%d/%y - %H:%M:%S.%f')}] Got response {request.method} ({response.status}) from {request.remote_addr}: {request.url}")
 
 #define routes
 #for info on decorators, see https://realpython.com/primer-on-python-decorators/, or look up "python decorators"
@@ -90,10 +95,6 @@ def ping():
 def serve(host:str="localhost", port:int=8080):
     "Serve the webapp."
     print("Serving", host, f"on port {port}.")
-    app.config["SQLALCHEMY_BINDS"] = DB_BINDS
-    db.init_app(app)
-    with app.app_context():
-        db.create_all()
     waitress.serve(app, host=host, port=int(port), threads=48)
 
 def load_competitions(dir:str=competition.COMPETITIONS_DIR):
@@ -119,5 +120,3 @@ def add_competition(comp:competition.Competition):
         return
     app.register_blueprint(comp.blueprint)
     comps.append(comp)
-    if comp.db_uri is not None:
-        DB_BINDS[comp.name] = comp.db_uri

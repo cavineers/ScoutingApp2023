@@ -1,13 +1,10 @@
 from datetime import datetime, tzinfo
 import os
-from ScoutingApp import DB_DIR
 
 PARSE_VERSION = "1.0"
 CONTENT_MATCH = "match"
 CONTENT_PIT = "pit"
 LOCAL_TIMEZONE:tzinfo = datetime.now().astimezone().tzinfo
-DB_URI = f"sqlite:///{os.path.join(DB_DIR, 'comp2023.db')}"
-BIND_KEY = "2023" #NOTE: bind key must be name attribute set in the Comptetition object
 
 class TableNames:
     MatchData = "match_data"

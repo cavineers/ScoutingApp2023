@@ -3,7 +3,6 @@ from datetime import datetime, timedelta, timezone
 import json
 from PIL import Image
 from pyzbar import pyzbar
-from ScoutingApp import db
 import sqlalchemy, sqlalchemy.orm
 
 
@@ -98,173 +97,80 @@ class Points:
 
 
 
-class MatchData(db.Model):
-    "Object for accessing data gotten from scouting a match via submission."
-
-    __bind_key__ = BIND_KEY
-    __tablename__ = TableNames.MatchData
-
-    #define columns
-    id = db.Column("id", db.Integer, primary_key=True)
-    version = db.Column("version", db.String, nullable=True)
-    team_number = db.Column("team_number", db.Integer, nullable=True)
-    match_number = db.Column("match_number", db.Integer, nullable=True)
-    scouter_name = db.Column("scouter_name", db.String, nullable=True)
-    score = db.Column("score_history", Json, nullable=True)
-    pickups = db.Column("pickups", Json, nullable=True)
-    drops = db.Column("drops", Json, nullable=True)
-    defenses = db.Column("defenses", Json, nullable=True)
-    charge_state = db.Column("charge_state", db.String(16), nullable=True)
-    comments = db.Column("comments", Json, nullable=True)
-    submission_time = db.Column("submission_time", db.Integer, nullable=True)
-    end_auto = db.Column("end_auto", db.Integer, nullable=True)
-    #navigational timestamps
-    navigation_start = db.Column("navigation_start", db.Integer, nullable=True) #to home.html
-    navigation_prematch = db.Column("navigation_prematch", db.Integer, nullable=True) #to prematch.html
-    navigation_match = db.Column("navigation_match", db.Integer, nullable=True) #to scout.html
-    navigation_result = db.Column("navigation_result", db.Integer, nullable=True) #to result.html
-    navigation_finish = db.Column("navigation_finish", db.Integer, nullable=True) #to qrscanner.html
 
 
-    @staticmethod
-    def get(id:int)->"MatchData|None":
-        "Query for the MatchData object by ID."
-        return filter_search(MatchData, id=id).first()
 
-    @staticmethod
-    def search(**by):
-        "Query for the MatchData object by the given criteria."
-        return filter_search(MatchData, by)
-
-
-    @classmethod
-    def generate(cls, data:dict):
-        "Create a MatchData object from raw data."
-        preliminary_data = data.get(ContentKeys.PRELIMINARY_DATA,{})
-        nav_stamps = data.get(ContentKeys.NAV_STAMPS,{})
-        return cls(
-            version=data.get(ContentKeys.VERSION),
-            team_number=preliminary_data.get(ContentKeys.TEAM_NUMBER),
-            match_number=preliminary_data.get(ContentKeys.MATCH_NUMBER),
-            scouter_name=preliminary_data.get(ContentKeys.SCOUTER_NAME),
-            score=data.get(ContentKeys.SCORE),
-            pickups=data.get(ContentKeys.PICKUPS),
-            drops=data.get(ContentKeys.DROPS),
-            defenses=data.get(ContentKeys.DEFENSES),
-            charge_state=data.get(ContentKeys.CHARGE_STATE),
-            comments=data.get(ContentKeys.COMMENTS),
-            end_auto=data.get(ContentKeys.END_AUTO),
-            navigation_start=nav_stamps.get("home.html"),
-            navigation_prematch=nav_stamps.get("prematch.html"),
-            navigation_match=nav_stamps.get("scout.html"),
-            navigation_result=nav_stamps.get("result.html"),
-            navigation_finish=nav_stamps.get("qrscanner.html")
-        )
-
-    def __init__(self, version:str=None, team_number:int=None, match_number:int=None, scouter_name:str=None, score:"dict[str, dict[str, str|None]]"=None,
-                 pickups:"list[int]"=None, drops:"list[int]"=None, defenses:"list[int]"=None, charge_state:str=None, comments:"list[str]"=None, submission_time:int=None,
-                 end_auto:int=None, navigation_start:int=None, navigation_prematch:int=None, navigation_match:int=None, navigation_result:int=None, navigation_finish:int=None):
-        self.version = version
-        self.team_number = team_number
-        self.match_number = match_number
-        self.id = MatchData._construct_id(team_number, match_number)
-        self.scouter_name = scouter_name
-        self.score = score
-        self.pickups = pickups
-        self.drops = drops
-        self.defenses = defenses
-        self.charge_state = charge_state
-        self.comments = comments
-        self.submission_time = submission_time
-        self.end_auto = end_auto
-        #navigation timestamps
-        self.navigation_start = navigation_start
-        self.navigation_prematch = navigation_prematch
-        self.navigation_match = navigation_match
-        self.navigation_result = navigation_result
-        self.navigation_finish = navigation_finish
-
-    def __getitem__(self, key:str): return self.__dict__[key]
-    def __setitem__(self, key:str, value): self.__dict__[key] = value
-    def __contains__(self, key:str): return key in self.__dict__
-
-    def __repr__(self):
-        return f"<MatchData {self.id} from '{self.scouter_name}' at {hex(id(self))}>"
-
-    @staticmethod
-    def _construct_id(team_number:int, match_number:int)->int:
-        if not (isinstance(team_number, int) and isinstance(match_number, int)):
-            raise TypeError("MatchData team number and match number must both be of type int to generate a MatchData id.")
-        #":04" will ensure that match number takes up at least 4 digits of space in the id, any untaken space is replaced with leading 0s
-        return int(f"{team_number}{match_number:04}")
+    # @classmethod
+    # def generate(cls, data:dict):
+    #     "Create a MatchData object from raw data."
+    #     preliminary_data = data.get(ContentKeys.PRELIMINARY_DATA,{})
+    #     nav_stamps = data.get(ContentKeys.NAV_STAMPS,{})
+    #     return cls(
+    #         version=data.get(ContentKeys.VERSION),
+    #         team_number=preliminary_data.get(ContentKeys.TEAM_NUMBER),
+    #         match_number=preliminary_data.get(ContentKeys.MATCH_NUMBER),
+    #         scouter_name=preliminary_data.get(ContentKeys.SCOUTER_NAME),
+    #         score=data.get(ContentKeys.SCORE),
+    #         pickups=data.get(ContentKeys.PICKUPS),
+    #         drops=data.get(ContentKeys.DROPS),
+    #         defenses=data.get(ContentKeys.DEFENSES),
+    #         charge_state=data.get(ContentKeys.CHARGE_STATE),
+    #         comments=data.get(ContentKeys.COMMENTS),
+    #         end_auto=data.get(ContentKeys.END_AUTO),
+    #         navigation_start=nav_stamps.get("home.html"),
+    #         navigation_prematch=nav_stamps.get("prematch.html"),
+    #         navigation_match=nav_stamps.get("scout.html"),
+    #         navigation_result=nav_stamps.get("result.html"),
+    #         navigation_finish=nav_stamps.get("qrscanner.html")
 
     #construction methods
-    def construct_score_events(self)->"list[Event]":
-        if self.score is None:
-            raise KeyError(ContentKeys.SCORE)
-        events = []
-        for index, history in self.score.items():
-            for timestamp, game_piece in history.items():
-                events.append(Event(
-                    EventActions.SCORE,
-                    timestamp,
-                    self.team_number,
-                    self.match_number,
-                    self.scouter_name,
-                    index=int(index),
-                    piece=game_piece
-                ))
-        return events
+    # def construct_score_events(self)->"list[Event]":
+    #     if self.score is None:
+    #         raise KeyError(ContentKeys.SCORE)
+    #     events = []
+    #     for index, history in self.score.items():
+    #         for timestamp, game_piece in history.items():
+    #             events.append(Event(
+    #                 EventActions.SCORE,
+    #                 timestamp,
+    #                 self.team_number,
+    #                 self.match_number,
+    #                 self.scouter_name,
+    #                 index=int(index),
+    #                 piece=game_piece
+    #             ))
+    #     return events
 
-    def construct_drop_events(self)->"list[Event]":
-        if self.drops is None:
-            raise KeyError(ContentKeys.DROPS)
-        return [Event(EventActions.DROP, timestamp, self.team_number, self.match_number, self.scouter_name) for timestamp in self.drops]
+    # def construct_drop_events(self)->"list[Event]":
+    #     if self.drops is None:
+    #         raise KeyError(ContentKeys.DROPS)
+    #     return [Event(EventActions.DROP, timestamp, self.team_number, self.match_number, self.scouter_name) for timestamp in self.drops]
 
-    def contruct_defense_events(self)->"list[Event]":
-        if self.defenses is None:
-            raise KeyError(ContentKeys.DEFENSES)
-        return [Event(EventActions.DEFENSE, timestamp, self.team_number, self.match_number, self.scouter_name) for timestamp in self.defenses]
+    # def contruct_defense_events(self)->"list[Event]":
+    #     if self.defenses is None:
+    #         raise KeyError(ContentKeys.DEFENSES)
+    #     return [Event(EventActions.DEFENSE, timestamp, self.team_number, self.match_number, self.scouter_name) for timestamp in self.defenses]
 
-    def construct_pickup_events(self)->"list[Event]":
-        if self.pickups is None:
-            raise KeyError(ContentKeys.PICKUPS)
-        return [Event(EventActions.PICK_UP, timestamp, self.team_number, self.match_number, self.scouter_name) for timestamp in self.pickups]
+    # def construct_pickup_events(self)->"list[Event]":
+    #     if self.pickups is None:
+    #         raise KeyError(ContentKeys.PICKUPS)
+    #     return [Event(EventActions.PICK_UP, timestamp, self.team_number, self.match_number, self.scouter_name) for timestamp in self.pickups]
 
-    def construct_events(self)->"list[Event]":
-        for e in self.construct_drop_events():
-            yield e
-        for e in self.contruct_defense_events():
-            yield e
-        for e in self.construct_pickup_events():
-            yield e
-        yield Event(EventActions.END_AUTO, self.end_auto, self.team_number, self.match_number, self.scouter_name)
-        yield Event(EventActions.START, self.navigation_match, self.team_number, self.match_number, self.scouter_name)
-        yield Event(EventActions.END, self.navigation_result, self.team_number, self.match_number, self.scouter_name)
+    # def construct_events(self)->"list[Event]":
+    #     for e in self.construct_drop_events():
+    #         yield e
+    #     for e in self.contruct_defense_events():
+    #         yield e
+    #     for e in self.construct_pickup_events():
+    #         yield e
+    #     yield Event(EventActions.END_AUTO, self.end_auto, self.team_number, self.match_number, self.scouter_name)
+    #     yield Event(EventActions.START, self.navigation_match, self.team_number, self.match_number, self.scouter_name)
+    #     yield Event(EventActions.END, self.navigation_result, self.team_number, self.match_number, self.scouter_name)
 
 
-class Event(db.Model):
-    __bind_key__ = BIND_KEY
-    __tablename__ = TableNames.Event
-
-    time = db.Column("time", Datetime, primary_key=True)
-    action = db.Column("action", db.String, nullable=False)
-    team_number = db.Column("team_number", db.Integer, nullable=False)
-    match_number = db.Column("match_number", db.Integer, nullable=False)
-    scouter_name = db.Column("scouter_name", db.String)
-    other = db.Column("other", Json, nullable=False)
-
-    @staticmethod
-    def get(time:int)->"Event|None":
-        "Query for the Event object by timestamp."
-        return filter_search(Event, time=time).first()
-
-    @staticmethod
-    def search(**by):
-        "Query for the Event object by the given criteria."
-        return filter_search(Event, by)
-
+class Event:
     "Object representing an event that happened during the match."
+
     def __init__(self, action:str, time:datetime, team_number:int, match_number:int, scouter_name:str, **other):
         self.action = action
         self.time = time if isinstance(time, datetime) else from_utc_timestamp(time)
@@ -298,48 +204,6 @@ class Event(db.Model):
         else:
             return super().__eq__(value)
 
-
-
-class Match(db.Model):
-    __bind_key__ = BIND_KEY
-    __tablename__ = TableNames.Match
-
-    number = db.Column("number", db.Integer, primary_key=True)
-    teams = db.Column("teams", Json, nullable=False)
-    events = db.Column("events", Json, nullable=False)
-
-    @staticmethod
-    def get(id:int)->"Match|None":
-        "Query for the Match object by number."
-        return filter_search(Match, id=id).first()
-
-    @staticmethod
-    def search(**by):
-        "Query for the Match object by the given criteria."
-        return filter_search(Match, by)
-
-    def __init__(self, number:int, teams:"list[int]", events:"list[int]"):
-        self.number = number
-        self.teams = teams
-        self.events = events
-
-    def generate_report(self):
-        team_match_reports = [TeamMatchReport(number, self.number) for number in self.teams]
-        #TODO create MatchReport from TeamMatchReport objects
-
-
-class Scouter(db.Model):
-    __bind_key__ = BIND_KEY
-    __tablename__ = TableNames.Scouter
-
-    name = db.Column("name", db.String, primary_key=True)
-    year = db.Column("year", db.Integer, nullable=True)
-    submissions = db.Column("submissions", Json, nullable=False)
-
-    def __init__(self, name:str, year:int, submissions:"list[int]"):
-        self.name = name
-        self.year = year
-        self.submissions = submissions
 
 class ScoreGroup:
     def __init__(self, pickup:"Event|None"=None, drop:"Event|None"=None, score:"Event|None"=None, ammend=False):
@@ -414,6 +278,7 @@ class ScoreGroup:
         return 0
 
 
+#TODO make this into a function for processing some of the raw data into more usable values: list[Event] -> list[ScoreGroup] -> (cubes_places:int, cones_placed:int, ...)
 class TeamMatchReport:
     "An object representing what a team did in a match based on Events and other match data. Should not be used to mutate or modify database contents, just for analytics."
 
@@ -551,54 +416,6 @@ class TeamMatchReport:
             else:
                 self.points_teleop[ScoreAwardName.GAME_PIECES] += sg.score
 
-class AllianceMatchReport:
-    def __init__(self, t1:int, t2:int, t3:int, match_number:int):
-        self.t1 = t1
-        self.t2 = t2
-        self.t3 = t3
-        self.match_number = match_number
-        self.reports = self.r1, self.r2, self.r3 = TeamMatchReport(t1, match_number), TeamMatchReport(t2, match_number), TeamMatchReport(t3, match_number)
-        #TODO make points dicts (auto, teleop, ranking)
-        self.points_auto:"dict[str, int]" = {
-
-        }
-        self.points_teleop:"dict[str, int]" = {
-
-        }
-        self.points_ranking:"dict[str, int]" = {
-
-        }
-
-    def initialize_report(self):
-        for report in self.reports:
-            report.initialize_report()
-        self.points_auto = {k:sum(di[k] for di in (self.r1.points_auto, self.r2.points_auto, self.r3.points_auto)) for k in (*self.r1.points_auto, *self.r2.points_auto, *self.r3.points_auto)}
-        
-        
-
-
-class Team:
-    "A FRC Team. Team-specific data is gotten from The Blue Alliance API instead of being stored locally." #NOTE: this may change :)
-    def __init__(self, number:int):
-        self.number = number
-
-    def get_matches(self, **filter)->"list[Match]":
-        return [match for match in (Match.search(**filter) if filter else get_all(Match)) if self.number in match.teams]
-
-    def get_submissions(self, **filter)->"list[MatchData]":
-        return list(MatchData.search(**dict(filter, team_number=self.number)))
-
-#data querying
-def filter_search(model:type, search:"dict[str]"):
-    "Query for a given model with the given search requirements."
-    q:sqlalchemy.orm.Query = db.session.query(model)
-    return q.filter_by(**search)
-
-def get_all(model:type):
-    "Get all rows of a given model as objects."
-    q:sqlalchemy.orm.Query = db.session.query(model)
-    return q.all()
-
 #functions
 def map_index_to_type(index:int)->str:
     "Given index, get its score node type in the score grid."
@@ -627,36 +444,16 @@ def parse_qr_code(fp)->"dict[str]":
     decoded:list = pyzbar.decode(Image.open(fp))
     return json.loads(decoded[0].data.decode("ascii"))
 
-def load_qr_code(fp):
-    "Parses qr code data and turns it into usable objects."
-    return read_data(parse_qr_code(fp))
-    
-def load_json_data(data:str):
-    "Parses JSON string and turns it into usable objects."
-    return read_data(json.loads(data))
-
-def read_data(fields:dict):
-    "Read the given data (dict) and return the appropriate object."
-    if not isinstance(fields, dict):
-        raise TypeError(f"Expected dict, got {type(fields).__name__}.")
-    elif ContentKeys.CONTENT_TYPE not in fields:
-        raise KeyError(repr(ContentKeys.CONTENT_TYPE))
-
-    content_type = str(fields.get(ContentKeys.CONTENT_TYPE)).strip().lower()
-    if content_type == CONTENT_MATCH:
-        return MatchData.generate(fields)
-    else:
-        raise ValueError(f"Unknow content type '{content_type}'.")
 
 
-def _debug(path:str): #debug used in scouting app presentation on 2/4/2023
-    from pprint import pprint
-    print("="*10+"RAW DATA"+"="*10)
-    pprint(parse_qr_code(path))
-    data:MatchData = load_qr_code(path)
-    print("\n"+"="*10+"EXTRACTED DATA"+"="*10)
-    for attr, value in data.items():
-        print(attr+":",value)
-    for attr, value in MatchData.__dict__.items():
-        if isinstance(value, property):
-            print(attr+":", getattr(data, attr))
+# def _debug(path:str): #debug used in scouting app presentation on 2/4/2023
+#     from pprint import pprint
+#     print("="*10+"RAW DATA"+"="*10)
+#     pprint(parse_qr_code(path))
+#     data:MatchData = load_qr_code(path)
+#     print("\n"+"="*10+"EXTRACTED DATA"+"="*10)
+#     for attr, value in data.items():
+#         print(attr+":",value)
+#     for attr, value in MatchData.__dict__.items():
+#         if isinstance(value, property):
+#             print(attr+":", getattr(data, attr))
