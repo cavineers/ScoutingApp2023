@@ -11,11 +11,10 @@ class NoCompetitionException(Exception):
 
 class Competition:
     "Object representing a competition."
-    def __init__(self, name:str, display_name:str, start_url:str, db_uri:str, blueprint:Blueprint):
+    def __init__(self, name:str, display_name:str, start_url:str, blueprint:Blueprint):
         self.name = name
         self.display_name = display_name
         self.start_url = start_url
-        self.db_uri = db_uri
         self.blueprint = blueprint
         self.module = None
 

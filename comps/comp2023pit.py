@@ -9,4 +9,4 @@ def pit():
     return render_template("2023pit/pit.html")
 
 
-competition.define(competition.Competition("2023pit", "2023: Pit Scouting", "pit.html", None, blueprint))
+competition.define(competition.Competition("2023pit", "2023: Pit Scouting", "pit.html", blueprint))

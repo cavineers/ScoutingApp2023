@@ -1,6 +1,6 @@
 from . import data_manage
 from datetime import datetime
-from ScoutingApp import db, not_content_route, STATIC, TEMPLATES
+from ScoutingApp import not_content_route, STATIC, TEMPLATES
 from flask import Blueprint, render_template, request
 import json
 import os
@@ -48,22 +48,22 @@ UPLOAD_DATA_KEY = "data"
 def upload():
     try:
         if "data" in request.files:
-            data = data_manage.load_qr_code(request.files[UPLOAD_DATA_KEY])
+            data = data_manage.parse_qr_code(request.files[UPLOAD_DATA_KEY])
         elif UPLOAD_DATA_KEY in request.form:
-            data = data_manage.load_json_data(request.form[UPLOAD_DATA_KEY])
+            data = json.loads(request.form[UPLOAD_DATA_KEY])
         else:
             return f"You must upload a QR code or JSON data under key '{UPLOAD_DATA_KEY}'.", 400
     except Exception as e:
         traceback.print_exception(e)
-        return "Got error while processing uploaded data.", 500
+        return "Got error while reading uploaded data.", 500
+    
+    #TODO process data into column values (see: https://docs.google.com/spreadsheets/d/1KCPyhZ5O3CdlRzDyMer7pqnJjNJhin79JegNVN5Jo5M/edit#gid=0 )
     
     try:
-        data.submission_time = data_manage.to_utc_timestamp(datetime.now())
-        db.session.add(data)
-        db.session.flush()
+        ... #TODO add data to sheets
     except Exception as e:
         traceback.print_exception(e)
-        return "Got error while committing uploaded data.", 500
+        return "Got error while storing uploaded data.", 500
     else:
         print(request.remote_addr, "uploaded data:", repr(data))
         return "Committed uploaded data.", 200

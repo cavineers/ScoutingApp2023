@@ -1,13 +1,9 @@
-from . import app, competition, db, serve, load_competitions
+from . import app, competition, serve, load_competitions
 import sys
 
 def main(**kw):
     load_competitions(kw.pop("dir", competition.COMPETITIONS_DIR))
-    try:
-        serve(**kw)
-    finally:
-        with app.app_context():
-            db.session.close()
+    serve(**kw)
 
 
 def _get_args():
