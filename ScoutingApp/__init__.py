@@ -32,6 +32,7 @@ def before_request():
 @app.after_request
 def after_request(response:Response):
     print(f"[{datetime.now().strftime('%m/%d/%y - %H:%M:%S.%f')}] Got response {request.method} ({response.status}) from {request.remote_addr}: {request.url}")
+    return response
 
 #define routes
 #for info on decorators, see https://realpython.com/primer-on-python-decorators/, or look up "python decorators"
