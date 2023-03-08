@@ -34,6 +34,7 @@
     background-color: #777;
     border-color: #777;
     padding: 11%;
+    margin: 23%;
     border-radius: 20%;
     align-items: center;
 }
@@ -41,7 +42,8 @@
 .node-cone_button {
     height: 100px;
     width: 100px;
-    margin: 30px;
+    margin-left: 23%;
+    margin-top: 23%;
     background-color: #777;
     border-color: #777;
     padding: 11%;

@@ -145,7 +145,7 @@
   display: inline-block;
   font-size: 8px;
   border-radius: 5px;
-  box-shadow: 0 10px #777;
+  box-shadow: 0 5px #777;
 }
 
 .next span {
@@ -162,7 +162,7 @@
 .next:active {
   background-color: #cf0000;
   box-shadow: 0 0px #666;
-  transform: translateY(10px);
+  transform: translateY(5px);
 }
 
 .next span:after {
