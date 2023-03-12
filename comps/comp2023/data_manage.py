@@ -1,10 +1,18 @@
 from .constants import *
+from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build, Resource
+from googleapiclient.errors import HttpError
 import json
 from PIL import Image
 from pyzbar import pyzbar
-import sqlalchemy, sqlalchemy.orm
 
+with open(API_KEYS_FILE) as f:
+    KEYS = json.load(f)
+SHEETS_OAUTH_DATA = KEYS[SHEETS_OAUTH]
 
 #NOTE: the notes below are about scoring, points, etc
 #cite: see manual 6.4:44-45 for time period between action taking place and when it counts for points 
@@ -80,6 +88,30 @@ import sqlalchemy, sqlalchemy.orm
     #     yield Event(EventActions.END_AUTO, self.end_auto, self.team_number, self.match_number, self.scouter_name)
     #     yield Event(EventActions.START, self.navigation_match, self.team_number, self.match_number, self.scouter_name)
     #     yield Event(EventActions.END, self.navigation_result, self.team_number, self.match_number, self.scouter_name)
+
+@dataclass(slots=True)
+class Data:
+    "Data that gets put into google sheets."
+
+    team_number:int
+    match_number:int
+    scouter:str
+    cones_bottom:int
+    cones_middle:int
+    cones_top:int
+    cubes_bottom:int
+    cubes_middle:int
+    cubes_top:int
+    picked_up_ground:int
+    picked_up_shelf:int
+    drops:int
+    charging_pad_auto:str
+    charging_pad_teleop:str
+    defenses:int
+    min_score_delta:float
+    max_score_delta:float
+    avg_score_delta:float
+    comments:str
 
 
 class Event:
@@ -358,6 +390,62 @@ def parse_qr_code(fp)->"dict[str]":
     decoded:list = pyzbar.decode(Image.open(fp))
     return json.loads(decoded[0].data.decode("ascii"))
 
+def handle_upload(raw:"dict[str]"):
+    "Handle data sent to the upload route"
+    data = process_data(raw)
+    save_local(raw)
+    save_to_sheets(data)
+
+def process_data(raw:"dict[str]")->Data:
+    ...
+
+def save_to_sheets(data:Data):
+    creds = None
+    # The file token.json stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists(SHEETS_TOKEN_FILE):
+        creds = Credentials.from_authorized_user_file(SHEETS_TOKEN_FILE, SHEETS_SCOPES)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_config(SHEETS_OAUTH_DATA, SHEETS_SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open(SHEETS_TOKEN_FILE, "w") as token:
+            token.write(creds.to_json())
+
+    try:
+        service:Resource = build("sheets", "v4", credentials=creds)
+        sheets:Resource = service.spreadsheets()
+        #TODO implement a queue system (depending on the api rate limits) where multiple rows are inserted in one request.
+        # A stress test & other research would be required to determine the necessity of this
+        row = [getattr(data, Data.__slots__[i]) for i in range(len(SHEETS_COLUMN_NAMES))] #TODO look for a better way to do this
+        #insert data at the end of the Data sheet
+        print(sheets.values().append(
+            spreadsheetId=SPREADSHEET_ID,
+            range="Data!A3:A",
+            valueInputOption="RAW", insertDataOption="INSERT_ROWS", body={"values":[row]}
+        ).execute())
+        #insert data at the end of the Backup Data sheet
+        print(sheets.values().append(
+            spreadsheetId=SPREADSHEET_ID,
+            range="'Backup Data'!A3:A",
+            valueInputOption="RAW", insertDataOption="INSERT_ROWS", body={"values":[row]}
+        ).execute())
+    except HttpError as err:
+        print(err)
+    finally:
+        if "service" in locals():
+            service.close()
+
+def save_local(raw:"dict[str]|str"):
+    if not isinstance(raw, str):
+        raw = json.dumps(raw)
+    with open("a" if os.path.isfile(SUBMISSIONS_FILE) else "w") as f:
+        f.write(raw+"\n")
 
 
 # def _debug(path:str): #debug used in scouting app presentation on 2/4/2023

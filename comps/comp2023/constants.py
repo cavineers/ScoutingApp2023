@@ -6,11 +6,23 @@ CONTENT_MATCH = "match"
 CONTENT_PIT = "pit"
 LOCAL_TIMEZONE:tzinfo = datetime.now().astimezone().tzinfo
 
-class TableNames:
-    MatchData = "match_data"
-    Event = "events"
-    Match = "matches"
-    Scouter = "scouters"
+DIR = os.path.dirname(__file__)
+NAMES_FILE = os.path.join(DIR, "names.txt")
+SUBMISSIONS_FILE = os.path.join(DIR, "submissions.txt") #each line is the json for one submission
+SHEETS_TOKEN_FILE = os.path.join(DIR, "token.json")
+
+#API names
+API_KEYS_FILE = os.path.join(DIR, "apikeys.json")
+SHEETS_OAUTH = "Sheets OAuth"
+SHEETS_SCOPES = "https://www.googleapis.com/auth/spreadsheets",
+
+SPREADSHEET_ID = "1KCPyhZ5O3CdlRzDyMer7pqnJjNJhin79JegNVN5Jo5M"
+
+#various key and state names
+SHEETS_COLUMN_NAMES = ("TEAM  NUMBER", "MATCH NUMBER", "SCOUTER", "CONES SCORED BOTTOM", "CONES SCORED MIDDLE", "CONES SCORED TOP", "CUBES SCORED BOTTOM", "CUBES SCORED MIDDLE",
+               "CUBES SCORED TOP", "PICKED UP GROUND", "PICKED UP SHELF", "DROPS", "CHARGING PAD STATE: AUTO", "CHARGING PAD STATE: TELEOP", "DEFENSES", "MIN SCORE DELTA",
+               "MAX SCORE DELTA", "AVG SCORE DELTA", "COMMENTS")
+
 class EventActions:
     PICK_UP = "pick_up"
     DROP = "drop"

@@ -1,4 +1,5 @@
 from . import data_manage
+from .constants import DIR, NAMES_FILE
 from datetime import datetime
 from ScoutingApp import not_content_route, STATIC, TEMPLATES
 from flask import Blueprint, render_template, request
@@ -7,8 +8,6 @@ import os
 import traceback
 
 blueprint = Blueprint("2023", __name__, url_prefix="/comps/2023", static_folder=STATIC, template_folder=TEMPLATES)
-
-NAMES_FILE = os.path.join(os.path.dirname(__file__), "names.txt")
 
 #content routes
 @blueprint.route("/home.html")
@@ -37,11 +36,6 @@ def names():
     with open(NAMES_FILE) as f:
         return json.dumps([name.strip() for name in f.readlines()])
 
-@blueprint.route("/sheets")
-def sheets():
-    return ""
-
-
 #api routes
 UPLOAD_DATA_KEY = "data"
 @not_content_route("/upload", onto=blueprint, methods=["POST"])
@@ -60,7 +54,7 @@ def upload():
     #TODO process data into column values (see: https://docs.google.com/spreadsheets/d/1KCPyhZ5O3CdlRzDyMer7pqnJjNJhin79JegNVN5Jo5M/edit#gid=0 )
     
     try:
-        ... #TODO add data to sheets
+        data_manage.handle_upload(data)
     except Exception as e:
         traceback.print_exception(e)
         return "Got error while storing uploaded data.", 500
