@@ -1,4 +1,4 @@
-from ScoutingApp import __main
+from ScoutingApp import __main, app
 
 
 def main():
