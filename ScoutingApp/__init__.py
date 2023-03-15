@@ -7,7 +7,7 @@ import os
 import traceback
 import waitress #production quality WSGI server to host the flask app with. more: https://docs.pylonsproject.org/projects/waitress/en/stable/index.html
 
-DIR = os.path.dirname(__main__.__file__)
+DIR = os.getcwd()
 STATIC = os.path.abspath(os.path.join(DIR, "static"))
 TEMPLATES = os.path.abspath(os.path.join(DIR, "templates"))
 
