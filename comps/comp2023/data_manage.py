@@ -273,9 +273,9 @@ def process_events(events:"list[Event]")->"dict[str]":
         "cubes_bottom":len([event for event in rows[2] if event.other["piece"]==GamePiece.CUBE]),
         "cubes_middle":len([event for event in rows[1] if event.other["piece"]==GamePiece.CUBE]),
         "cubes_top":len([event for event in rows[0] if event.other["piece"]==GamePiece.CUBE]),
-        "min_score_delta":round(min(deltas).total_seconds(), 3),
-        "max_score_delta":round(max(deltas).total_seconds(), 3),
-        "avg_score_delta":round(sum(delta.total_seconds() for delta in deltas)/len(deltas), 3)
+        "min_score_delta":round(min(deltas).total_seconds(), 3) if deltas else 0,
+        "max_score_delta":round(max(deltas).total_seconds(), 3) if deltas else 0,
+        "avg_score_delta":round((sum(delta.total_seconds() for delta in deltas)/len(deltas)) if deltas else 0, 3)
     }
 
 def map_index_to_type(index:int)->str:
