@@ -39,10 +39,10 @@ UPLOAD_DATA_KEY = "data"
 @not_content_route("/upload", onto=blueprint, methods=["POST"])
 def upload():
     try:
-        if "data" in request.files:
+        if UPLOAD_DATA_KEY in request.files:
             data = data_manage.parse_qr_code(request.files[UPLOAD_DATA_KEY])
         elif UPLOAD_DATA_KEY in request.form:
-            data = json.loads(request.form[UPLOAD_DATA_KEY])
+            data = json.loads(json.loads(request.form[UPLOAD_DATA_KEY]))
         else:
             return f"You must upload a QR code or JSON data under key '{UPLOAD_DATA_KEY}'.", 400
     except Exception as e:

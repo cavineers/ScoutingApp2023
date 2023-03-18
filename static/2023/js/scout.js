@@ -3,6 +3,8 @@ let scoreNodes = [];
 /** @type {Array.<number>} */
 let pickUps = []
 /** @type {Array.<number>} */
+let shelfPickUps = [];
+/** @type {Array.<number>} */
 let drops = [];
 /** @type {Array.<number>} */
 let defenses = [];
@@ -10,11 +12,12 @@ let defenses = [];
 
 const SCORE_GRID_STORAGE = "scoreGrid";
 const PICK_UPS_STORAGE = "pickUps";
+const SHELF_PICK_UPS_STORAGE = "shelfPickUps";
 const DROPS_STORAGE = "pieceDrops";
 const DEFENSES_STORAGE = "defenses";
 const CHARGE_STORAGE = "chargeState";
-const END_AUTO = "endAuto";
 const AUTO_CHARGE_STORAGE = "autoChargeState";
+const END_AUTO_STORAGE = "endAuto";
 const COMMUNITY_EXIT_STORAGE = "communityExit";
 
 const NodeType = {
@@ -99,8 +102,10 @@ window.addEventListener("load", () => {
     });
 
     //track button press times
-    const pickUpPiece = document.getElementById("pickedUpGround");
-    const pickUpPieceAuto = document.getElementById("pickUpAuto");
+    const pickedUpGround = document.getElementById("pickedUpGround");
+    const pickedUpShelf = document.getElementById("pickedUpShelf");
+    const pickUpAuto = document.getElementById("pickUpAuto");
+    const pickedUpShelfAuto = document.getElementById("pickedUpShelfAuto");
     const dropPiece = document.getElementById("dropPiece");
     const dropPieceAuto = document.getElementById("dropPieceAuto");
     const markDefense = document.getElementById("markDefense");
@@ -109,7 +114,9 @@ window.addEventListener("load", () => {
         localStorage.setItem(COMMUNITY_EXIT_STORAGE, "null");
 
     setMarkTime(pickedUpGround, PICK_UPS_STORAGE, pickUps);
-    setMarkTime(pickUpPieceAuto, PICK_UPS_STORAGE, pickUps);
+    setMarkTime(pickUpAuto, PICK_UPS_STORAGE, pickUps);
+    setMarkTime(pickedUpShelf, SHELF_PICK_UPS_STORAGE, shelfPickUps);
+    setMarkTime(pickedUpShelfAuto, SHELF_PICK_UPS_STORAGE, shelfPickUps);
     setMarkTime(dropPiece, DROPS_STORAGE, drops);
     setMarkTime(dropPieceAuto, DROPS_STORAGE, drops);
     setMarkTime(markDefense, DEFENSES_STORAGE, defenses);
@@ -130,7 +137,7 @@ window.addEventListener("load", () => {
                       chargeDocked.checked ? chargeDocked.value :
                       chargeOff.value;
         localStorage.setItem(AUTO_CHARGE_STORAGE, JSON.stringify(state))
-        localStorage.setItem(END_AUTO, JSON.stringify(getUTCNow()));
+        localStorage.setItem(END_AUTO_STORAGE, JSON.stringify(getUTCNow()));
         switchTele();
     });
 
@@ -152,6 +159,7 @@ window.addEventListener("load", () => {
         //redundant save
         localStorage.setItem(SCORE_GRID_STORAGE, JSON.stringify(scoreNodes));
         localStorage.setItem(PICK_UPS_STORAGE, JSON.stringify(pickUps));
+        localStorage.setItem(SHELF_PICK_UPS_STORAGE, JSON.stringify(shelfPickUps));
         localStorage.setItem(DROPS_STORAGE, JSON.stringify(drops));
         localStorage.setItem(DEFENSES_STORAGE, JSON.stringify(defenses));
 

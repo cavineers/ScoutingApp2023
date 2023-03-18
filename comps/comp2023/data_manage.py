@@ -82,7 +82,7 @@ class Event:
 
     def __init__(self, action:str, time:datetime, team_number:int, match_number:int, scouter_name:str, **other):
         self.action = action
-        self.time = time if isinstance(time, datetime) else from_utc_timestamp(time)
+        self.time = time if isinstance(time, datetime) else from_utc_timestamp(float(time))
         #reference fields: can be used in database subclass to access the related objects
         self.team_number = team_number
         self.match_number = match_number
@@ -112,79 +112,6 @@ class Event:
             return self.time == value.time and self.action == value.action
         else:
             return super().__eq__(value)
-
-
-class ScoreGroup:
-    def __init__(self, pickup:"Event|None"=None, drop:"Event|None"=None, score:"Event|None"=None, ammend=False):
-        if not (drop is None or score is None) or drop is score:
-            raise ValueError("ScoreGroup must contain either drop Event or score Event, not both or neither.")
-        self.pickup = pickup
-        self.drop = drop
-        self.score = score
-        self.ammend = ammend #if this event ammends a score event made in this node previously
-        self._get_node_location()
-
-    def __contains__(self, value):
-        return value is not None and value in (self.pickup, self.second)
-
-    def __len__(self):
-        return self.has_first+1 #0+1 or 1+1
-
-    def __getitem__(self, index:int):
-        return (self.first, self.second)[index]
-
-    def __setitem__(self, index:int, value):
-        if index == 0:
-            self.first = value
-        elif index == 1:
-            self.second = value
-        else:
-            raise IndexError("ScoreGroup assignment index out of range.")
-
-    def __iter__(self):
-        yield self.first
-        yield self.second
-
-    @property
-    def first(self)->Event: return self.pickup
-    @first.setter
-    def first(self, value:Event):
-        if not (isinstance(value, Event) or value is None):
-            raise TypeError(f"ScoreGroup first element must be Event instance, got {type(value).__name__}.")
-        self.pickup = value
-
-    @property
-    def second(self)->Event: return self.drop or self.score
-    @second.setter
-    def second(self, value:Event):
-        if not isinstance(value, Event):
-            raise TypeError(f"ScoreGroup second element must be Event instance, got {type(value).__name__}.")
-        if self.drop is not None:
-            self.drop = value
-        else:
-            self.score = value
-
-    @property
-    def has_first(self): return self.pickup is not None
-    @property
-    def delta(self)->timedelta: return self.second.time-self.pickup.time
-    @property
-    def index(self)->int: return self._index
-    @property
-    def row(self)->int: return self._row
-    @property
-    def column(self)->int: return self._column
-
-    def _get_node_location(self):
-        self._index = (int(self.score.other["index"]) if "index" in self.score.other else None) if self.score is not None else None
-        self._row = int(self._index / 9)
-        self._column = self._index % 9 if self._index is not None else None
-
-    def get_score(self):
-        for row, points in SCORE_VALUE_INDEX.items():
-            if self.row in row:
-                return points
-        return 0
 
 
 # class TeamMatchReport:
@@ -295,41 +222,16 @@ class ScoreGroup:
 
 #functions
 
-def _find_event(events:"list[Event]", actions:"tuple[str]", search_start=0, end_index=...)->"tuple[int, Event]":
-    if end_index is ...:
-        end_index = len(events)
-    for i, event in enumerate(events[search_start:end_index]):
-        if event.action in actions:
-            return i+search_start, event #enumeration happens over slice, add i+search_start gets index in the entire list
-    return -1, None
-
-def _get_score_groups(events:"list[Event]"):
-    "Group each pickup event with a score or drop event.\nIf there is no pickup event to go with the found score or drop event, thescore/drop event is put into a ScoreGroup on its own."
-    score_groups:"list[ScoreGroup]" = []
-    indexes = set()
-
-    search_start = 0
-    #get index and object of first score/drop event
-    s_index, second = _find_event((EventActions.SCORE, EventActions.DROP), search_start)
-    while s_index != -1:
-        #get pickup event
-        f_pi, f_pe = _find_event((EventActions.PICK_UP), search_start, s_index)
-        drop = second if second is not None and second.action == EventActions.DROP else None
-        score_index = second.index if drop is None else None
-        score_groups.append(ScoreGroup(f_pe, drop=drop, score=second if drop is None else None, ammend=score_index in indexes))
-        if score_index is not None:
-            indexes.add(score_index)
-        #get next group
-        search_start = s_index+1
-        s_index, second = _find_event((EventActions.PICK_UP, EventActions.DROP), search_start)
-    return score_groups
-
-def _get_score_deltas(score_groups:"list[ScoreGroup]")->"list[timedelta]":
+def _get_score_deltas(events:"list[Event]")->"list[timedelta]":
+    pickup = None
     score_deltas = []
-    for sg in score_groups:
-        if not sg.score:
-            continue
-        score_deltas.append(sg.second.time-sg.first.time)
+    for event in events:
+        if event.action in (EventActions.PICK_UP, EventActions.PICK_UP_SHELF):
+            pickup = event
+        elif event.action == EventActions.SCORE and pickup is not None:
+            score_deltas.append(event.time-pickup.time)
+        elif event.action == EventActions.DROP:
+            pickup = None
     return score_deltas
 
 def construct_events(raw:"dict[str]"):
@@ -359,20 +261,18 @@ def construct_events(raw:"dict[str]"):
 
 def process_events(events:"list[Event]")->"dict[str]":
     #cones&cubes bottom,middle,top; min,max,avg score delta
-    score_groups = _get_score_groups(events)
-    deltas = _get_score_deltas(score_groups)
-
-    rows = [] #top, middle, bottom
+    deltas = _get_score_deltas(events)
+    rows:"list[list[Event]]" = [] #top, middle, bottom
     for row_range in SCORE_GRID_ROW_INDEX:
-        rows.append([event for event in events if event.action==EventActions.SCORE and event.index in row_range]) #get scores in top, middle, bottom respectively
+        rows.append([event for event in events if event.action==EventActions.SCORE and event.other["index"] in row_range]) #get scores in top, middle, bottom respectively
 
     return {
-        "cones_bottom":len([event for event in rows[2] if event.piece==GamePiece.CONE]),
-        "cones_middle":len([event for event in rows[1] if event.piece==GamePiece.CONE]),
-        "cones_top":len([event for event in rows[0] if event.piece==GamePiece.CONE]),
-        "cubes_bottom":len([event for event in rows[2] if event.piece==GamePiece.CUBE]),
-        "cubes_middle":len([event for event in rows[1] if event.piece==GamePiece.CUBE]),
-        "cubes_top":len([event for event in rows[0] if event.piece==GamePiece.CUBE]),
+        "cones_bottom":len([event for event in rows[2] if event.other["piece"]==GamePiece.CONE]),
+        "cones_middle":len([event for event in rows[1] if event.other["piece"]==GamePiece.CONE]),
+        "cones_top":len([event for event in rows[0] if event.other["piece"]==GamePiece.CONE]),
+        "cubes_bottom":len([event for event in rows[2] if event.other["piece"]==GamePiece.CUBE]),
+        "cubes_middle":len([event for event in rows[1] if event.other["piece"]==GamePiece.CUBE]),
+        "cubes_top":len([event for event in rows[0] if event.other["piece"]==GamePiece.CUBE]),
         "min_score_delta":round(min(deltas).total_seconds(), 3),
         "max_score_delta":round(max(deltas).total_seconds(), 3),
         "avg_score_delta":round(sum(delta.total_seconds() for delta in deltas)/len(deltas), 3)
@@ -435,7 +335,6 @@ def process_data(raw:"dict[str]")->Data:
 
     events = list(construct_events(raw))
     events.sort(key=lambda e: e.time)
-
     processed = process_events(events)
 
     return Data(
@@ -459,7 +358,7 @@ def process_data(raw:"dict[str]")->Data:
             avg_score_delta=processed["avg_score_delta"],
             auto_activity=len([event for event in events if event.time < end_auto]) if end_auto else None,
             teleop_activity=len([event for event in events if event.time > end_auto]) if end_auto else None,
-            comments=raw.get(ContentKeys.COMMENTS)
+            comments="\n".join(raw.get(ContentKeys.COMMENTS, ()))
     )
 
 def get_sheets_api_creds():

@@ -47,7 +47,7 @@ DATA_ATTR_NAMES = {v:k for k,v in SHEETS_COLUMN_NAMES.items()}
 #various key and state names
 class EventActions:
     PICK_UP = "pick_up"
-    PICK_UP_SHELF = ... #TODO
+    PICK_UP_SHELF = "shelf_pick_up"
     DROP = "drop"
     SCORE = "score"
     DEFENSE = "defense"
@@ -64,7 +64,7 @@ class ContentKeys:
     SCOUTER_NAME = "scouterName"
     SCORE = "scoreGrid"
     PICKUPS = "pickUps"
-    SHELF_PICKUPS = ... #TODO
+    SHELF_PICKUPS = "shelfPickUps"
     DROPS = "pieceDrops"
     DEFENSES = "defenses"
     CHARGE_STATE_AUTO = "autoChargeState"
