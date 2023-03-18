@@ -1,10 +1,8 @@
 from . import data_manage
-from .constants import DIR, NAMES_FILE
-from datetime import datetime
+from .constants import NAMES_FILE
 from ScoutingApp import not_content_route, STATIC, TEMPLATES
 from flask import Blueprint, render_template, request
 import json
-import os
 import traceback
 
 blueprint = Blueprint("2023", __name__, url_prefix="/comps/2023", static_folder=STATIC, template_folder=TEMPLATES)
@@ -50,9 +48,6 @@ def upload():
     except Exception as e:
         traceback.print_exception(e)
         return "Got error while reading uploaded data.", 500
-    
-    #TODO process data into column values (see: https://docs.google.com/spreadsheets/d/1KCPyhZ5O3CdlRzDyMer7pqnJjNJhin79JegNVN5Jo5M/edit#gid=0 )
-    
     try:
         data_manage.handle_upload(data)
     except Exception as e:

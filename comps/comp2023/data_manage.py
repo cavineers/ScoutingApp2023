@@ -15,7 +15,7 @@ with open(API_KEYS_FILE) as f:
 SHEETS_OAUTH_DATA = KEYS[SHEETS_OAUTH]
 
 #NOTE: the notes below are about scoring, points, etc
-#cite: see manual 6.4:44-45 for time period between action taking place and when it counts for points 
+#cite: see manual 6.4:44-45 for time period between action taking place and when it counts for points
 #cite: see manual 6.4.1:45 for scoring criteria
 #cite: see manual 6.4.3:46-47 for point values
 
@@ -45,49 +45,10 @@ SHEETS_OAUTH_DATA = KEYS[SHEETS_OAUTH]
     #         navigation_result=nav_stamps.get("result.html"),
     #         navigation_finish=nav_stamps.get("qrscanner.html")
 
-    #construction methods
-    # def construct_score_events(self)->"list[Event]":
-    #     if self.score is None:
-    #         raise KeyError(ContentKeys.SCORE)
-    #     events = []
-    #     for index, history in self.score.items():
-    #         for timestamp, game_piece in history.items():
-    #             events.append(Event(
-    #                 EventActions.SCORE,
-    #                 timestamp,
-    #                 self.team_number,
-    #                 self.match_number,
-    #                 self.scouter_name,
-    #                 index=int(index),
-    #                 piece=game_piece
-    #             ))
-    #     return events
-
-    # def construct_drop_events(self)->"list[Event]":
-    #     if self.drops is None:
-    #         raise KeyError(ContentKeys.DROPS)
-    #     return [Event(EventActions.DROP, timestamp, self.team_number, self.match_number, self.scouter_name) for timestamp in self.drops]
-
     # def contruct_defense_events(self)->"list[Event]":
     #     if self.defenses is None:
     #         raise KeyError(ContentKeys.DEFENSES)
     #     return [Event(EventActions.DEFENSE, timestamp, self.team_number, self.match_number, self.scouter_name) for timestamp in self.defenses]
-
-    # def construct_pickup_events(self)->"list[Event]":
-    #     if self.pickups is None:
-    #         raise KeyError(ContentKeys.PICKUPS)
-    #     return [Event(EventActions.PICK_UP, timestamp, self.team_number, self.match_number, self.scouter_name) for timestamp in self.pickups]
-
-    # def construct_events(self)->"list[Event]":
-    #     for e in self.construct_drop_events():
-    #         yield e
-    #     for e in self.contruct_defense_events():
-    #         yield e
-    #     for e in self.construct_pickup_events():
-    #         yield e
-    #     yield Event(EventActions.END_AUTO, self.end_auto, self.team_number, self.match_number, self.scouter_name)
-    #     yield Event(EventActions.START, self.navigation_match, self.team_number, self.match_number, self.scouter_name)
-    #     yield Event(EventActions.END, self.navigation_result, self.team_number, self.match_number, self.scouter_name)
 
 @dataclass(slots=True)
 class Data:
@@ -111,6 +72,8 @@ class Data:
     min_score_delta:float
     max_score_delta:float
     avg_score_delta:float
+    auto_activity:float
+    teleop_activity:float
     comments:str
 
 
@@ -125,7 +88,7 @@ class Event:
         self.match_number = match_number
         self.scouter_name = scouter_name
         self.other = other
-    
+
     def __getitem__(self, key:str): return self._other[key]
     def __setitem__(self, key:str, value): self._other[key] = value
 
@@ -163,7 +126,7 @@ class ScoreGroup:
 
     def __contains__(self, value):
         return value is not None and value in (self.pickup, self.second)
-        
+
     def __len__(self):
         return self.has_first+1 #0+1 or 1+1
 
@@ -177,7 +140,7 @@ class ScoreGroup:
             self.second = value
         else:
             raise IndexError("ScoreGroup assignment index out of range.")
-    
+
     def __iter__(self):
         yield self.first
         yield self.second
@@ -224,145 +187,197 @@ class ScoreGroup:
         return 0
 
 
-#TODO make this into a function for processing some of the raw data into more usable values: list[Event] -> list[ScoreGroup] -> (cubes_places:int, cones_placed:int, ...)
-class TeamMatchReport:
-    "An object representing what a team did in a match based on Events and other match data. Should not be used to mutate or modify database contents, just for analytics."
+# class TeamMatchReport:
+#     "An object representing what a team did in a match based on Events and other match data. Should not be used to mutate or modify database contents, just for analytics."
 
-    def __init__(self, team_number:int, match_number:int):
-        self._init = False
-        self.team_number = team_number
-        self.match_number = match_number
-        #match_data = MatchData.get(MatchData._construct_id(team_number, match_number))
-        #all events
-        self.events:"list[Event]" = list(Event.search(team_number=team_number, match_number=match_number))
-        self.events.sort()
-        #event categories
-        self.event_categories:"dict[str, list[Event]]" = {
-            EventActions.PICK_UP:[],
-            EventActions.DROP:[],
-            EventActions.SCORE:[],
-            EventActions.DEFENSE:[]
-        }
-        self.started:Event = None
-        self.ended:Event = None
-        self.end_auto:Event = None #event that marks the end of auto
-        self.score_groups:"list[ScoreGroup]" = []
-        self.links:"list[tuple[ScoreGroup, ScoreGroup, ScoreGroup]]" = []
-        self.events_auto = []
-        self.events_teleop = []
-        self.score_deltas = []
-        #as seen on manual 6.4.3 (pg 46) {Award Name: value}
-        #TODO cooperation bonus requires both alliances to do 3, so thats a MatchReport thing (boolean)
-        self.points_auto:"dict[str, int]" = {
-            ScoreAwardName.MOBILITY:0,
-            ScoreAwardName.GAME_PIECES:0,
-            #TODO have docked and engaged points calculated in AllianceMatchReport (depends on stats of multiple team reports)
-        }
-        self.points_teleop:"dict[str, int]" = {
-            ScoreAwardName.GAME_PIECES:0,
-            ScoreAwardName.LINK:0,
-            ScoreAwardName.PARK:0
-        }
-        self.points_ranking:"dict[str, int]" = {
-            ScoreAwardName.SUSTAINABILITY:0,
-            ScoreAwardName.ACTIVATION:0 #TODO figure out how this is earned, because one team can not earn 26 charging station points alone
-            #TODO Tie and Win go in the AllianceMatchReport
-        }
+#     def __init__(self, team_number:int, match_number:int):
+#         self._init = False
+#         self.team_number = team_number
+#         self.match_number = match_number
+#         #match_data = MatchData.get(MatchData._construct_id(team_number, match_number))
+#         #all events
+#         self.events:"list[Event]" = list(Event.search(team_number=team_number, match_number=match_number))
+#         self.events.sort()
+#         #event categories
+#         self.event_categories:"dict[str, list[Event]]" = {
+#             EventActions.PICK_UP:[],
+#             EventActions.DROP:[],
+#             EventActions.SCORE:[],
+#             EventActions.DEFENSE:[]
+#         }
+#         self.started:Event = None
+#         self.ended:Event = None
+#         self.end_auto:Event = None #event that marks the end of auto
+#         self.score_groups:"list[ScoreGroup]" = []
+#         self.links:"list[tuple[ScoreGroup, ScoreGroup, ScoreGroup]]" = []
+#         self.events_auto = []
+#         self.events_teleop = []
+#         self.score_deltas = []
+#         #as seen on manual 6.4.3 (pg 46) {Award Name: value}
+#         # cooperation bonus requires both alliances to do 3, so thats a MatchReport thing (boolean)
+#         self.points_auto:"dict[str, int]" = {
+#             ScoreAwardName.MOBILITY:0,
+#             ScoreAwardName.GAME_PIECES:0,
+#             # have docked and engaged points calculated in AllianceMatchReport (depends on stats of multiple team reports)
+#         }
+#         self.points_teleop:"dict[str, int]" = {
+#             ScoreAwardName.GAME_PIECES:0,
+#             ScoreAwardName.LINK:0,
+#             ScoreAwardName.PARK:0
+#         }
+#         self.points_ranking:"dict[str, int]" = {
+#             ScoreAwardName.SUSTAINABILITY:0,
+#             ScoreAwardName.ACTIVATION:0 # figure out how this is earned, because one team can not earn 26 charging station points alone
+#             # Tie and Win go in the AllianceMatchReport
+#         }
 
-    def before_teleop(self, event:Event)->bool:
-        return event.time < self.end_auto.time
-    
-    def initialize_report(self):
-        if self._init: return
-        self._init = True
-        self._categorize_events()
-        self._get_score_groups()
-        self._get_score_links()
-        self._get_score_deltas()
-        self._get_points()
+#     def before_teleop(self, event:Event)->bool:
+#         return event.time < self.end_auto.time
 
-    def _categorize_events(self):
-        "Categorize events by action, timestamp, and other things."
-        #sort based on action name
-        for event in self.events:
-            if event.action in self.event_categories:
-                self.event_categories[event.action].append(event)
-            elif not self.started and event.action == EventActions.START:
-                self.started = event
-            elif not self.ended and event.action == EventActions.END:
-                self.ended = event
-        #find the auto_end/teleop_start event and split events into auto and teleop lists
-        for i, event in enumerate(self.events):
-            if event.action == EventActions.END_AUTO:
-                self.end_auto = event
-                self.events_auto = self.events[:i]
-                self.events_teleop = self.events[i+1:]
-                break
-        else: #TODO autogenerate self.end_auto event at 15 seconds from scout.html start timestamp if its missing in self.events, else set
-            self.end_auto = Event(EventActions.END_AUTO, self.started.time+timedelta(seconds=15), self.started.team_number, self.started.match_number, self.started.scouter_name)
-            for i, event in enumerate(self.events):
-                if event.time < self.end_auto.time:
-                    self.events_auto.append(event)
-                elif event.time >= self.end_auto.time:
-                    self.events_teleop = self.events[i:]
-                    break
+#     def initialize_report(self):
+#         if self._init: return
+#         self._init = True
+#         self._categorize_events()
+#         self._get_score_groups()
+#         self._get_score_links()
+#         self._get_score_deltas()
+#         self._get_points()
 
+#     def _categorize_events(self):
+#         "Categorize events by action, timestamp, and other things."
+#         #sort based on action name
+#         for event in self.events:
+#             if event.action in self.event_categories:
+#                 self.event_categories[event.action].append(event)
+#             elif not self.started and event.action == EventActions.START:
+#                 self.started = event
+#             elif not self.ended and event.action == EventActions.END:
+#                 self.ended = event
+#         #find the auto_end/teleop_start event and split events into auto and teleop lists
+#         for i, event in enumerate(self.events):
+#             if event.action == EventActions.END_AUTO:
+#                 self.end_auto = event
+#                 self.events_auto = self.events[:i]
+#                 self.events_teleop = self.events[i+1:]
+#                 break
+#         else: # autogenerate self.end_auto event at 15 seconds from scout.html start timestamp if its missing in self.events, else set
+#             self.end_auto = Event(EventActions.END_AUTO, self.started.time+timedelta(seconds=15), self.started.team_number, self.started.match_number, self.started.scouter_name)
+#             for i, event in enumerate(self.events):
+#                 if event.time < self.end_auto.time:
+#                     self.events_auto.append(event)
+#                 elif event.time >= self.end_auto.time:
+#                     self.events_teleop = self.events[i:]
+#                     break
 
-    def _get_score_groups(self):
-        "Group each pickup event with a score or drop event.\nIf there is no pickup event to go with the found score or drop event, thescore/drop event is put into a ScoreGroup on its own."
-        search_start = 0
-        f_si, f_se = self._find_event(EventActions.SCORE, search_start)
-        f_di, f_de = self._find_event(EventActions.DROP, search_start)
-        s_index, second = None, None
-        while f_si != -1 and f_di != -1:
-            s_index, second = (f_si, f_se) if f_si < f_di and f_si > -1 else (f_di, f_de) #get which one is first
-            f_pi, f_pe = self._find_event(EventActions.PICK_UP, search_start, s_index)
-            self.score_groups.append(ScoreGroup(f_pe, drop=f_de if second is f_de else None, score=f_se if f_se is second else None))
-            #get next group
-            search_start = s_index+1
-            f_si, f_se = self._find_event(EventActions.SCORE, search_start)
-            f_di, f_de = self._find_event(EventActions.DROP, search_start)
+#     def _get_score_links(self):
+#         for irow in range(len(SCORE_GRID_ROW_INDEX)): #0, 1, 2
+#             current_link:"list[ScoreGroup]" = []
+#             for sg in self.score_groups:
+#                 if not (sg.score and sg.row == irow):
+#                     continue
+#                 elif not current_link or sg.index == current_link[-1].index+1: #sg is first in link or sg is right after last
+#                     current_link.append(sg)
+#                 else:
+#                     current_link = [sg] #the current link starts with this sg
 
-    def _find_event(self, action:str, search_start=0, end_index=...)->"tuple[int, Event]":
-        if end_index is ...:
-            end_index = len(self.events)
-        for i, event in enumerate(self.events[search_start:end_index]):
-            if event.action == action:
-                return i+search_start, event
-        return -1, None
+#                 if len(current_link)==3:
+#                     self.links.append(tuple(current_link))
+#                     current_link.clear()
 
-    def _get_score_links(self):
-        for irow in range(len(SCORE_GRID_ROW_INDEX)): #0, 1, 2
-            current_link:"list[ScoreGroup]" = []
-            for sg in self.score_groups:
-                if not (sg.score and sg.row == irow):
-                    continue
-                elif not current_link or sg.index == current_link[-1].index+1: #sg is first in link or sg is right after last
-                    current_link.append(sg)
-                else:
-                    current_link = [sg] #the current link starts with this sg
-
-                if len(current_link)==3:
-                    self.links.append(tuple(current_link))
-                    current_link.clear()
-
-    def _get_score_deltas(self):
-        self.score_deltas = []
-        for sg in self.score_groups:
-            if not sg.score:
-                continue
-            self.score_deltas.append(sg.second.time-sg.first.time)
-
-    def _get_points(self):
-        for sg in self.score_groups:
-            if not sg.score:
-                continue
-            if self.before_teleop(sg.second):
-                self.points_auto[ScoreAwardName.GAME_PIECES] += sg.score+1
-            else:
-                self.points_teleop[ScoreAwardName.GAME_PIECES] += sg.score
+#     def _get_points(self):
+#         for sg in self.score_groups:
+#             if not sg.score:
+#                 continue
+#             if self.before_teleop(sg.second):
+#                 self.points_auto[ScoreAwardName.GAME_PIECES] += sg.score+1
+#             else:
+#                 self.points_teleop[ScoreAwardName.GAME_PIECES] += sg.score
 
 #functions
+
+def _find_event(events:"list[Event]", actions:"tuple[str]", search_start=0, end_index=...)->"tuple[int, Event]":
+    if end_index is ...:
+        end_index = len(events)
+    for i, event in enumerate(events[search_start:end_index]):
+        if event.action in actions:
+            return i+search_start, event #enumeration happens over slice, add i+search_start gets index in the entire list
+    return -1, None
+
+def _get_score_groups(events:"list[Event]"):
+    "Group each pickup event with a score or drop event.\nIf there is no pickup event to go with the found score or drop event, thescore/drop event is put into a ScoreGroup on its own."
+    score_groups:"list[ScoreGroup]" = []
+    indexes = set()
+
+    search_start = 0
+    #get index and object of first score/drop event
+    s_index, second = _find_event((EventActions.SCORE, EventActions.DROP), search_start)
+    while s_index != -1:
+        #get pickup event
+        f_pi, f_pe = _find_event((EventActions.PICK_UP), search_start, s_index)
+        drop = second if second is not None and second.action == EventActions.DROP else None
+        score_index = second.index if drop is None else None
+        score_groups.append(ScoreGroup(f_pe, drop=drop, score=second if drop is None else None, ammend=score_index in indexes))
+        if score_index is not None:
+            indexes.add(score_index)
+        #get next group
+        search_start = s_index+1
+        s_index, second = _find_event((EventActions.PICK_UP, EventActions.DROP), search_start)
+    return score_groups
+
+def _get_score_deltas(score_groups:"list[ScoreGroup]")->"list[timedelta]":
+    score_deltas = []
+    for sg in score_groups:
+        if not sg.score:
+            continue
+        score_deltas.append(sg.second.time-sg.first.time)
+    return score_deltas
+
+def construct_events(raw:"dict[str]"):
+    team_number = raw.get(ContentKeys.TEAM_NUMBER)
+    match_number = raw.get(ContentKeys.MATCH_NUMBER)
+    scouter_name = raw.get(ContentKeys.SCOUTER_NAME)
+    for index, history in raw.get(ContentKeys.SCORE,{}).items():
+        for timestamp, game_piece in history.items():
+            yield Event(
+                EventActions.SCORE,
+                timestamp,
+                team_number,
+                match_number,
+                scouter_name,
+                index=int(index),
+                piece=game_piece
+            )
+
+    for timestamp in raw.get(ContentKeys.DROPS,()):
+        yield Event(EventActions.DROP, timestamp, team_number, match_number, scouter_name)
+    for timestamp in raw.get(ContentKeys.PICKUPS,()):
+        yield Event(EventActions.PICK_UP, timestamp, team_number, match_number, scouter_name)
+    for timestamp in raw.get(ContentKeys.SHELF_PICKUPS,()):
+        yield Event(EventActions.PICK_UP_SHELF, timestamp, team_number, match_number, scouter_name)
+    for timestamp in raw.get(ContentKeys.DEFENSES, ()):
+        yield Event(EventActions.DEFENSE, timestamp, team_number, match_number, scouter_name)
+
+def process_events(events:"list[Event]")->"dict[str]":
+    #cones&cubes bottom,middle,top; min,max,avg score delta
+    score_groups = _get_score_groups(events)
+    deltas = _get_score_deltas(score_groups)
+
+    rows = [] #top, middle, bottom
+    for row_range in SCORE_GRID_ROW_INDEX:
+        rows.append([event for event in events if event.action==EventActions.SCORE and event.index in row_range]) #get scores in top, middle, bottom respectively
+
+    return {
+        "cones_bottom":len([event for event in rows[2] if event.piece==GamePiece.CONE]),
+        "cones_middle":len([event for event in rows[1] if event.piece==GamePiece.CONE]),
+        "cones_top":len([event for event in rows[0] if event.piece==GamePiece.CONE]),
+        "cubes_bottom":len([event for event in rows[2] if event.piece==GamePiece.CUBE]),
+        "cubes_middle":len([event for event in rows[1] if event.piece==GamePiece.CUBE]),
+        "cubes_top":len([event for event in rows[0] if event.piece==GamePiece.CUBE]),
+        "min_score_delta":round(min(deltas).total_seconds(), 3),
+        "max_score_delta":round(max(deltas).total_seconds(), 3),
+        "avg_score_delta":round(sum(delta.total_seconds() for delta in deltas)/len(deltas), 3)
+    }
+
 def map_index_to_type(index:int)->str:
     "Given index, get its score node type in the score grid."
     if isinstance(index, int) and (index >= 0 or index < 27):
@@ -383,7 +398,7 @@ def from_utc_timestamp(value:int)->datetime: #assuming that value is a javascrip
     return datetime.fromtimestamp(value/1000, tz=timezone.utc).astimezone(LOCAL_TIMEZONE)
 
 def to_utc_timestamp(dt:datetime)->int:
-    return int(dt.astimezone(timezone.utc).timestamp()*1000) #from seconds.microseconds -> milliseconds
+    return int(dt.astimezone(timezone.utc).timestamp()*1000) #from f"{seconds}.{microseconds}" -> milliseconds
 
 def parse_qr_code(fp)->"dict[str]":
     "Parse the qr code and extract the JSON data"
@@ -397,9 +412,57 @@ def handle_upload(raw:"dict[str]"):
     save_to_sheets(data)
 
 def process_data(raw:"dict[str]")->Data:
-    ...
+    "Turn raw gathered data into Data for each column in google sheets."
+    preliminary_data = raw.get(ContentKeys.PRELIMINARY_DATA) or {}
 
-def save_to_sheets(data:Data):
+    nav_stamps = raw.get(ContentKeys.NAV_STAMPS) or {}
+    navigation_match = nav_stamps.get("scout.html")
+
+    end_auto = raw.get(ContentKeys.END_AUTO)
+    if end_auto is not None:
+        end_auto = from_utc_timestamp(end_auto)
+    elif navigation_match:
+        end_auto:datetime = navigation_match+timedelta(seconds=15)
+
+
+    #NOT NEEDED (i don't think)
+    #
+    #
+    # navigation_start = nav_stamps.get("home.html")
+    # navigation_prematch = nav_stamps.get("prematch.html")
+    # navigation_result = nav_stamps.get("result.html")
+    # navigation_finish = nav_stamps.get("qrscanner.html")
+
+    events = list(construct_events(raw))
+    events.sort(key=lambda e: e.time)
+
+    processed = process_events(events)
+
+    return Data(
+            team_number=preliminary_data.get(ContentKeys.TEAM_NUMBER),
+            match_number=preliminary_data.get(ContentKeys.MATCH_NUMBER),
+            scouter=preliminary_data.get(ContentKeys.SCOUTER_NAME),
+            cones_bottom=processed["cones_bottom"],
+            cones_middle=processed["cones_middle"],
+            cones_top=processed["cones_top"],
+            cubes_bottom=processed["cubes_bottom"],
+            cubes_middle=processed["cubes_middle"],
+            cubes_top=processed["cubes_top"],
+            picked_up_ground=len(raw.get(ContentKeys.PICKUPS, ())),
+            picked_up_shelf=len(raw.get(ContentKeys.SHELF_PICKUPS, ())),
+            drops=len(raw.get(ContentKeys.DROPS, ())),
+            charging_pad_auto=raw.get(ContentKeys.CHARGE_STATE_AUTO),
+            charging_pad_teleop=raw.get(ContentKeys.CHARGE_STATE),
+            defenses=len(raw.get(ContentKeys.DEFENSES, ())),
+            min_score_delta=processed["min_score_delta"],
+            max_score_delta=processed["max_score_delta"],
+            avg_score_delta=processed["avg_score_delta"],
+            auto_activity=len([event for event in events if event.time < end_auto]) if end_auto else None,
+            teleop_activity=len([event for event in events if event.time > end_auto]) if end_auto else None,
+            comments=raw.get(ContentKeys.COMMENTS)
+    )
+
+def get_sheets_api_creds():
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -417,34 +480,61 @@ def save_to_sheets(data:Data):
         with open(SHEETS_TOKEN_FILE, "w") as token:
             token.write(creds.to_json())
 
+    return creds
+
+def get_sheet_columns()->list:
+    "Get columns for the google sheets."
+
+    creds = get_sheets_api_creds()
+
     try:
+        service:Resource = build("sheets", "v4", credentials=creds)
+        sheets:Resource = service.spreadsheets()
+        data = sheets.values().get(spreadsheetId=SPREADSHEET_ID, range="'Backup Data'!A1:1").execute()
+        return data["values"][0] if "values" in data else []
+    except HttpError as e:
+        print(e)
+    finally:
+        if "service" in locals():
+            service.close()
+
+sheet_columns = get_sheet_columns()
+
+def save_to_sheets(data:Data):
+    "Save processed data to the google sheets."
+
+    creds = get_sheets_api_creds()
+
+    try:
+        insert_range = "A2:A" #range to insert into
         service:Resource = build("sheets", "v4", credentials=creds)
         sheets:Resource = service.spreadsheets()
         #TODO implement a queue system (depending on the api rate limits) where multiple rows are inserted in one request.
         # A stress test & other research would be required to determine the necessity of this
-        row = [getattr(data, Data.__slots__[i]) for i in range(len(SHEETS_COLUMN_NAMES))] #TODO look for a better way to do this
+        row = [getattr(data, SHEETS_COLUMN_NAMES[column]) if column in SHEETS_COLUMN_NAMES else "" for column in sheet_columns]
         #insert data at the end of the Data sheet
         print(sheets.values().append(
             spreadsheetId=SPREADSHEET_ID,
-            range="Data!A3:A",
+            range=f"Data!{insert_range}",
             valueInputOption="RAW", insertDataOption="INSERT_ROWS", body={"values":[row]}
         ).execute())
         #insert data at the end of the Backup Data sheet
         print(sheets.values().append(
             spreadsheetId=SPREADSHEET_ID,
-            range="'Backup Data'!A3:A",
+            range=f"'Backup Data'!{insert_range}",
             valueInputOption="RAW", insertDataOption="INSERT_ROWS", body={"values":[row]}
         ).execute())
-    except HttpError as err:
-        print(err)
+    except HttpError as e:
+        print(e)
     finally:
         if "service" in locals():
             service.close()
 
 def save_local(raw:"dict[str]|str"):
+    "Save (append) the raw data to a local file."
     if not isinstance(raw, str):
         raw = json.dumps(raw)
-    with open("a" if os.path.isfile(SUBMISSIONS_FILE) else "w") as f:
+    with open(SUBMISSIONS_FILE, "a" if os.path.isfile(SUBMISSIONS_FILE) else "w") as f:
         f.write(raw+"\n")
 
 

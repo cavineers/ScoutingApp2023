@@ -18,19 +18,39 @@ SHEETS_SCOPES = "https://www.googleapis.com/auth/spreadsheets",
 
 SPREADSHEET_ID = "1KCPyhZ5O3CdlRzDyMer7pqnJjNJhin79JegNVN5Jo5M"
 
-#various key and state names
-SHEETS_COLUMN_NAMES = ("TEAM  NUMBER", "MATCH NUMBER", "SCOUTER", "CONES SCORED BOTTOM", "CONES SCORED MIDDLE", "CONES SCORED TOP", "CUBES SCORED BOTTOM", "CUBES SCORED MIDDLE",
-               "CUBES SCORED TOP", "PICKED UP GROUND", "PICKED UP SHELF", "DROPS", "CHARGING PAD STATE: AUTO", "CHARGING PAD STATE: TELEOP", "DEFENSES", "MIN SCORE DELTA",
-               "MAX SCORE DELTA", "AVG SCORE DELTA", "COMMENTS")
+SHEETS_COLUMN_NAMES = {
+    "TEAM NUMBER":"team_number",
+    "MATCH NUMBER":"match_number",
+    "SCOUTER":"scouter",
+    "CONES SCORED BOTTOM":"cones_bottom",
+    "CONES SCORED MIDDLE":"cones_middle",
+    "CONES SCORED TOP":"cones_top",
+    "CUBES SCORED BOTTOM":"cubes_bottom",
+    "CUBES SCORED MIDDLE":"cubes_middle",
+    "CUBES SCORED TOP":"cubes_top",
+    "PICKED UP GROUND":"picked_up_ground",
+    "PICKED UP SHELF":"picked_up_shelf",
+    "DROPS":"drops",
+    "CHARGING PAD STATE: AUTO":"charging_pad_auto",
+    "CHARGING PAD STATE: TELEOP":"charging_pad_teleop",
+    "DEFENSES":"defenses",
+    "MIN SCORE DELTA":"min_score_delta",
+    "MAX SCORE DELTA":"max_score_delta",
+    "AVG SCORE DELTA":"avg_score_delta",
+    "AUTO ACTIVITY":"auto_activity",
+    "TELEOP ACTIVITY":"teleop_activity",
+    "COMMENTS":"comments"
+}
 
+DATA_ATTR_NAMES = {v:k for k,v in SHEETS_COLUMN_NAMES.items()}
+
+#various key and state names
 class EventActions:
     PICK_UP = "pick_up"
+    PICK_UP_SHELF = ... #TODO
     DROP = "drop"
     SCORE = "score"
     DEFENSE = "defense"
-    END_AUTO = "end_auto"
-    START = "start"
-    END = "end"
 class ChargeStates:
     OFF = "off"
     DOCKED = "docked"
@@ -44,8 +64,10 @@ class ContentKeys:
     SCOUTER_NAME = "scouterName"
     SCORE = "scoreGrid"
     PICKUPS = "pickUps"
+    SHELF_PICKUPS = ... #TODO
     DROPS = "pieceDrops"
     DEFENSES = "defenses"
+    CHARGE_STATE_AUTO = "autoChargeState"
     CHARGE_STATE = "chargeState"
     COMMENTS = "comments"
     NAV_STAMPS = "navStamps"
