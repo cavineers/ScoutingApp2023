@@ -37,3 +37,6 @@ When modifying this file for future competitions, a couple of changes need to be
 ### Adding Routes
 
 ### Adding Static Assets
+
+### Other
+Do not delete the coconut -max
