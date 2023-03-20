@@ -7,8 +7,6 @@ import random
 import traceback
 
 blueprint = Blueprint("2023", __name__, url_prefix="/comps/2023", static_folder=STATIC, template_folder=TEMPLATES)
-random_number = str(random.randint(1, 1000000))
-print("rn:", random_number)
 
 
 #content routes
@@ -61,12 +59,7 @@ def upload():
         print(request.remote_addr, "uploaded data:", repr(data))
         return "Committed uploaded data.", 200
     
-@not_content_route("/submissions.txt", onto=blueprint, methods=["POST"])
+@not_content_route("/submissions.txt", onto=blueprint)
 def get_submissions():
-    if "key" not in request.form:
-        return "Invalid.", 400
-    elif str(request.form["key"]) != random_number:
-        return "Invalid.", 403
-    else:
-        return send_file(SUBMISSIONS_FILE, "text")
+    return send_file(SUBMISSIONS_FILE, "text")
     
