@@ -59,7 +59,7 @@ def upload():
         print(request.remote_addr, "uploaded data:", repr(data))
         return "Committed uploaded data.", 200
     
-@not_content_route("/submissions.txt", onto=blueprint)
-def get_submissions():
-    return send_file(SUBMISSIONS_FILE, "text")
+# @not_content_route("/submissions.txt", onto=blueprint)
+# def get_submissions():
+#     return send_file(SUBMISSIONS_FILE, "text")
     
