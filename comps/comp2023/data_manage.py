@@ -355,8 +355,8 @@ def process_data(raw:"dict[str]")->Data:
     processed = process_events(events)
 
     #get auto and teleop events
-    auto_events = []
-    teleop_events = []
+    auto_events:"list[Event]" = []
+    teleop_events:"list[Event]" = []
     for event in events:
         if event.time<end_auto: auto_events.append(event)
         else: teleop_events.append(event)
@@ -377,10 +377,10 @@ def process_data(raw:"dict[str]")->Data:
             cubes_total=sum((processed["cubes_bottom"], processed["cubes_middle"], processed["cubes_top"])),
             total_pieces=sum((processed["cones_bottom"], processed["cones_middle"], processed["cones_top"],
                              processed["cubes_bottom"], processed["cubes_middle"], processed["cubes_top"])),
-            cones_auto=len(_get_unique_scores(auto_events, GamePiece.CONE)),
-            cubes_auto=len(_get_unique_scores(auto_events, GamePiece.CUBE)),
-            cones_teleop=len(_get_unique_scores(teleop_events, GamePiece.CONE)),
-            cubes_teleop=len(_get_unique_scores(teleop_events, GamePiece.CUBE)),
+            cones_auto=len(_get_unique_scores((event for event in auto_events if event.action == EventActions.SCORE), GamePiece.CONE)),
+            cubes_auto=len(_get_unique_scores((event for event in auto_events if event.action == EventActions.SCORE), GamePiece.CUBE)),
+            cones_teleop=len(_get_unique_scores((event for event in teleop_events if event.action == EventActions.SCORE), GamePiece.CONE)),
+            cubes_teleop=len(_get_unique_scores((event for event in teleop_events if event.action == EventActions.SCORE), GamePiece.CUBE)),
             picked_up_ground=len(raw.get(ContentKeys.PICKUPS, ())),
             picked_up_shelf=len(raw.get(ContentKeys.SHELF_PICKUPS, ())),
             drops=len(raw.get(ContentKeys.DROPS, ())),
@@ -433,7 +433,7 @@ def get_sheet_columns()->list:
 
 sheet_columns = get_sheet_columns()
 
-def save_to_sheets(data:Data):
+def save_to_sheets(*datas:Data):
     "Save processed data to the google sheets."
 
     creds = get_sheets_api_creds()
@@ -444,18 +444,18 @@ def save_to_sheets(data:Data):
         sheets:Resource = service.spreadsheets()
         #TODO implement a queue system (depending on the api rate limits) where multiple rows are inserted in one request.
         # A stress test & other research would be required to determine the necessity of this
-        row = [getattr(data, SHEETS_COLUMN_NAMES[column]) if column in SHEETS_COLUMN_NAMES else "" for column in sheet_columns]
+        rows = [[getattr(data, SHEETS_COLUMN_NAMES[column]) if column in SHEETS_COLUMN_NAMES else "" for column in sheet_columns] for data in datas]
         #insert data at the end of the Data sheet
         print(sheets.values().append(
             spreadsheetId=SPREADSHEET_ID,
             range=f"Data!{insert_range}",
-            valueInputOption="RAW", insertDataOption="INSERT_ROWS", body={"values":[row]}
+            valueInputOption="RAW", insertDataOption="INSERT_ROWS", body={"values":rows}
         ).execute())
         #insert data at the end of the Backup Data sheet
         print(sheets.values().append(
             spreadsheetId=SPREADSHEET_ID,
             range=f"'Backup Data'!{insert_range}",
-            valueInputOption="RAW", insertDataOption="INSERT_ROWS", body={"values":[row]}
+            valueInputOption="RAW", insertDataOption="INSERT_ROWS", body={"values":rows}
         ).execute())
     except HttpError as e:
         print(e)
