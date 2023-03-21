@@ -57,12 +57,20 @@ class Data:
     team_number:int
     match_number:int
     scouter:str
+    date:str
     cones_bottom:int
     cones_middle:int
     cones_top:int
     cubes_bottom:int
     cubes_middle:int
     cubes_top:int
+    cones_total:int
+    cubes_total:int
+    total_pieces:int
+    cones_auto:int
+    cubes_auto:int
+    cones_teleop:int
+    cubes_teleop:int
     picked_up_ground:int
     picked_up_shelf:int
     drops:int
@@ -89,8 +97,8 @@ class Event:
         self.scouter_name = scouter_name
         self.other = other
 
-    def __getitem__(self, key:str): return self._other[key]
-    def __setitem__(self, key:str, value): self._other[key] = value
+    def __getitem__(self, key:str): return self.other[key]
+    def __setitem__(self, key:str, value): self.other[key] = value
 
     def __repr__(self):
         return f"<Event '{self.action}' : {to_utc_timestamp(self.time) or '-'} at {hex(id(self))}>"
@@ -259,6 +267,15 @@ def construct_events(raw:"dict[str]"):
     for timestamp in raw.get(ContentKeys.DEFENSES, ()):
         yield Event(EventActions.DEFENSE, timestamp, team_number, match_number, scouter_name)
 
+def _get_unique_scores(score_range:"list[Event]", piece:str):
+    s = set()
+    for event in score_range:
+        if event.other["piece"] == piece:
+            s.add(event.other["index"])
+        elif event.other["piece"] is None:
+            s.discard(event.other["index"])
+    return s
+
 def process_events(events:"list[Event]")->"dict[str]":
     #cones&cubes bottom,middle,top; min,max,avg score delta
     deltas = _get_score_deltas(events)
@@ -267,12 +284,12 @@ def process_events(events:"list[Event]")->"dict[str]":
         rows.append([event for event in events if event.action==EventActions.SCORE and event.other["index"] in row_range]) #get scores in top, middle, bottom respectively
 
     return {
-        "cones_bottom":len([event for event in rows[2] if event.other["piece"]==GamePiece.CONE]),
-        "cones_middle":len([event for event in rows[1] if event.other["piece"]==GamePiece.CONE]),
-        "cones_top":len([event for event in rows[0] if event.other["piece"]==GamePiece.CONE]),
-        "cubes_bottom":len([event for event in rows[2] if event.other["piece"]==GamePiece.CUBE]),
-        "cubes_middle":len([event for event in rows[1] if event.other["piece"]==GamePiece.CUBE]),
-        "cubes_top":len([event for event in rows[0] if event.other["piece"]==GamePiece.CUBE]),
+        "cones_bottom":len(_get_unique_scores(rows[2], GamePiece.CONE)),
+        "cones_middle":len(_get_unique_scores(rows[1], GamePiece.CONE)),
+        "cones_top":len(_get_unique_scores(rows[0], GamePiece.CONE)),
+        "cubes_bottom":len(_get_unique_scores(rows[2], GamePiece.CUBE)),
+        "cubes_middle":len(_get_unique_scores(rows[1], GamePiece.CUBE)),
+        "cubes_top":len(_get_unique_scores(rows[0], GamePiece.CUBE)),
         "min_score_delta":round(min(deltas).total_seconds(), 3) if deltas else 0,
         "max_score_delta":round(max(deltas).total_seconds(), 3) if deltas else 0,
         "avg_score_delta":round((sum(delta.total_seconds() for delta in deltas)/len(deltas)) if deltas else 0, 3)
@@ -337,16 +354,33 @@ def process_data(raw:"dict[str]")->Data:
     events.sort(key=lambda e: e.time)
     processed = process_events(events)
 
+    #get auto and teleop events
+    auto_events = []
+    teleop_events = []
+    for event in events:
+        if event.time<end_auto: auto_events.append(event)
+        else: teleop_events.append(event)
+
+    #fill in data
     return Data(
             team_number=preliminary_data.get(ContentKeys.TEAM_NUMBER),
             match_number=preliminary_data.get(ContentKeys.MATCH_NUMBER),
             scouter=preliminary_data.get(ContentKeys.SCOUTER_NAME),
+            date=from_utc_timestamp(navigation_match).astimezone(timezone.utc).strftime("%m/%d"),
             cones_bottom=processed["cones_bottom"],
             cones_middle=processed["cones_middle"],
             cones_top=processed["cones_top"],
             cubes_bottom=processed["cubes_bottom"],
             cubes_middle=processed["cubes_middle"],
             cubes_top=processed["cubes_top"],
+            cones_total=sum((processed["cones_bottom"], processed["cones_middle"], processed["cones_top"])),
+            cubes_total=sum((processed["cubes_bottom"], processed["cubes_middle"], processed["cubes_top"])),
+            total_pieces=sum((processed["cones_bottom"], processed["cones_middle"], processed["cones_top"],
+                             processed["cubes_bottom"], processed["cubes_middle"], processed["cubes_top"])),
+            cones_auto=len(_get_unique_scores(auto_events, GamePiece.CONE)),
+            cubes_auto=len(_get_unique_scores(auto_events, GamePiece.CUBE)),
+            cones_teleop=len(_get_unique_scores(teleop_events, GamePiece.CONE)),
+            cubes_teleop=len(_get_unique_scores(teleop_events, GamePiece.CUBE)),
             picked_up_ground=len(raw.get(ContentKeys.PICKUPS, ())),
             picked_up_shelf=len(raw.get(ContentKeys.SHELF_PICKUPS, ())),
             drops=len(raw.get(ContentKeys.DROPS, ())),
@@ -356,8 +390,8 @@ def process_data(raw:"dict[str]")->Data:
             min_score_delta=processed["min_score_delta"],
             max_score_delta=processed["max_score_delta"],
             avg_score_delta=processed["avg_score_delta"],
-            auto_activity=len([event for event in events if event.time < end_auto]) if end_auto else None,
-            teleop_activity=len([event for event in events if event.time > end_auto]) if end_auto else None,
+            auto_activity=len(auto_events) if end_auto else None,
+            teleop_activity=len(teleop_events) if end_auto else None,
             comments="\n".join(raw.get(ContentKeys.COMMENTS, ()))
     )
 
