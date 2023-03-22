@@ -38,5 +38,29 @@ When modifying this file for future competitions, a couple of changes need to be
 
 ### Adding Static Assets
 
+### Installing the scouting app on AWS EC2 instance
+
+1. Install git and gh
+sudo apt-get install git
+sudo apt-get install gh
+
+2. Install python and pip
+sudo apt-get install python3.10
+sudo apt update
+sudo apt install python3-pip
+
+3. Install python packages
+sudo pip install --upgrade flask waitress pyzbar Pillow google-api-python-client google-auth-httplib2 google-auth-oauthlib
+
+4. Install zbar
+sudo apt-get install libzbar0
+
+5. Login with gh
+gh auth login
+...
+
+6. Clone the repo
+git clone https://github.com/cavineers/...
+
 ### Other
 Do not delete the coconut -max
