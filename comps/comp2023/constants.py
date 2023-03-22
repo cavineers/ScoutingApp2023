@@ -66,6 +66,7 @@ class ChargeStates:
 class ContentKeys:
     VERSION = "version"
     CONTENT_TYPE = "contentType"
+    DATE = "date"
     PRELIMINARY_DATA = "preliminaryData"
     TEAM_NUMBER = "teamNumber"
     MATCH_NUMBER = "matchNumber"

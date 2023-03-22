@@ -324,6 +324,7 @@ def parse_qr_code(fp)->"dict[str]":
 
 def handle_upload(raw:"dict[str]"):
     "Handle data sent to the upload route"
+    raw[ContentKeys.DATE] = datetime.now().astimezone(timezone.utc).strftime("%m/%d")
     data = process_data(raw)
     save_local(raw)
     save_to_sheets(data)
@@ -366,7 +367,7 @@ def process_data(raw:"dict[str]")->Data:
             team_number=preliminary_data.get(ContentKeys.TEAM_NUMBER),
             match_number=preliminary_data.get(ContentKeys.MATCH_NUMBER),
             scouter=preliminary_data.get(ContentKeys.SCOUTER_NAME),
-            date=from_utc_timestamp(navigation_match).astimezone(timezone.utc).strftime("%m/%d"),
+            date=raw.get(ContentKeys.DATE),
             cones_bottom=processed["cones_bottom"],
             cones_middle=processed["cones_middle"],
             cones_top=processed["cones_top"],
@@ -465,8 +466,8 @@ def save_to_sheets(*datas:Data):
 
 def save_local(raw:"dict[str]|str"):
     "Save (append) the raw data to a local file."
-    if not isinstance(raw, str):
-        raw = json.dumps(raw)
+    if isinstance(raw, str):
+        raw = json.loads(raw)
     with open(SUBMISSIONS_FILE, "a" if os.path.isfile(SUBMISSIONS_FILE) else "w") as f:
         f.write(raw+"\n")
 
