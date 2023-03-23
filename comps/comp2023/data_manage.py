@@ -7,8 +7,8 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build, Resource
 from googleapiclient.errors import HttpError
 import json
-from PIL import Image
-from pyzbar import pyzbar
+# from PIL import Image
+# from pyzbar import pyzbar
 
 with open(API_KEYS_FILE) as f:
     KEYS = json.load(f)
@@ -317,10 +317,10 @@ def from_utc_timestamp(value:int)->datetime: #assuming that value is a javascrip
 def to_utc_timestamp(dt:datetime)->int:
     return int(dt.astimezone(timezone.utc).timestamp()*1000) #from f"{seconds}.{microseconds}" -> milliseconds
 
-def parse_qr_code(fp)->"dict[str]":
-    "Parse the qr code and extract the JSON data"
-    decoded:list = pyzbar.decode(Image.open(fp))
-    return json.loads(decoded[0].data.decode("ascii"))
+# def parse_qr_code(fp)->"dict[str]":
+#     "Parse the qr code and extract the JSON data"
+#     decoded:list = pyzbar.decode(Image.open(fp))
+#     return json.loads(decoded[0].data.decode("ascii"))
 
 def handle_upload(raw:"dict[str]"):
     "Handle data sent to the upload route"
