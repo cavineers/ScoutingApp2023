@@ -1,9 +1,8 @@
 from . import data_manage
-from .constants import NAMES_FILE, SUBMISSIONS_FILE
+from .constants import NAMES_FILE
 from ScoutingApp import not_content_route, STATIC, TEMPLATES
-from flask import Blueprint, render_template, request, send_file
+from flask import Blueprint, render_template, request
 import json
-import random
 import traceback
 
 blueprint = Blueprint("2023", __name__, url_prefix="/comps/2023", static_folder=STATIC, template_folder=TEMPLATES)
@@ -42,7 +41,8 @@ UPLOAD_DATA_KEY = "data"
 def upload():
     try:
         if UPLOAD_DATA_KEY in request.files:
-            data = data_manage.parse_qr_code(request.files[UPLOAD_DATA_KEY])
+            #data = data_manage.parse_qr_code(request.files[UPLOAD_DATA_KEY])
+            return "Not accepting QR Codes anymore.", 400
         elif UPLOAD_DATA_KEY in request.form:
             data = json.loads(json.loads(request.form[UPLOAD_DATA_KEY]))
         else:
