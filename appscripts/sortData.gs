@@ -1,17 +1,29 @@
+var CHARGE_PAD_SORT_MAP = new Map();
+CHARGE_PAD_SORT_MAP.set("off", 0);
+CHARGE_PAD_SORT_MAP.set("docked", 1);
+CHARGE_PAD_SORT_MAP.set("engaged", 2);
+
 /**
  * @param {string} columnName What column to sort the leaderboard by.
  * @param {string} sortBy How to merge the different rows of data into one spot in the leaderboard.
  * @param {Array.<Array.<string|number>>} rows The rows to pull the data from. Includes the columns.
  */
-function sortData(columnName, sortBy, direction, rows) {
+function sortData(columnName, sortBy, direction, dateFrom, dateTo, rows) {
   /** @type {Array.<string>} */
   const columns = rows[0];
   rows = rows.slice(1);
+
+  var relevant = [];
+  for (let row of rows) {
+    if (dateInRange(row[3], dateFrom, dateTo))
+      relevant.push(row);
+  }
+
   /** @type {number} */
   const colIndex = columns.indexOf(columnName);
   const sortMethod = SORT_METHODS[sortBy];
   if (sortMethod) {
-    var sorted = sortMethod(rows, colIndex);
+    var sorted = sortMethod(relevant, colIndex);
     if (direction=="DOWN")
       sorted.reverse();
     return sorted;
@@ -24,7 +36,7 @@ function sortData(columnName, sortBy, direction, rows) {
 function sortMax(rows, colIndex) {
   var maxed = new Map();
   for (let row of rows) {
-    const num = String(row[0]);
+    const num = row[0];
     if (!maxed.has(num) || (row[colIndex] > maxed.get(num))) { //team number not in maxed or row value > maxed value
       maxed.set(num, row[colIndex]);
     }
@@ -34,8 +46,7 @@ function sortMax(rows, colIndex) {
   maxed.forEach((value, key) => {
     maxedArray.push([key, value]);
   });
-  maxedArray.sort((a, b) => b[1]-a[1]);
-  return maxedArray;
+  return fittingSort(maxedArray);
 }
 
 function sortMin(rows, colIndex) {
@@ -51,11 +62,59 @@ function sortMin(rows, colIndex) {
   mined.forEach((value, key) => {
     minedArray.push([key, value]);
   });
-  minedArray.sort((a, b) => b[1]-a[1]);
-  return minedArray;
+  return fittingSort(minedArray);
 }
 
-function sortAvg(rows, colIndex, doMax) {
+function numericalAverage(values) {
+  const rawAvg = values.reduce((a, b) => a + b)/values.length;
+  return parseFloat(rawAvg.toFixed(3));
+}
+
+function cumulativeAverage(values) {
+  var appears = new Map(); //{value : appearance_count}
+  for (let value of values) {
+    if (appears.has(value))
+      appears.set(value, appears.get(value)+1);
+    else
+      appears.set(value, 1);
+  }
+
+  var maxValue = values[0];
+
+  for (let i = 1; i<values.length; i++) {
+    if (appears.get(values[i]) > appears.get(maxValue))
+      maxValue = values[i];
+  }
+  return maxValue;
+}
+
+function getFittingAverage(values) {
+  return values[0] == "number" ? numericalAverage(values) : cumulativeAverage(values);
+}
+
+function fittingSort(array2d) {
+  if (CHARGE_PAD_SORT_MAP.has(array2d[0][1]))
+      return array2d.sort((a,b) => CHARGE_PAD_SORT_MAP.get(b[1])-CHARGE_PAD_SORT_MAP.get(a[1]));
+  else
+    return array2d.sort((a, b) => b[1]-a[1]);
+}
+
+function sortAvg(rows, colIndex) {
+  var avged = getAverageValues(rows, colIndex);
+  
+  var avgedArray = [];
+  avged.forEach((value, key) => {
+    avgedArray.push([key, getFittingAverage(value)]);
+  });
+  return fittingSort(avgedArray);
+}
+
+/**
+ * @param {Array.<Array.<string|int>>} rows The rows to search through for team data.
+ * @param {number} colIndex The index of the column to collect data for.
+ * @returns {Map<string, Array>} teamNumber -> [...value]
+ */
+function getAverageValues(rows, colIndex) {
   var avged = new Map();
   for (let row of rows) {
     const num = String(row[0]);
@@ -63,18 +122,9 @@ function sortAvg(rows, colIndex, doMax) {
       avged.get(num).push(row[colIndex]);
     else
       avged.set(num, [row[colIndex]]);
-
   }
-  
-  var avgedArray = [];
-  avged.forEach((value, key) => {
-    const rawAvg = value.reduce((a, b) => a + b)/value.length;
-    avgedArray.push([key, parseFloat(rawAvg.toFixed(3))]);
-  });
-  avgedArray.sort((a, b) => b[1]-a[1]);
-  return avgedArray;
+  return avged;
 }
-
 
 const SORT_METHOD_NAMES = ["MAX", "MIN", "AVG"];
 
