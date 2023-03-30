@@ -1,12 +1,6 @@
 # ScoutingApp2023
 Scouting App Code for the 2023 FRC Season
 
-## Contact Info
-hey, you, yes you, whoever you may be in the future, if you want to contact us or have any questions about the scouting app, do so by emailing us!
-
-Max Maginnis : &emsp;`maxmaginnis@yahoo.com`
-
-Jake Goodyear : &emsp;`jakengoodyear@gmail.com`
 
 ## Prerequisites
 ### Pypi Packages
@@ -184,6 +178,19 @@ Where your extra comments go.
 Where you submit the data.
 
 - Submit: This is where you submit all of your data into the google sheet we use. Once you press the "Submit" button, you will be sent back to the "Home Page". Also make sure to point out your assigned robot's strength's and weaknesses (I can't say this enought). After that, you can keep scouting for any later matches.
+
+<br>
+<hr>
+<br>
+
+## Contact Info
+hey, you, yes you, whoever you may be in the future, if you want to contact us or have any questions about the scouting app, do so by emailing us!
+
+&emsp;Max Maginnis : &emsp;`maxmaginnis@yahoo.com`
+
+&emsp;Jake Goodyear : &emsp;`jakengoodyear@gmail.com`
+
+<br>
 
 # Other
 
