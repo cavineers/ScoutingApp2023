@@ -176,7 +176,7 @@ Where your extra comments go.
 
 Where you submit the data.
 
-- Submit: This is where you submit all of your data into the google sheet we use. Once you press the "Submit" button, you will be sent back to the "Home Page", so then you can keep scouting for any later matches.
+- Submit: This is where you submit all of your data into the google sheet we use. Once you press the "Submit" button, you will be sent back to the "Home Page". Also make sure to point out your assigned robot's strength's and weaknesses (I can't say this enought). After that, you can keep scouting for any later matches.
 
 # Other
 
