@@ -5,6 +5,7 @@ Scouting App Code for the 2023 FRC Season
 hey, you, yes you, whoever you may be in the future, if you want to contact us or have any questions about the scouting app, do so by emailing us!
 
 Max Maginnis --&emsp;`maxmaginnis@yahoo.com`
+
 Jake Goodyear --&emsp;`jakengoodyear@gmail.com`
 
 ## Prerequisites
