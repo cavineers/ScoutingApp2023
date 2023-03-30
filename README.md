@@ -190,6 +190,8 @@ hey, you, yes you, whoever you may be in the future, if you want to contact us o
 
 &emsp;Jake Goodyear : &emsp;`jakengoodyear@gmail.com`
 
+&emsp;Charles Hecker : &emsp;`thecheckerbro2007@gmail.com`
+
 <br>
 
 # Other
