@@ -89,7 +89,7 @@ function cumulativeAverage(values) {
 }
 
 function getFittingAverage(values) {
-  return values[0] == "number" ? numericalAverage(values) : cumulativeAverage(values);
+  return typeof values[0] == "number" ? numericalAverage(values) : cumulativeAverage(values);
 }
 
 function fittingSort(array2d) {
