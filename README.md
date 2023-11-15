@@ -16,6 +16,7 @@ NOTE: if you're on an apple M1 computer, download `Miniconda3 macOS Apple M1 64-
    - `ls -l`
    - then go and find where your miniconda install is located EX: Miniconda3-latest-MacOSX-arm64.sh
    - `./Miniconda-latest(filename)`
+        - If you don't have permissions to download it, do the command `chmod +x ./Miniconda…`
    - read through the user agreement, READ IT, and THEN type `yes` in the terminal
    - `eval "(/Users/(name)/miniconda3/bin/conda shell.(name) hook)"`
    - `conda init`
